@@ -1,34 +1,723 @@
 [
-  {
-    "id": "taj-palace-agra",
-    "name": "Taj Palace Stay",
-    "place": "Taj Mahal",
-    "city": "Agra",
-    "image": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
-    "baseRate": 2400
-  },
-  {
-    "id": "red-fort-inn",
-    "name": "Red Fort Inn",
-    "place": "Red Fort",
-    "city": "Delhi",
-    "image": "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
-    "baseRate": 1900
-  },
-  {
-    "id": "qutub-heritage",
-    "name": "Qutub Heritage Hotel",
-    "place": "Qutub Minar",
-    "city": "Delhi",
-    "image": "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
-    "baseRate": 2100
-  },
-  {
-    "id": "hampi-riverside",
-    "name": "Hampi Riverside Retreat",
-    "place": "Hampi (Vijayanagara)",
-    "city": "Hampi",
-    "image": "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
-    "baseRate": 1800
-  }
+    {
+        "id":  "taj-mahal-heritage-stay",
+        "name":  "Agra Heritage Stay",
+        "place":  "Taj Mahal",
+        "city":  "Agra",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1800
+    },
+    {
+        "id":  "taj-mahal-grand-residency",
+        "name":  "Agra Grand Residency",
+        "place":  "Taj Mahal",
+        "city":  "Agra",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2300
+    },
+    {
+        "id":  "taj-mahal-palace-view",
+        "name":  "Agra Palace View Hotel",
+        "place":  "Taj Mahal",
+        "city":  "Agra",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2800
+    },
+    {
+        "id":  "red-fort-heritage-stay",
+        "name":  "Delhi Heritage Stay",
+        "place":  "Red Fort",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1920
+    },
+    {
+        "id":  "red-fort-grand-residency",
+        "name":  "Delhi Grand Residency",
+        "place":  "Red Fort",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2420
+    },
+    {
+        "id":  "red-fort-palace-view",
+        "name":  "Delhi Palace View Hotel",
+        "place":  "Red Fort",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2920
+    },
+    {
+        "id":  "qutub-minar-heritage-stay",
+        "name":  "Delhi Heritage Stay",
+        "place":  "Qutub Minar",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2040
+    },
+    {
+        "id":  "qutub-minar-grand-residency",
+        "name":  "Delhi Grand Residency",
+        "place":  "Qutub Minar",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2540
+    },
+    {
+        "id":  "qutub-minar-palace-view",
+        "name":  "Delhi Palace View Hotel",
+        "place":  "Qutub Minar",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3040
+    },
+    {
+        "id":  "hampi-vijayanagara-heritage-stay",
+        "name":  "Hampi Heritage Stay",
+        "place":  "Hampi (Vijayanagara)",
+        "city":  "Hampi",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2160
+    },
+    {
+        "id":  "hampi-vijayanagara-grand-residency",
+        "name":  "Hampi Grand Residency",
+        "place":  "Hampi (Vijayanagara)",
+        "city":  "Hampi",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2660
+    },
+    {
+        "id":  "hampi-vijayanagara-palace-view",
+        "name":  "Hampi Palace View Hotel",
+        "place":  "Hampi (Vijayanagara)",
+        "city":  "Hampi",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3160
+    },
+    {
+        "id":  "amber-fort-heritage-stay",
+        "name":  "Jaipur Heritage Stay",
+        "place":  "Amber Fort",
+        "city":  "Jaipur",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2280
+    },
+    {
+        "id":  "amber-fort-grand-residency",
+        "name":  "Jaipur Grand Residency",
+        "place":  "Amber Fort",
+        "city":  "Jaipur",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2780
+    },
+    {
+        "id":  "amber-fort-palace-view",
+        "name":  "Jaipur Palace View Hotel",
+        "place":  "Amber Fort",
+        "city":  "Jaipur",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3280
+    },
+    {
+        "id":  "city-palace-heritage-stay",
+        "name":  "Udaipur Heritage Stay",
+        "place":  "City Palace",
+        "city":  "Udaipur",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1800
+    },
+    {
+        "id":  "city-palace-grand-residency",
+        "name":  "Udaipur Grand Residency",
+        "place":  "City Palace",
+        "city":  "Udaipur",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2300
+    },
+    {
+        "id":  "city-palace-palace-view",
+        "name":  "Udaipur Palace View Hotel",
+        "place":  "City Palace",
+        "city":  "Udaipur",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2800
+    },
+    {
+        "id":  "gateway-of-india-heritage-stay",
+        "name":  "Mumbai Heritage Stay",
+        "place":  "Gateway of India",
+        "city":  "Mumbai",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1920
+    },
+    {
+        "id":  "gateway-of-india-grand-residency",
+        "name":  "Mumbai Grand Residency",
+        "place":  "Gateway of India",
+        "city":  "Mumbai",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2420
+    },
+    {
+        "id":  "gateway-of-india-palace-view",
+        "name":  "Mumbai Palace View Hotel",
+        "place":  "Gateway of India",
+        "city":  "Mumbai",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2920
+    },
+    {
+        "id":  "charminar-heritage-stay",
+        "name":  "Hyderabad Heritage Stay",
+        "place":  "Charminar",
+        "city":  "Hyderabad",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2040
+    },
+    {
+        "id":  "charminar-grand-residency",
+        "name":  "Hyderabad Grand Residency",
+        "place":  "Charminar",
+        "city":  "Hyderabad",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2540
+    },
+    {
+        "id":  "charminar-palace-view",
+        "name":  "Hyderabad Palace View Hotel",
+        "place":  "Charminar",
+        "city":  "Hyderabad",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3040
+    },
+    {
+        "id":  "konark-sun-temple-heritage-stay",
+        "name":  "Konark Heritage Stay",
+        "place":  "Konark Sun Temple",
+        "city":  "Konark",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2160
+    },
+    {
+        "id":  "konark-sun-temple-grand-residency",
+        "name":  "Konark Grand Residency",
+        "place":  "Konark Sun Temple",
+        "city":  "Konark",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2660
+    },
+    {
+        "id":  "konark-sun-temple-palace-view",
+        "name":  "Konark Palace View Hotel",
+        "place":  "Konark Sun Temple",
+        "city":  "Konark",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3160
+    },
+    {
+        "id":  "ajanta-caves-heritage-stay",
+        "name":  "Aurangabad Heritage Stay",
+        "place":  "Ajanta Caves",
+        "city":  "Aurangabad",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2280
+    },
+    {
+        "id":  "ajanta-caves-grand-residency",
+        "name":  "Aurangabad Grand Residency",
+        "place":  "Ajanta Caves",
+        "city":  "Aurangabad",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2780
+    },
+    {
+        "id":  "ajanta-caves-palace-view",
+        "name":  "Aurangabad Palace View Hotel",
+        "place":  "Ajanta Caves",
+        "city":  "Aurangabad",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3280
+    },
+    {
+        "id":  "ellora-caves-heritage-stay",
+        "name":  "Aurangabad Heritage Stay",
+        "place":  "Ellora Caves",
+        "city":  "Aurangabad",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1800
+    },
+    {
+        "id":  "ellora-caves-grand-residency",
+        "name":  "Aurangabad Grand Residency",
+        "place":  "Ellora Caves",
+        "city":  "Aurangabad",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2300
+    },
+    {
+        "id":  "ellora-caves-palace-view",
+        "name":  "Aurangabad Palace View Hotel",
+        "place":  "Ellora Caves",
+        "city":  "Aurangabad",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2800
+    },
+    {
+        "id":  "khajuraho-group-of-monuments-heritage-stay",
+        "name":  "Khajuraho Heritage Stay",
+        "place":  "Khajuraho Group of Monuments",
+        "city":  "Khajuraho",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1920
+    },
+    {
+        "id":  "khajuraho-group-of-monuments-grand-residency",
+        "name":  "Khajuraho Grand Residency",
+        "place":  "Khajuraho Group of Monuments",
+        "city":  "Khajuraho",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2420
+    },
+    {
+        "id":  "khajuraho-group-of-monuments-palace-view",
+        "name":  "Khajuraho Palace View Hotel",
+        "place":  "Khajuraho Group of Monuments",
+        "city":  "Khajuraho",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2920
+    },
+    {
+        "id":  "sanchi-stupa-heritage-stay",
+        "name":  "Sanchi Heritage Stay",
+        "place":  "Sanchi Stupa",
+        "city":  "Sanchi",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2040
+    },
+    {
+        "id":  "sanchi-stupa-grand-residency",
+        "name":  "Sanchi Grand Residency",
+        "place":  "Sanchi Stupa",
+        "city":  "Sanchi",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2540
+    },
+    {
+        "id":  "sanchi-stupa-palace-view",
+        "name":  "Sanchi Palace View Hotel",
+        "place":  "Sanchi Stupa",
+        "city":  "Sanchi",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3040
+    },
+    {
+        "id":  "mysore-palace-heritage-stay",
+        "name":  "Mysuru Heritage Stay",
+        "place":  "Mysore Palace",
+        "city":  "Mysuru",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2160
+    },
+    {
+        "id":  "mysore-palace-grand-residency",
+        "name":  "Mysuru Grand Residency",
+        "place":  "Mysore Palace",
+        "city":  "Mysuru",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2660
+    },
+    {
+        "id":  "mysore-palace-palace-view",
+        "name":  "Mysuru Palace View Hotel",
+        "place":  "Mysore Palace",
+        "city":  "Mysuru",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3160
+    },
+    {
+        "id":  "gol-gumbaz-heritage-stay",
+        "name":  "Vijayapura Heritage Stay",
+        "place":  "Gol Gumbaz",
+        "city":  "Vijayapura",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2280
+    },
+    {
+        "id":  "gol-gumbaz-grand-residency",
+        "name":  "Vijayapura Grand Residency",
+        "place":  "Gol Gumbaz",
+        "city":  "Vijayapura",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2780
+    },
+    {
+        "id":  "gol-gumbaz-palace-view",
+        "name":  "Vijayapura Palace View Hotel",
+        "place":  "Gol Gumbaz",
+        "city":  "Vijayapura",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3280
+    },
+    {
+        "id":  "meenakshi-temple-heritage-stay",
+        "name":  "Madurai Heritage Stay",
+        "place":  "Meenakshi Temple",
+        "city":  "Madurai",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1800
+    },
+    {
+        "id":  "meenakshi-temple-grand-residency",
+        "name":  "Madurai Grand Residency",
+        "place":  "Meenakshi Temple",
+        "city":  "Madurai",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2300
+    },
+    {
+        "id":  "meenakshi-temple-palace-view",
+        "name":  "Madurai Palace View Hotel",
+        "place":  "Meenakshi Temple",
+        "city":  "Madurai",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2800
+    },
+    {
+        "id":  "brihadeeswara-temple-heritage-stay",
+        "name":  "Thanjavur Heritage Stay",
+        "place":  "Brihadeeswara Temple",
+        "city":  "Thanjavur",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1920
+    },
+    {
+        "id":  "brihadeeswara-temple-grand-residency",
+        "name":  "Thanjavur Grand Residency",
+        "place":  "Brihadeeswara Temple",
+        "city":  "Thanjavur",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2420
+    },
+    {
+        "id":  "brihadeeswara-temple-palace-view",
+        "name":  "Thanjavur Palace View Hotel",
+        "place":  "Brihadeeswara Temple",
+        "city":  "Thanjavur",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2920
+    },
+    {
+        "id":  "victoria-memorial-heritage-stay",
+        "name":  "Kolkata Heritage Stay",
+        "place":  "Victoria Memorial",
+        "city":  "Kolkata",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2040
+    },
+    {
+        "id":  "victoria-memorial-grand-residency",
+        "name":  "Kolkata Grand Residency",
+        "place":  "Victoria Memorial",
+        "city":  "Kolkata",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2540
+    },
+    {
+        "id":  "victoria-memorial-palace-view",
+        "name":  "Kolkata Palace View Hotel",
+        "place":  "Victoria Memorial",
+        "city":  "Kolkata",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3040
+    },
+    {
+        "id":  "howrah-bridge-heritage-stay",
+        "name":  "Kolkata Heritage Stay",
+        "place":  "Howrah Bridge",
+        "city":  "Kolkata",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2160
+    },
+    {
+        "id":  "howrah-bridge-grand-residency",
+        "name":  "Kolkata Grand Residency",
+        "place":  "Howrah Bridge",
+        "city":  "Kolkata",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2660
+    },
+    {
+        "id":  "howrah-bridge-palace-view",
+        "name":  "Kolkata Palace View Hotel",
+        "place":  "Howrah Bridge",
+        "city":  "Kolkata",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3160
+    },
+    {
+        "id":  "india-gate-heritage-stay",
+        "name":  "Delhi Heritage Stay",
+        "place":  "India Gate",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2280
+    },
+    {
+        "id":  "india-gate-grand-residency",
+        "name":  "Delhi Grand Residency",
+        "place":  "India Gate",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2780
+    },
+    {
+        "id":  "india-gate-palace-view",
+        "name":  "Delhi Palace View Hotel",
+        "place":  "India Gate",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3280
+    },
+    {
+        "id":  "humayuns-tomb-heritage-stay",
+        "name":  "Delhi Heritage Stay",
+        "place":  "Humayuns Tomb",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1800
+    },
+    {
+        "id":  "humayuns-tomb-grand-residency",
+        "name":  "Delhi Grand Residency",
+        "place":  "Humayuns Tomb",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2300
+    },
+    {
+        "id":  "humayuns-tomb-palace-view",
+        "name":  "Delhi Palace View Hotel",
+        "place":  "Humayuns Tomb",
+        "city":  "Delhi",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2800
+    },
+    {
+        "id":  "fatehpur-sikri-heritage-stay",
+        "name":  "Agra Heritage Stay",
+        "place":  "Fatehpur Sikri",
+        "city":  "Agra",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1920
+    },
+    {
+        "id":  "fatehpur-sikri-grand-residency",
+        "name":  "Agra Grand Residency",
+        "place":  "Fatehpur Sikri",
+        "city":  "Agra",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2420
+    },
+    {
+        "id":  "fatehpur-sikri-palace-view",
+        "name":  "Agra Palace View Hotel",
+        "place":  "Fatehpur Sikri",
+        "city":  "Agra",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2920
+    },
+    {
+        "id":  "jaisalmer-fort-heritage-stay",
+        "name":  "Jaisalmer Heritage Stay",
+        "place":  "Jaisalmer Fort",
+        "city":  "Jaisalmer",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2040
+    },
+    {
+        "id":  "jaisalmer-fort-grand-residency",
+        "name":  "Jaisalmer Grand Residency",
+        "place":  "Jaisalmer Fort",
+        "city":  "Jaisalmer",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2540
+    },
+    {
+        "id":  "jaisalmer-fort-palace-view",
+        "name":  "Jaisalmer Palace View Hotel",
+        "place":  "Jaisalmer Fort",
+        "city":  "Jaisalmer",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3040
+    },
+    {
+        "id":  "mehrangarh-fort-heritage-stay",
+        "name":  "Jodhpur Heritage Stay",
+        "place":  "Mehrangarh Fort",
+        "city":  "Jodhpur",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2160
+    },
+    {
+        "id":  "mehrangarh-fort-grand-residency",
+        "name":  "Jodhpur Grand Residency",
+        "place":  "Mehrangarh Fort",
+        "city":  "Jodhpur",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2660
+    },
+    {
+        "id":  "mehrangarh-fort-palace-view",
+        "name":  "Jodhpur Palace View Hotel",
+        "place":  "Mehrangarh Fort",
+        "city":  "Jodhpur",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3160
+    },
+    {
+        "id":  "rani-ki-vav-heritage-stay",
+        "name":  "Patan Heritage Stay",
+        "place":  "Rani ki Vav",
+        "city":  "Patan",
+        "image":  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2280
+    },
+    {
+        "id":  "rani-ki-vav-grand-residency",
+        "name":  "Patan Grand Residency",
+        "place":  "Rani ki Vav",
+        "city":  "Patan",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2780
+    },
+    {
+        "id":  "rani-ki-vav-palace-view",
+        "name":  "Patan Palace View Hotel",
+        "place":  "Rani ki Vav",
+        "city":  "Patan",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3280
+    },
+    {
+        "id":  "sun-temple-modhera-heritage-stay",
+        "name":  "Modhera Heritage Stay",
+        "place":  "Sun Temple Modhera",
+        "city":  "Modhera",
+        "image":  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1800
+    },
+    {
+        "id":  "sun-temple-modhera-grand-residency",
+        "name":  "Modhera Grand Residency",
+        "place":  "Sun Temple Modhera",
+        "city":  "Modhera",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2300
+    },
+    {
+        "id":  "sun-temple-modhera-palace-view",
+        "name":  "Modhera Palace View Hotel",
+        "place":  "Sun Temple Modhera",
+        "city":  "Modhera",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2800
+    },
+    {
+        "id":  "mahabodhi-temple-heritage-stay",
+        "name":  "Bodh Gaya Heritage Stay",
+        "place":  "Mahabodhi Temple",
+        "city":  "Bodh Gaya",
+        "image":  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  1920
+    },
+    {
+        "id":  "mahabodhi-temple-grand-residency",
+        "name":  "Bodh Gaya Grand Residency",
+        "place":  "Mahabodhi Temple",
+        "city":  "Bodh Gaya",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2420
+    },
+    {
+        "id":  "mahabodhi-temple-palace-view",
+        "name":  "Bodh Gaya Palace View Hotel",
+        "place":  "Mahabodhi Temple",
+        "city":  "Bodh Gaya",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2920
+    },
+    {
+        "id":  "nalanda-ruins-heritage-stay",
+        "name":  "Nalanda Heritage Stay",
+        "place":  "Nalanda Ruins",
+        "city":  "Nalanda",
+        "image":  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2040
+    },
+    {
+        "id":  "nalanda-ruins-grand-residency",
+        "name":  "Nalanda Grand Residency",
+        "place":  "Nalanda Ruins",
+        "city":  "Nalanda",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2540
+    },
+    {
+        "id":  "nalanda-ruins-palace-view",
+        "name":  "Nalanda Palace View Hotel",
+        "place":  "Nalanda Ruins",
+        "city":  "Nalanda",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3040
+    },
+    {
+        "id":  "shore-temple-heritage-stay",
+        "name":  "Mahabalipuram Heritage Stay",
+        "place":  "Shore Temple",
+        "city":  "Mahabalipuram",
+        "image":  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2160
+    },
+    {
+        "id":  "shore-temple-grand-residency",
+        "name":  "Mahabalipuram Grand Residency",
+        "place":  "Shore Temple",
+        "city":  "Mahabalipuram",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2660
+    },
+    {
+        "id":  "shore-temple-palace-view",
+        "name":  "Mahabalipuram Palace View Hotel",
+        "place":  "Shore Temple",
+        "city":  "Mahabalipuram",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3160
+    },
+    {
+        "id":  "chittorgarh-fort-heritage-stay",
+        "name":  "Chittorgarh Heritage Stay",
+        "place":  "Chittorgarh Fort",
+        "city":  "Chittorgarh",
+        "image":  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2280
+    },
+    {
+        "id":  "chittorgarh-fort-grand-residency",
+        "name":  "Chittorgarh Grand Residency",
+        "place":  "Chittorgarh Fort",
+        "city":  "Chittorgarh",
+        "image":  "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  2780
+    },
+    {
+        "id":  "chittorgarh-fort-palace-view",
+        "name":  "Chittorgarh Palace View Hotel",
+        "place":  "Chittorgarh Fort",
+        "city":  "Chittorgarh",
+        "image":  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
+        "baseRate":  3280
+    }
 ]
+
