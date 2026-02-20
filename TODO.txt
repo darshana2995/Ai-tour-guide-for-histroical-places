@@ -1,0 +1,10 @@
+Install the new backend dependency:
+
+cd BACKEND
+npm install
+
+npm run dev
+Restart frontend:
+
+cd FRONTEND
+npx http-server -p 5173

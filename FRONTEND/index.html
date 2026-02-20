@@ -1,0 +1,3346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Tour Guide — Demo</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+
+
+/* ===== UNIQUE ACHIEVEMENT DESIGN ===== */
+
+.achievement-card{
+  padding:14px;
+  border-radius:14px;
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:600;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.ach-easy{
+  background:#e6f9f0;
+  border-left:6px solid #22c55e;
+}
+
+.ach-medium{
+  background:#fff7e6;
+  border-left:6px solid #f59e0b;
+}
+
+.ach-hard{
+  background:#ffe6e6;
+  border-left:6px solid #ef4444;
+}
+
+.ach-special{
+  background:#f3e8ff;
+  border-left:6px solid #a855f7;
+}
+
+.ach-icon{
+  font-size:22px;
+}
+
+
+
+    :root{
+      --bg:#f4efe7;
+      --bg-2:#e9f2ef;
+      --card:#ffffff;
+      --text:#0f172a;
+      --accent:#0f766e;
+      --accent-2:#f59e0b;
+      --muted:#4b5563;
+      --shadow:0 14px 34px rgba(15, 23, 42, 0.14);
+      --ring:rgba(15, 118, 110, 0.25);
+    }
+    body{
+      font-family:'Space Grotesk', sans-serif;
+      margin:0;
+      background:linear-gradient(160deg,var(--bg) 0%,var(--bg-2) 60%,#fdf8f2 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-10% -10% auto -10%;
+      height:70%;
+      background:
+        radial-gradient(600px 260px at 10% 20%, rgba(15,118,110,0.12), transparent 60%),
+        radial-gradient(520px 220px at 90% 0%, rgba(245,158,11,0.12), transparent 65%);
+      pointer-events:none;
+      z-index:-1;
+    }
+    .wrap{max-width:1100px;margin:28px auto;padding:18px}
+    nav{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      margin:12px 0 18px;
+      position:sticky;
+      top:12px;
+      z-index:10;
+      padding:10px;
+      background:rgba(255,255,255,0.7);
+      border:1px solid rgba(15,23,42,0.08);
+      border-radius:14px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 6px 20px rgba(15,23,42,0.08);
+    }
+    nav button{
+      background:transparent;
+      border:1px solid rgba(15,23,42,0.12);
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      color:var(--text);
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    nav button:hover{transform:translateY(-1px);border-color:rgba(15,23,42,0.25);box-shadow:0 6px 14px rgba(15,23,42,0.08)}
+    .page{display:none;opacity:0;transform:translateY(8px)}
+    .page.active{display:block;animation:pageReveal .5s ease forwards}
+    .card{
+      background:var(--card);
+      padding:18px;
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      margin-bottom:16px;
+      border:1px solid rgba(15,23,42,0.06);
+    }
+    h1,h2,h3{margin:0 0 8px 0;font-family:'Fraunces', serif;letter-spacing:.2px}
+    input,select,textarea,button{font-family:inherit}
+    input,select,textarea{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,0.12);
+      margin-top:8px;
+      background:#fff;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+    button{
+      transition:transform .15s ease, box-shadow .15s ease, background .2s ease, color .2s ease;
+    }
+    button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    button.primary{
+      background:linear-gradient(135deg,#0f766e,#0b4f4a);
+      color:white;
+      border:none;
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      box-shadow:0 10px 18px rgba(15,118,110,0.22);
+    }
+    button.primary:hover{transform:translateY(-1px);box-shadow:0 14px 24px rgba(15,118,110,0.26)}
+    .hero{height:320px;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 16px 44px rgba(2,6,23,0.18)}
+    .hero img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.6)}
+    .hero .overlay{text-align:center;color:white;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-shadow:0 8px 30px rgba(0,0,0,0.35)}
+    .icons{display:flex;gap:18px;justify-content:center;margin:18px 0;align-items:stretch}
+    /* square icon cards */
+    .icon{
+      width:110px;
+      height:110px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,251,250,0.9));
+      border-radius:14px;
+      padding:8px;
+      text-align:center;
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(2,6,23,0.08);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      border:1px solid rgba(15,23,42,0.08);
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+    .icon:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(2,6,23,0.12)}
+    .icon div.emoji{font-size:32px;line-height:1}
+    .icon div.title{font-weight:700;font-size:15px;line-height:1.05}
+    .icon .small-muted{font-size:12px;color:var(--muted);margin:0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .small-muted{color:var(--muted);font-size:13px;margin-top:6px}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    /* chatbot floating (kept as fallback) */
+    #chatbotBox{display:none;position:fixed;bottom:22px;right:22px;width:360px;height:480px;background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.18);overflow:hidden;z-index:9999}
+    #chatHeader{background:var(--accent);color:#fff;padding:12px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+    #chatArea{padding:12px;height:320px;overflow:auto;background:#fbfdff}
+    .msg{margin-bottom:10px;line-height:1.3}
+    .msg.user{text-align:right}
+    .msg .bubble{display:inline-block;padding:8px 12px;border-radius:12px;max-width:80%}
+    .msg.bot .bubble{background:#eef2ff;color:var(--text)}
+    .msg.user .bubble{background:var(--accent);color:white}
+    .chatInputWrap{display:flex;gap:8px;padding:10px}
+    .chatInputWrap input{flex:1;padding:8px;border-radius:10px;border:1px solid #e6eef8}
+    .chatMeta{display:flex;gap:8px;padding:8px;border-top:1px solid #eef6ff;background:#fcfeff}
+    .chatMeta input{width:50%}
+    /* new styles for added features */
+    .small-pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--accent);font-weight:600;font-size:13px}
+    .journey-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .gallery img{width:calc(33% - 8px);border-radius:8px;height:120px;object-fit:cover}
+    .itinerary-day{border:1px dashed #e6eef8;padding:8px;border-radius:8px;margin-top:8px;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.18);padding:8px 10px;border-radius:10px;cursor:pointer}
+    .mini{padding:6px 8px;font-size:13px;border-radius:8px}
+    .muted-block{background:#fbfdff;padding:10px;border-radius:10px;border:1px solid #eef6ff;margin-top:8px;color:var(--muted)}
+    .admin-table{width:100%;border-collapse:collapse;margin-top:8px}
+    .admin-table th,.admin-table td{border:1px solid rgba(15,23,42,0.12);padding:8px;text-align:left;font-size:13px}
+    .admin-badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:600}
+    .admin-paid{background:#dcfce7;color:#166534}
+    .admin-pending{background:#fef3c7;color:#92400e}
+    .admin-table tr[data-uid]{cursor:pointer}
+    .admin-table tr[data-uid]:hover{background:#f8fafc}
+    .admin-row-active{background:#eef6ff !important}
+    /* large square slideshow (new) */
+    .square-slide-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .square-slide{width:520px;height:520px;border-radius:16px;overflow:hidden;box-shadow:0 14px 40px rgba(2,6,23,0.12);position:relative;background:#ddd}
+    .square-slide img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .45s ease}
+    .square-slide .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,0.45);color:white;padding:8px 12px;border-radius:10px;font-weight:600}
+    @media (max-width:960px){
+      .square-slide{width:92%;height:420px}
+    }
+    @media (max-width:640px){
+      .icons{flex-wrap:wrap;gap:12px}
+      .icon{width:90px;height:90px}
+      #chatbotBox{width:300px;height:420px}
+      .gallery img{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  
+}
+
+      .square-slide{width:100%;height:320px}
+    }
+    /* dark mode */
+    .dark{
+      --bg:#0b1f1e;
+      --bg-2:#142e2a;
+      --card:#0f2a27;
+      --text:#e5e7eb;
+      --muted:#cbd5e1;
+      --accent:#34d399;
+      --accent-2:#fbbf24;
+      --shadow:0 16px 40px rgba(0,0,0,0.35);
+      --ring:rgba(52,211,153,0.25);
+    }
+    @keyframes pageReveal{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    /* Hotel-specific styles injected later in script too */
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- top navigation (hidden until login) -->
+    <nav id="navbar" style="display:none">
+      <span id="adminBadge" class="small-pill" style="display:none;margin-right:auto;background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.2)">Admin Mode</span>
+      <button onclick="showPage('homePage')">Home</button>
+      <button onclick="showPage('journeyPage')">Create Journey</button>
+      <button onclick="showPage('aiPlannerPage')">AI Planner</button>
+      <button id="navHotelsBtn" onclick="showPage('hotelPage')">Hotels</button>
+      <button onclick="openBookingsPage()">Hotel Bookings</button>
+      <button onclick="showPage('profilePage')">Profile</button>
+      <button onclick="showPage('achievementPage')">Achievements</button>
+      <button id="navAdminBtn" onclick="showPage('adminPage')" style="display:none">Admin</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+
+    <!-- LANDING PAGE -->
+    <div id="landingPage" class="page active">
+      <div class="card" style="max-width:980px;margin:18px auto">
+        <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center">
+          <div>
+            <div class="small-pill">AI Tour Guide</div>
+            <h1 style="margin-top:8px">Plan smarter historical trips, faster.</h1>
+            <p class="small-muted" style="font-size:15px">
+              Build journeys, compare hotels, track budgets, and get instant travel tips — all in one place.
+            </p>
+            <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+              <button class="primary" onclick="showPage('loginPage')">Get Started</button>
+              <button class="btn-ghost" onclick="showPage('registerPage')">Create Account</button>
+            </div>
+          </div>
+          <div style="background:linear-gradient(135deg,#0f766e22,#f59e0b22);border-radius:16px;padding:14px">
+            <div class="muted-block">
+              <strong>Key Features</strong>
+              <div class="small-muted" style="margin-top:6px">• AI trip planner with budget guidance</div>
+              <div class="small-muted">• Hotel booking with payment status</div>
+              <div class="small-muted">• Itinerary + PDF export</div>
+              <div class="small-muted">• Trip photos + visits tracker</div>
+            </div>
+            <div class="gallery" style="margin-top:10px">
+              <img src="https://images.unsplash.com/photo-1505765050359-0101643d6e9d" alt="place1">
+              <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1" alt="place2">
+              <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b" alt="place3">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="page">
+      <div class="card" style="max-width:520px;margin:18px auto;text-align:center">
+        <h1>Welcome back</h1>
+        <p class="small-muted">Login to your AI Tour Guide account</p>
+        <input id="loginEmail" type="email" placeholder="Email" />
+        <input id="loginPass" type="password" placeholder="Password" />
+        <div style="display:flex;gap:10px; margin-top:12px">
+          <button class="primary" style="flex:1" onclick="login()">Login</button>
+          <button style="flex:1" onclick="showPage('registerPage')">Register</button>
+        </div>
+        <p class="small-muted" style="margin-top:12px">Demo: demo@example.com / demo123</p>
+      </div>
+    </div>
+
+    <!-- REGISTER PAGE -->
+    <div id="registerPage" class="page">
+      <div class="card" style="max-width:520px;margin:18px auto">
+        <h2>Create account</h2>
+        <input id="regName" placeholder="Full name" />
+        <div style="display:flex;gap:10px">
+          <select id="regCountry" style="width:45%">
+            <option value="+91" selected>+91 (India)</option>
+            <option value="+1">+1 (USA)</option>
+            <option value="+44">+44 (UK)</option>
+            <option value="+61">+61 (Australia)</option>
+            <option value="+971">+971 (UAE)</option>
+          </select>
+          <input id="regPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone (10 digits)" style="width:55%" />
+        </div>
+        <input id="regEmail" type="email" placeholder="Email" />
+        <input id="regPass" type="password" placeholder="Password" />
+        <div style="display:flex;gap:10px; margin-top:12px">
+          <button class="primary" style="flex:1" onclick="register()">Register</button>
+          <button style="flex:1" onclick="showPage('loginPage')">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page">
+      <div class="hero card" style="padding:0">
+        <img id="slideImg" src="https://images.unsplash.com/photo-1505765050359-0101643d6e9d?auto=format&fit=crop&w=1600&q=80" alt="banner">
+        <div class="overlay">
+          <h1 style="font-size:34px;letter-spacing:1px">Explore History — with your AI Travel Partner</h1>
+          <p style="opacity:.9;margin-top:8px">Smart itineraries • Hotel bookings • Budget & time manager</p>
+          <div style="margin-top:12px">
+            <button class="primary" onclick="showPage('journeyPage')" style="padding:10px 16px">Create Journey</button>
+            <!-- Updated: Talk to AI now opens a full Chatbot Page -->
+            <button onclick="showChatPage()" style="margin-left:8px;padding:10px 16px;border-radius:10px">Talk to AI 🤖</button>
+            <!-- Removed 'Suggest for today' button from homepage (user requested removal) -->
+          </div>
+        </div>
+      </div>
+
+
+      
+      <!-- ICONS: square and Hotels replaced with User Dashboard -->
+      <div class="icons">
+        <div class="icon" onclick="showPage('journeyPage')" title="Plan Trip">
+          <div class="emoji">🧭</div>
+          <div class="title">Plan Trip</div>
+          <div class="small-muted">Create & save itinerary</div>
+        </div>
+
+        <div class="icon" onclick="showPage('profilePage')" title="Profile">
+            <div class="emoji">👤</div>
+            <div class="title">Profile</div>
+             <div class="small-muted">View / Edit</div>
+            </div>
+
+        <div class="icon" onclick="document.getElementById('tripPhotoUpload').click()" title="Upload Trip Photos">
+             <div class="emoji">📸</div>
+             <div class="title">Trip Photos</div>
+             <div class="small-muted">Upload Memories</div>
+            </div>
+
+        <div class="icon" onclick="showChatPage()" title="CATBOT">
+            <div class="emoji">🤖</div>
+            <div class="title">CATBOT</div>
+            <div class="small-muted">Ask anything</div>
+        </div>
+
+
+        <div class="icon" onclick="toggleDarkMode()" title="Toggle dark mode">
+          <div class="emoji">🌙</div>
+          <div class="title">Dark Mode</div>
+          <div class="small-muted">Toggle theme</div>
+        </div>
+      </div>
+
+      <!-- REPLACED: Budget & Dashboard removed from home. Added big square slideshow + "Why useful" section -->
+      <div class="card" style="text-align:center">
+        <div class="square-slide-wrap">
+          <div class="square-slide" id="squareSlide">
+            <img id="squareSlideImg" src="https://images.unsplash.com/photo-1505765050359-0101643d6e9d" alt="large-slide" />
+            <div class="caption" id="squareCaption">Discover historical places with curated itineraries</div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
+            <button class="btn-ghost" onclick="prevSquare()">◀</button>
+            <button class="btn-ghost" onclick="toggleSquareSlideshow()" id="squarePlayBtn">Pause</button>
+            <button class="btn-ghost" onclick="nextSquare()">▶</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Why AI Tour Guide is useful for historical travellers</h2>
+        <p class="small-muted" style="margin-top:6px">
+          Planning trips to historical sites can be confusing — opening times, distances, transport options, and budgeting all matter.
+        </p>
+        <div style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+          <div class="muted-block">
+            <strong>Smart Itineraries</strong>
+            <div class="small-muted">AI helps build day-by-day plans so you see the best sites without wasting time.</div>
+          </div>
+
+          <div class="muted-block">
+            <strong>Budget Guidance</strong>
+            <div class="small-muted">Enter your budget and bookings; the planner estimates daily spend and gives tips to stretch your money.</div>
+          </div>
+
+          <div class="muted-block">
+            <strong>Local Travel Advice</strong>
+            <div class="small-muted">Quick recommendations for trains, buses and flights based on approximate distance and origin city.</div>
+          </div>
+
+          <div class="muted-block">
+            <strong>Booking Integration</strong>
+            <div class="small-muted">Search hotels, preview room types, and save bookings into your journey for one-click itinerary generation.</div>
+          </div>
+
+          <div class="muted-block">
+            <strong>Printable Itineraries</strong>
+            <div class="small-muted">Generate a clean PDF itinerary for offline use — great for low-connectivity historical sites.</div>
+          </div>
+
+          <div class="muted-block">
+            <strong>Time Manager</strong>
+            <div class="small-muted">Schedule visits and check for overlapping activities so your day stays realistic.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Explore Map</h2>
+        <p class="small-muted">Pan / zoom the embedded map to find nearby historical places.</p>
+        <iframe style="width:100%;height:280px;border:0;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06)" loading="lazy"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.1160976656!2d72.74109997809093!3d19.082197839917364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be795b5dcf7c41b%3A0x6b6639799af70906!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000"></iframe>
+      </div>
+
+      <div class="card">
+        <h2>Why choose AI Tour Guide?</h2>
+        <p class="small-muted">We combine offline-friendly tools and quick AI guidance to help you plan efficient, memorable historical trips — with budget control, time management and printable itineraries.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <div style="flex:1;min-width:220px">
+            <div class="muted-block"><strong>Smart Itineraries</strong><div class="small-muted">AI-suggested plans tailored to your dates and preferences.</div></div>
+          </div>
+          <div style="flex:1;min-width:220px">
+            <div class="muted-block"><strong>Budget Tracking</strong><div class="small-muted">Set budgets and view remaining balance at a glance.</div></div>
+          </div>
+          <div style="flex:1;min-width:220px">
+            <div class="muted-block"><strong>Printable Tours</strong><div class="small-muted">Generate a clean PDF of your saved journey for offline use.</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="gallery">
+            <img src="https://images.unsplash.com/photo-1505765050359-0101643d6e9d" alt="place1">
+            <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1" alt="place2">
+            <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b" alt="place3">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHATBOT PAGE (NEW: full page chatbot with close/back) -->
+    <div id="chatPage" class="page">
+      <div class="card" style="max-width:820px;margin:18px auto;padding:0;overflow:hidden">
+        <div id="chatHeaderPage" style="background:var(--accent);color:#fff;padding:12px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-weight:700">AI Assistant — Full Chat</div>
+            <div style="font-size:12px;opacity:.9">Travel & historical help</div>
+          </div>
+          <div>
+            <button class="btn-ghost" onclick="showPage('homePage')" style="margin-right:8px">Close</button>
+          </div>
+        </div>
+
+        <div id="chatAreaPage" style="padding:12px;height:520px;overflow:auto;background:#fbfdff"></div>
+
+        <div style="display:flex;gap:8px;padding:10px;border-top:1px solid #eef6ff;background:#fcfeff;align-items:center">
+          <input id="chatInputPage" placeholder="Ask about the site, 'Where should I visit today?', or 'Best travel option to Agra'..." style="flex:1;padding:8px;border-radius:10px;border:1px solid #e6eef8" />
+          <button class="primary" onclick="sendChat('page')">Send</button>
+        </div>
+        <div style="padding:8px;font-size:12px;color:var(--muted);text-align:center">Tip: ask about places, travel options, hotels, or budgets.</div>
+      </div>
+    </div>
+
+    <!-- CREATE JOURNEY PAGE -->
+    <div id="journeyPage" class="page">
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:320px">
+          <div class="card">
+            <h2>Create Your Journey</h2>
+            <label>Choose place</label>
+            <select id="placeSelect">
+              <option>Taj Mahal</option>
+              <option>Red Fort</option>
+              <option>Qutub Minar</option>
+              <option>Hampi</option>
+            </select>
+
+            <label style="margin-top:10px">Arrival date</label>
+            <input id="arrive" type="date" />
+
+            <!-- NEW: travel mode -->
+            <label style="margin-top:10px">Travel mode</label>
+            <select id="travelMode">
+              <option>Train</option>
+              <option>Bus</option>
+              <option>Flight</option>
+              <option>Car</option>
+            </select>
+
+            <label>Hotel name</label>
+            <input id="hotelName" placeholder="Hotel / Guesthouse" />
+
+            <label>Number of nights</label>
+            <input id="nights" type="number" min="1" value="1" />
+
+            <label>Estimated hotel price (total)</label>
+            <input id="hotelPrice" type="number" placeholder="e.g., 4500" />
+
+            <!-- NEW: notes -->
+            <label style="margin-top:10px">Notes (optional)</label>
+            <textarea id="journeyNotes" placeholder="Any notes for this journey item (e.g., room preferences, contact info)"></textarea>
+
+            <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+              <button class="primary" onclick="addToJourney()">Add to Journey</button>
+              <button onclick="exportJourney()">Export JSON</button>
+              <!-- NEW: generate PDF for saved journey -->
+              <button onclick="generatePDF()" class="btn-ghost">Generate PDF</button>
+            </div>
+          </div>
+
+          
+            <!-- New Advice panel -->
+            <div id="budgetAdvice" class="small-muted" style="margin-top:8px"></div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:320px">
+          <div class="card">
+            <h2>Your Journey Plan</h2>
+            <div id="journeyList"></div>
+            <div style="margin-top:12px;display:flex;gap:10px">
+              <button onclick="loadSample()">Load sample</button>
+              <button onclick="clearJourney()">Clear</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Time Manager</h2>
+            <small class="small-muted">Schedule visits and check overlapping times.</small>
+            <label>Visit place</label>
+            <input id="visitPlace" placeholder="Place name" />
+            <label>Date & time</label>
+            <input id="visitDT" type="datetime-local" />
+            <label>Duration (minutes)</label>
+            <input id="visitDur" type="number" value="60" />
+            <button style="margin-top:8px" onclick="addVisit()">Add Visit</button>
+            <div id="visitList" class="small-muted" style="margin-top:8px">No visits yet.</div>
+          </div>
+
+          <!-- NEW: Daily Itinerary Builder -->
+          <div class="card">
+            <h3>Daily Itinerary Builder</h3>
+            <small class="small-muted">Add activities per day — useful for multi-day trips.</small>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input id="itDay" type="number" min="1" placeholder="Day #" />
+              <input id="itActivity" placeholder="Activity (e.g., 'Visit Taj Mahal 8am-10am')" />
+              <button class="mini" onclick="addItinerary()">Add</button>
+            </div>
+            <div id="itineraryContainer" style="margin-top:10px"></div>
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button onclick="exportItinerary()" class="btn-ghost">Export Itinerary</button>
+              <button onclick="clearItinerary()" class="btn-ghost">Clear Itinerary</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- AI PLANNER PAGE -->
+<div id="aiPlannerPage" class="page ai-planner-bg">
+
+  <div class="card ai-planner-card">
+
+    <h2>🧠 AI Trip Planner</h2>
+
+    <label>Select Month</label>
+    <select id="aiMonth">
+      <option>January</option>
+      <option>February</option>
+      <option>March</option>
+      <option>April</option>
+      <option>May</option>
+      <option>June</option>
+      <option>July</option>
+      <option>August</option>
+      <option>September</option>
+      <option>October</option>
+      <option>November</option>
+      <option>December</option>
+    </select>
+
+    <label>Budget</label>
+    <input type="number" id="aiBudget">
+
+    <label>Days</label>
+    <input type="number" id="aiDays">
+
+    <button class="primary" onclick="generateAIPlan()">
+      Generate AI Plan
+    </button>
+
+    <div id="aiResult"></div>
+
+  </div>
+
+</div>
+
+
+<div id="hotelBookingsPage" class="page">
+  <div class="card">
+    <h2>🏨 Hotel Bookings</h2>
+    <div id="hotelBookingsList"></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="adminPage" class="page">
+  <div class="card">
+    <h2>Admin Dashboard</h2>
+    <div class="small-muted" id="adminMeta"></div>
+    <div style="margin-top:12px">
+      <h3>Users</h3>
+      <div id="adminUsers"></div>
+    </div>
+    <div style="margin-top:16px">
+      <h3>User Details</h3>
+      <div id="adminUserDetails" class="small-muted">Select a user to view full booking and journey history.</div>
+    </div>
+    <div style="margin-top:16px">
+      <h3>Bookings (All Users)</h3>
+      <div id="adminBookings"></div>
+    </div>
+    <div style="margin-top:16px">
+      <h3>Journeys (All Users)</h3>
+      <div id="adminJourneys"></div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- PROFILE PAGE -->
+<div id="profilePage" class="page">
+
+  <div class="card" style="max-width:600px;margin:auto;text-align:center">
+
+    <h2>User Profile</h2>
+
+    <img id="profilePhoto"
+      src="https://i.imgur.com/6VBx3io.png"
+      style="width:120px;border-radius:50%;margin-bottom:10px">
+
+    <input type="file" id="photoUpload" onchange="uploadPhoto()">
+
+    <p><b>Name:</b> <span id="profileName"></span></p>
+    <p><b>Email:</b> <span id="profileEmail"></span></p>
+    <p><b>Phone:</b> <span id="profilePhone"></span></p>
+
+    <button class="primary" onclick="editProfile()">Edit Profile</button>
+
+    <h3 style="margin-top:20px">My Trip Photos</h3>
+<div id="tripGallery" class="gallery"></div>
+
+
+  </div>
+
+</div>
+
+
+<!-- ACHIEVEMENT PAGE -->
+<div id="achievementPage" class="page">
+  <div class="card" style="max-width:700px;margin:auto">
+
+    <h2>🏆 Achievements</h2>
+
+    <div id="achievementList"></div>
+
+  </div>
+</div>
+
+
+  <!-- Chatbot UI (floating kept as fallback) -->
+  <div id="chatbotBox">
+    <div id="chatHeader">
+      <div>AI Assistant</div>
+      <div style="font-size:12px;opacity:.9">Travel & historical help</div>
+    </div>
+    <div id="chatArea"></div>
+
+    <div class="chatInputWrap">
+      <input id="chatInput" placeholder="Ask about the site, 'Where should I visit today?', or 'Best travel option to Agra'..." />
+      <button onclick="sendChat('float')">Send</button>
+    </div>
+    <div style="padding:8px;font-size:12px;color:var(--muted);text-align:center">Tip: include your origin city in the message for tailored travel suggestions.</div>
+  </div>
+
+<script type="module">
+/* ====================== Firebase SDK Imports ====================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-storage.js";
+
+/* ====================== Firebase Configuration ====================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBWBiNeBEE90t-X6pOXGFGLjMif_A9EUAQ",
+  authDomain: "tourismapp-a1af5.firebaseapp.com",
+  projectId: "tourismapp-a1af5",
+  storageBucket: "tourismapp-a1af5.firebasestorage.app",
+  messagingSenderId: "904349402092",
+  appId: "1:904349402092:web:8319edabb1510ed2baf6c9"
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);
+const USE_FAKE_PAYMENT = true;
+
+/* ====================== API Helpers ====================== */
+const API_BASE = "http://localhost:3000";
+
+async function getIdTokenSafe(){
+  const u = auth.currentUser || firebaseCurrentUser;
+  if(!u) return null;
+  return await u.getIdToken();
+}
+
+async function apiFetch(path, options = {}){
+  const token = await getIdTokenSafe();
+  const headers = Object.assign(
+    { "Content-Type": "application/json" },
+    options.headers || {}
+  );
+  if(token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers
+  });
+  const text = await res.text();
+  let data = {};
+  try{ data = text ? JSON.parse(text) : {}; }catch(e){ data = { raw: text }; }
+  if(!res.ok){
+    const msg = data.error || data.message || `Request failed (${res.status})`;
+    throw new Error(msg);
+  }
+  return data;
+}
+
+/* ====================== Firebase Helper Functions ====================== */
+
+// Save user data to Firestore
+async function saveUserToFirestore(userId, userData) {
+  try {
+    await setDoc(doc(db, "users", userId), {
+      ...userData,
+      createdAt: new Date().toISOString()
+    }, { merge: true });
+    console.log("User data saved to Firestore");
+  } catch (error) {
+    console.error("Error saving user data:", error);
+  }
+}
+
+// Get user data from Firestore
+async function getUserFromFirestore(userId) {
+  try {
+    const docSnap = await getDoc(doc(db, "users", userId));
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+    return null;
+  } catch (error) {
+    console.error("Error getting user data:", error);
+    return null;
+  }
+}
+
+// Save booking to Firestore
+async function saveBookingToFirestore(userId, bookingData) {
+  try {
+    const bookingRef = doc(collection(db, "bookings"));
+    await setDoc(bookingRef, {
+      ...bookingData,
+      userId: userId,
+      createdAt: new Date().toISOString()
+    });
+    console.log("Booking saved to Firestore");
+    return bookingRef.id;
+  } catch (error) {
+    console.error("Error saving booking:", error);
+    return null;
+  }
+}
+
+// Get user's bookings from Firestore
+async function getUserBookingsFromFirestore(userId) {
+  try {
+    const q = query(collection(db, "bookings"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const bookings = [];
+    querySnapshot.forEach((doc) => {
+      bookings.push({ id: doc.id, ...doc.data() });
+    });
+    return bookings;
+  } catch (error) {
+    console.error("Error getting bookings:", error);
+    return [];
+  }
+}
+
+// Save journey to Firestore
+async function saveJourneyToFirestore(userId, journeyData) {
+  try {
+    const journeyRef = doc(collection(db, "journeys"));
+    await setDoc(journeyRef, {
+      ...journeyData,
+      userId: userId,
+      createdAt: new Date().toISOString()
+    });
+    console.log("Journey saved to Firestore");
+    return journeyRef.id;
+  } catch (error) {
+    console.error("Error saving journey:", error);
+    return null;
+  }
+}
+
+// Get user's journeys from Firestore
+async function getUserJourneysFromFirestore(userId) {
+  try {
+    const q = query(collection(db, "journeys"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const journeys = [];
+    querySnapshot.forEach((doc) => {
+      journeys.push({ id: doc.id, ...doc.data() });
+    });
+    return journeys;
+  } catch (error) {
+    console.error("Error getting journeys:", error);
+    return [];
+  }
+}
+
+// Upload trip photo to Firebase Storage
+async function uploadTripPhotoToStorage(userId, file) {
+  try {
+    const storageRef = ref(storage, `tripPhotos/${userId}/${Date.now()}_${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    console.log("Photo uploaded successfully");
+    return downloadURL;
+  } catch (error) {
+    console.error("Error uploading photo:", error);
+    return null;
+  }
+}
+
+// Save trip photo metadata to Firestore
+async function saveTripPhotoToFirestore(userId, photoURL) {
+  try {
+    const photoRef = doc(collection(db, "tripPhotos"));
+    await setDoc(photoRef, {
+      userId: userId,
+      photoURL: photoURL,
+      createdAt: new Date().toISOString()
+    });
+    console.log("Trip photo saved to Firestore");
+    return photoRef.id;
+  } catch (error) {
+    console.error("Error saving trip photo:", error);
+    return null;
+  }
+}
+
+// Get user's trip photos from Firestore
+async function getUserTripPhotosFromFirestore(userId) {
+  try {
+    const q = query(collection(db, "tripPhotos"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const photos = [];
+    querySnapshot.forEach((doc) => {
+      photos.push({ id: doc.id, ...doc.data() });
+    });
+    return photos;
+  } catch (error) {
+    console.error("Error getting trip photos:", error);
+    return [];
+  }
+}
+
+/* --------------------------
+  App state & helpers
+   -------------------------- */
+const slides = [
+  "https://images.unsplash.com/photo-1505765050359-0101643d6e9d?auto=format&fit=crop&w=1600&q=80", // Taj Mahal
+  "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80", // Qutub Minar
+  "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80", // Red Fort
+  "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1600&q=80", // Hampi
+  "https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&w=1600&q=80"  // Jaipur Fort
+];
+
+const IMAGE_FALLBACKS = [
+  "https://images.unsplash.com/photo-1505765050359-0101643d6e9d?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
+];
+
+let slideIdx = 0;
+let slideTimer = null;
+let squareIdx = 0;
+let squareTimer = null;
+
+/* ---------- small place metadata for images & info (used by PDF & display) ---------- */
+
+const PLACE_META = {
+
+"Taj Mahal": { image:"https://upload.wikimedia.org/wikipedia/commons/d/da/Taj-Mahal.jpg", info:"Agra monument" },
+"Agra Fort": { image:"https://upload.wikimedia.org/wikipedia/commons/9/9b/Agra_Fort_India.jpg", info:"Agra fort" },
+"Fatehpur Sikri": { image:"https://upload.wikimedia.org/wikipedia/commons/1/1b/Fatehpur_Sikri_Buland_Darwaza.jpg", info:"Historic city" },
+"Red Fort": { image:"https://upload.wikimedia.org/wikipedia/commons/0/0c/Red_Fort_in_Delhi_03-2016.jpg", info:"Delhi fort" },
+"Qutub Minar": { image:"https://upload.wikimedia.org/wikipedia/commons/e/e8/Qutb_Minar_2011.jpg", info:"Delhi minaret" },
+"India Gate": { image:"https://upload.wikimedia.org/wikipedia/commons/d/d1/India_Gate_in_New_Delhi_03-2016.jpg", info:"War memorial" },
+"Jama Masjid": { image:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Jama_Masjid_Delhi.jpg", info:"Delhi mosque" },
+"Lotus Temple": { image:"https://upload.wikimedia.org/wikipedia/commons/f/fc/Lotus_Delhi.jpg", info:"Delhi temple" },
+"Charminar": { image:"https://upload.wikimedia.org/wikipedia/commons/d/d1/Charminar-Pride_of_Hyderabad.jpg", info:"Hyderabad monument" },
+"Konark Sun Temple": { image:"https://upload.wikimedia.org/wikipedia/commons/4/47/Konark_Sun_Temple.jpg", info:"Odisha temple" },
+"Ajanta Caves": { image:"https://upload.wikimedia.org/wikipedia/commons/7/76/Ajanta_Caves.jpg", info:"Cave site Maharashtra" },
+"Ellora Caves": { image:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Kailasa_temple_Ellora.jpg", info:"Ellora caves" },
+"Gateway of India": { image:"https://upload.wikimedia.org/wikipedia/commons/4/4d/Gateway_of_India_Mumbai.jpg", info:"Mumbai monument" },
+"Mysore Palace": { image:"https://upload.wikimedia.org/wikipedia/commons/a/a4/Mysore_Palace_Front_View.jpg", info:"Karnataka palace" },
+"Hawa Mahal": { image:"https://upload.wikimedia.org/wikipedia/commons/9/9b/Hawa_Mahal_2011.jpg", info:"Jaipur palace" }
+
+};
+
+/* ---------- Auth with Firebase ---------- */
+let firebaseCurrentUser = null;
+
+// Listen for auth state changes
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    firebaseCurrentUser = user;
+    // Get user data from Firestore
+    const userData = await getUserFromFirestore(user.uid);
+    if (userData) {
+      window.user = {
+        uid: user.uid,
+        email: user.email,
+        name: userData.name || user.email.split('@')[0],
+        phone: userData.phone || ''
+      };
+      onLogin();
+    } else {
+      // Create new user in Firestore if not exists
+      await saveUserToFirestore(user.uid, {
+        email: user.email,
+        name: user.email.split('@')[0],
+        phone: ''
+      });
+      window.user = {
+        uid: user.uid,
+        email: user.email,
+        name: user.email.split('@')[0],
+        phone: ''
+      };
+      onLogin();
+    }
+  } else {
+    firebaseCurrentUser = null;
+    window.user = null;
+  }
+});
+
+function register(){
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const country = document.getElementById('regCountry').value;
+  const phoneRaw = document.getElementById('regPhone').value.trim();
+  const phoneOk = /^[0-9]{10}$/.test(phoneRaw);
+  if(!name||!email||!pass||!phoneRaw){ alert('Complete all fields'); return; }
+  if(!phoneOk){ alert('Phone must be exactly 10 digits'); return; }
+  if(pass.length < 6){ alert('Password must be at least 6 characters'); return; }
+  const phone = `${country} ${phoneRaw}`;
+  
+  // Show loading state
+  const btn = document.querySelector('#registerPage .primary');
+  const originalText = btn.textContent;
+  btn.textContent = 'Registering...';
+  btn.disabled = true;
+  
+  createUserWithEmailAndPassword(auth, email, pass)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      // Save user data to Firestore
+      await saveUserToFirestore(user.uid, {
+        email: email,
+        name: name,
+        phone: phone
+      });
+      window.user = { uid: user.uid, email, name, phone };
+      alert('Registration successful!');
+      onLogin();
+    })
+    .catch((error) => {
+      if (error.code === 'auth/email-already-in-use') {
+        alert('Email already registered');
+      } else {
+        alert('Registration failed: ' + error.message);
+      }
+    })
+    .finally(() => {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    });
+}
+
+function login(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if(!email||!pass){ alert('Please enter email and password'); return; }
+  
+  // Show loading state
+  const btn = document.querySelector('#loginPage .primary');
+  const originalText = btn.textContent;
+  btn.textContent = 'Logging in...';
+  btn.disabled = true;
+  
+  signInWithEmailAndPassword(auth, email, pass)
+    .then((userCredential) => {
+      // User logged in successfully - onAuthStateChanged will handle the rest
+    })
+    .catch((error) => {
+      if (error.code === 'auth/invalid-email' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        alert('Invalid email or password');
+      } else {
+        alert('Login failed: ' + error.message);
+      }
+    })
+    .finally(() => {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    });
+}
+
+function logout(){
+  signOut(auth).then(() => {
+    window.user = null;
+    firebaseCurrentUser = null;
+    window.isAdmin = false;
+    document.getElementById('navbar').style.display='none';
+    const adminBtn = document.getElementById('navAdminBtn');
+    if(adminBtn) adminBtn.style.display = 'none';
+    const adminBadge = document.getElementById('adminBadge');
+    if(adminBadge) adminBadge.style.display = 'none';
+    showPage('loginPage');
+  }).catch((error) => {
+    console.error('Logout error:', error);
+    alert('Logout failed: ' + error.message);
+  });
+}
+
+/* ---------- Navigation ---------- */
+function showPage(id){
+
+    if(id === "achievementPage"){
+   renderAchievements();
+}
+
+  if(id === "profilePage"){
+  renderProfile();
+}
+  if(id === "adminPage"){
+  renderAdminPage();
+}
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById(id);
+  if(!pg) return;
+  pg.classList.add('active');
+  if(id !== 'loginPage' && id !== 'registerPage'){
+    document.getElementById('navbar').style.display = 'flex';
+  }
+  if(id === 'homePage'){ startSlideshow(); startSquareSlideshow(); }
+  else { stopSlideshow(); stopSquareSlideshow(); }
+  renderAll();
+  if(typeof renderHotelBookings === 'function') renderHotelBookings();
+}
+
+/* ===== TRIP PHOTO FUNCTIONS ===== */
+
+function uploadTripPhotos(){
+
+  const input = document.getElementById("tripPhotoUpload");
+  if(!input || !input.files.length) return;
+
+  let photos = JSON.parse(localStorage.getItem("tripPhotos") || "[]");
+
+  Array.from(input.files).forEach(file=>{
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+      photos.push(e.target.result);
+      localStorage.setItem("tripPhotos", JSON.stringify(photos));
+      renderTripPhotos();
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+}
+
+function renderTripPhotos(){
+
+  const gallery = document.getElementById("tripGallery");
+  if(!gallery) return;
+
+  const photos = JSON.parse(localStorage.getItem("tripPhotos") || "[]");
+
+  if(!photos.length){
+    gallery.innerHTML = "<div class='small-muted'>No trip photos uploaded yet.</div>";
+    return;
+  }
+
+  gallery.innerHTML = photos.map(p =>
+    `<img src="${p}" style="width:120px;height:120px;object-fit:cover;border-radius:10px">`
+  ).join("");
+
+}
+
+
+
+/* ===== ACHIEVEMENTS SYSTEM (UPGRADED) ===== */
+
+    function renderAchievements(){
+
+  const el = document.getElementById("achievementList");
+  if(!el) return;
+
+  const journeys = getJourney();
+  const trips = journeys.length;
+  const photos = JSON.parse(localStorage.getItem("tripPhotos") || "[]").length;
+
+  const today = new Date().toISOString().slice(0,10);
+  const visited = journeys.filter(j => j.arrive && j.arrive <= today).length;
+
+  let list = [];
+
+  /* EASY */
+  if(trips >= 1) list.push({icon:"🟢", text:"First Trip Planned", cls:"ach-easy"});
+  if(photos >= 5) list.push({icon:"📸", text:"5 Photos Uploaded", cls:"ach-easy"});
+  if(visited >= 3) list.push({icon:"📍", text:"3 Places Visited", cls:"ach-easy"});
+
+  /* MEDIUM */
+  if(trips >= 3) list.push({icon:"🟡", text:"3 Trips Planned", cls:"ach-medium"});
+  if(photos >= 10) list.push({icon:"📸", text:"10 Photos Uploaded", cls:"ach-medium"});
+  if(visited >= 5) list.push({icon:"📍", text:"5 Places Visited", cls:"ach-medium"});
+
+  /* HARD */
+  if(trips >= 7) list.push({icon:"🔴", text:"7 Trips Planned", cls:"ach-hard"});
+  if(photos >= 20) list.push({icon:"📸", text:"20 Photos Uploaded", cls:"ach-hard"});
+  if(visited >= 10) list.push({icon:"📍", text:"10 Places Visited", cls:"ach-hard"});
+
+  /* SPECIAL */
+  if(trips >= 3 && photos >= 10 && visited >= 5){
+    list.push({icon:"💎", text:"Travel Enthusiast", cls:"ach-special"});
+  }
+
+  if(list.length === 0){
+    el.innerHTML = "<div class='small-muted'>Start planning trips to unlock achievements!</div>";
+    return;
+  }
+
+  el.innerHTML = list.map(a => `
+    <div class="achievement-card ${a.cls}">
+      <div class="ach-icon">${a.icon}</div>
+      <div>${a.text}</div>
+    </div>
+  `).join("");
+
+}
+
+
+
+/* ---------- After login setup ---------- */
+async function onLogin(){
+  document.getElementById('navbar').style.display='flex';
+  showPage('homePage');
+  await loadAdminStatus();
+  await syncUserDataFromDb();
+  renderAll();
+}
+
+/* ---------- Slideshow (hero) ---------- */
+function startSlideshow(){
+  const img = document.getElementById('slideImg');
+  if(slideTimer) return;
+  if(img){ img.src = slides[slideIdx]; }
+  slideTimer = setInterval(()=>{
+    slideIdx = (slideIdx+1)%slides.length;
+    const img = document.getElementById('slideImg');
+    if(!img) return;
+    img.style.opacity = 0;
+    setTimeout(()=>{ img.src = slides[slideIdx]; img.style.opacity=1; }, 400);
+  }, 4200);
+}
+function stopSlideshow(){ clearInterval(slideTimer); slideTimer = null }
+
+/* ---------- Square slideshow (new) ---------- */
+function startSquareSlideshow(){
+  const img = document.getElementById('squareSlideImg');
+  if(!img) return;
+  if(squareTimer) return;
+  img.src = slides[squareIdx];
+  document.getElementById('squareCaption').textContent = captionFor(slides[squareIdx]);
+  squareTimer = setInterval(()=>{ nextSquare(); }, 4200);
+  const btn = document.getElementById('squarePlayBtn'); if(btn) btn.textContent = 'Pause';
+}
+function stopSquareSlideshow(){
+  clearInterval(squareTimer); squareTimer = null;
+  const btn = document.getElementById('squarePlayBtn'); if(btn) btn.textContent = 'Play';
+}
+function nextSquare(){
+  squareIdx = (squareIdx + 1) % slides.length;
+  const img = document.getElementById('squareSlideImg'); if(!img) return;
+  img.style.opacity = 0;
+  setTimeout(()=>{ img.src = slides[squareIdx]; img.style.opacity = 1; document.getElementById('squareCaption').textContent = captionFor(slides[squareIdx]); }, 200);
+}
+function prevSquare(){
+  squareIdx = (squareIdx - 1 + slides.length) % slides.length;
+  const img = document.getElementById('squareSlideImg'); if(!img) return;
+  img.style.opacity = 0;
+  setTimeout(()=>{ img.src = slides[squareIdx]; img.style.opacity = 1; document.getElementById('squareCaption').textContent = captionFor(slides[squareIdx]); }, 200);
+}
+function toggleSquareSlideshow(){
+  if(squareTimer) stopSquareSlideshow(); else startSquareSlideshow();
+}
+function captionFor(src){
+  if(src.includes('1505765050359')) return 'Taj Mahal and nearby heritage';
+  if(src.includes('1526778548025')) return 'Historic forts and monuments';
+  if(src.includes('1467269204594')) return 'Ancient monuments & ruins';
+  return 'Explore historical places with curated itineraries';
+}
+
+/* ---------- Dark mode ---------- */
+function toggleDarkMode(){ document.body.classList.toggle('dark'); }
+
+/* ---------- Image fallback for broken URLs ---------- */
+function applyImageFallbacks(root = document){
+  const imgs = root.querySelectorAll('img');
+  imgs.forEach(img => {
+    if(img.dataset.fallbackBound) return;
+    img.dataset.fallbackBound = '1';
+    if(!img.loading) img.loading = 'lazy';
+    img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';
+    img.addEventListener('error', () => {
+      if(img.dataset.fallbackTried) return;
+      img.dataset.fallbackTried = '1';
+      const next = IMAGE_FALLBACKS[Math.floor(Math.random()*IMAGE_FALLBACKS.length)];
+      img.src = next;
+    }, { once: true });
+  });
+}
+
+/* ---------- Small fix: renderProfile points to existing elements ---------- */
+function renderProfile(){
+  const p = window.user || {name:'Guest', email:'', phone:'', photo:''};
+  const nameEl = document.getElementById('profileName');
+  const emailEl = document.getElementById('profileEmail');
+  const phoneEl = document.getElementById('profilePhone');
+  const photoEl = document.getElementById('profilePhoto');
+  if(nameEl) nameEl.textContent = p.name || p.email || 'User Name';
+  if(emailEl) emailEl.textContent = p.email || 'user@example.com';
+  if(phoneEl) phoneEl.textContent = p.phone || 'Not set';
+  if(photoEl && p.photo) photoEl.src = p.photo;
+
+  renderTripPhotos();
+
+
+
+  const tripsEl = document.getElementById('profileTrips');
+  if(tripsEl) tripsEl.textContent = `Trips Planned: ${getJourney().length}`;
+  const visitedEl = document.getElementById('visitedList');
+  const willVisitEl = document.getElementById('willVisitList');
+  const journeys = getJourney();
+  const today = new Date().toISOString().slice(0,10);
+  const visited = journeys.filter(j => j.arrive && j.arrive <= today).map(j=>j.place).slice(0,10);
+  const will = journeys.filter(j => j.arrive && j.arrive > today).map(j=>j.place).slice(0,10);
+  if(visitedEl) visitedEl.innerHTML = visited.length ? visited.map(v=>`<div>${escapeHtml(v)}</div>`).join('') : '<span class="small-muted">No visited places saved.</span>';
+  if(willVisitEl) willVisitEl.innerHTML = will.length ? will.map(v=>`<div>${escapeHtml(v)}</div>`).join('') : '<span class="small-muted">No planned visits yet.</span>';
+}
+
+
+/* ---------- Renders the live dashboard preview on home page if present ---------- */
+function renderDashboardPreview(){
+  const preview = document.getElementById('dashboardPreviewCard');
+  if(!preview) return;
+  const user = window.user || {name:'Guest', email:''};
+  const dpAvatar = document.getElementById('dpAvatar');
+  const dpName = document.getElementById('dpName');
+  const dpEmail = document.getElementById('dpEmail');
+  const dpTrips = document.getElementById('dpTrips');
+  const dpVisited = document.getElementById('dpVisited');
+  const dpUpcoming = document.getElementById('dpUpcoming');
+
+  const journeys = getJourney();
+  const trips = journeys.length;
+  const today = new Date().toISOString().slice(0,10);
+  const visited = journeys.filter(j => j.arrive && j.arrive <= today).length;
+  const upcoming = journeys.filter(j => j.arrive && j.arrive > today).length;
+
+  const initials = (user.name || user.email || 'U').split(/\s+/).map(s=>s[0]).slice(0,2).join('').toUpperCase();
+  if(dpAvatar) dpAvatar.textContent = initials || 'U';
+  if(dpName) dpName.textContent = user.name || (user.email || 'Guest');
+  if(dpEmail) dpEmail.textContent = user.email || '';
+  if(dpTrips) dpTrips.textContent = `Trips: ${trips}`;
+  if(dpVisited) dpVisited.textContent = `Visited: ${visited}`;
+  if(dpUpcoming) dpUpcoming.textContent = `Upcoming: ${upcoming}`;
+}
+
+/* ---------- Chatbot: improved simple assistant (used by both floating and page chat) ---------- */
+const placeCity = {
+  "Taj Mahal":"Agra",
+  "Red Fort":"Delhi",
+  "Qutub Minar":"Delhi",
+  "Hampi":"Hampi"
+};
+
+function recommendTravel(destCity){
+  destCity = (destCity||'').trim();
+  if(!destCity){
+    return "Tell me which place or city you want to travel to (e.g., 'Best travel option to Agra').";
+  }
+  return `Best travel options to **${destCity}**: **Train** for budget, **Bus** for short trips, **Flight** for fastest. If you share your origin city in the message, I can tailor this more.`;
+}
+
+const canned = [
+  {q:/how to use (this )?website|how to use (this )?site|use this website/i,
+   a:"Go to **Create Journey** to add trips, hotels, dates and notes. Use **Hotels** to book rooms. **AI Planner** helps with budget ideas. **Profile** stores your details. **Chatbot** answers travel questions."},
+
+  {q:/who is owner|who is the owner|owner of (this )?website|who made this website|co founder/i,
+   a:"The website owner/co-founder is **Darshana Khane**."},
+
+  {q:/best places.*summer|where go in summer|summer place/i,
+   a:"Best summer places: **Manali, Shimla, Ladakh, Kashmir, Ooty**."},
+
+  {q:/best places.*winter|where go in winter|winter place/i,
+   a:"Best winter places: **Manali (snow), Kashmir, Auli, Shimla**."},
+
+  {q:/best places.*rainy|monsoon place|rainy season/i,
+   a:"Best rainy/monsoon places: **Lonavala, Malshej Ghat, Mahabaleshwar, Coorg**."},
+
+  {q:/how (is )?this website useful|how useful is this website|why use this website/i,
+   a:"It helps you **plan trips, manage budget, book hotels, track visits, and generate itineraries** in one place."},
+
+  {q:/is this website helpful|is this website useful/i,
+   a:"Yes. It saves time by combining **planning, bookings, budget tracking, and trip notes** in one dashboard."},
+
+  {q:/best place to visit in (january|february|march|april|may|june|july|august|september|october|november|december)/i,
+   a:"Tell me the month (e.g., 'Best place to visit in March'), and I'll suggest places from the monthly list."},
+
+  {q:/trek|trekking|trek places/i,
+   a:"Popular trekking places include **Manali, Kedarnath trek, Lonavala trails, Himachal routes**."},
+
+  {q:/near mumbai|places near mumbai/i,
+   a:"Near Mumbai you can visit **Lonavala, Alibaug, Matheran, Mahabaleshwar, Igatpuri**."},
+
+  {q:/budget for .* days/i,
+   a:"For a 2-3 day trip, budget ?5000??15000 per person** depending on travel and hotel type."},
+
+  {q:/camping|where camping/i,
+   a:"Good camping places: **Rishikesh riverside, Manali camps, Pawna Lake (near Pune)**."},
+
+  {q:/my bookings|previous booking|last booking|my hotel|hotel booking history|booking status/i,
+   a:"Let me check your bookings..."},
+
+  {q:/my trips|previous trip|last trip|journey history|past journey/i,
+   a:"Let me check your journeys..."}
+];
+
+const placeSeasons = {
+ "manali":"Best visited Oct to Feb for snow, or Apr to Jun for pleasant weather.",
+ "goa":"Best Nov to Feb for beaches and festivals.",
+ "kashmir":"Best Mar to Oct for valley views, Dec-Jan for snow.",
+ "lonavala":"Best Jun to Sep for waterfalls and greenery."
+};
+
+function sendChat(source){
+  try{
+    const inputEl = (source === 'page') ? document.getElementById('chatInputPage') : document.getElementById('chatInput');
+    if(!inputEl) return;
+    const text = inputEl.value.trim();
+    if(!text) return;
+    appendChat(source, 'user', text);
+    inputEl.value = '';
+    const tl = text.toLowerCase();
+
+    // basic FAQ patterns
+    if(/what (is|does) (this|this site|this website)|what are you|what is this site/i.test(text)){
+      setTimeout(()=> appendChat(source,'bot', `This is an AI Tour Guide demo website ? it helps you plan journeys to historical places, create itineraries, manage budget and schedule visits. Ask me "Where should I visit today?" or ask "Best travel option to Agra".`), 400);
+      return;
+    }
+
+    if(/where.*visit.*today|visit.*today|what.*visit.*today/i.test(text)){
+      const knownPlaces = Object.keys(placeCity);
+      for(const p of knownPlaces){
+        if(tl.includes(p.toLowerCase()) || tl.includes(placeCity[p].toLowerCase())){
+          setTimeout(()=> appendChat(source,'bot', `If you're thinking about visiting **${p}** in ${placeCity[p]} today: morning visits avoid the crowd. Check opening hours and book tickets where applicable.`), 450);
+          return;
+        }
+      }
+      const weekday = new Date().getDay();
+      let place;
+      if(weekday===0 || weekday===6) place = "Taj Mahal";
+      else place = (Math.random()>0.5) ? "Red Fort" : "Qutub Minar";
+      setTimeout(()=> appendChat(source,'bot', `Suggestion for today: ${place} (${placeCity[place]}). If you want travel advice, ask "Best travel option to ${place}" and include your origin city in the message.`), 450);
+      return;
+    }
+
+    const travelMatch = text.match(/best (travel|way|option) (to|for) (.+)/i) || text.match(/(travel|go) to (.+) (best|how)/i) || text.match(/how to (reach|get to) (.+)/i);
+    if(travelMatch){
+      let destRaw = travelMatch[3] || travelMatch[2] || '';
+      destRaw = destRaw.replace(/\?$/,'').trim();
+      let destCity = destRaw;
+      for(const p of Object.keys(placeCity)){
+        if(destRaw.toLowerCase().includes(p.toLowerCase()) || destRaw.toLowerCase().includes(placeCity[p].toLowerCase())){
+          destCity = placeCity[p];
+          break;
+        }
+      }
+      const rec = recommendTravel(destCity);
+      setTimeout(()=> appendChat(source,'bot', rec), 450);
+      return;
+    }
+
+    const monthMatch = text.match(/best place to visit in (january|february|march|april|may|june|july|august|september|october|november|december)/i);
+    if(monthMatch){
+      const m = monthMatch[1];
+      const month = m.charAt(0).toUpperCase() + m.slice(1).toLowerCase();
+      if(typeof window.MONTH_DESTINATIONS === 'object' && window.MONTH_DESTINATIONS[month]){
+        const places = window.MONTH_DESTINATIONS[month].map(p => p.name).slice(0,5);
+        setTimeout(()=> appendChat(source,'bot', `Best places in **${month}**: ${places.join(", ")}.`), 450);
+      } else {
+        setTimeout(()=> appendChat(source,'bot', `Tell me the month and I'll suggest places. Example: "Best place to visit in March".`), 450);
+      }
+      return;
+    }
+
+    if(/from .* to .*|how to (reach|get to)/i.test(text) && /km|kilom/i.test(text)){
+      let guessedDest = '';
+      for(const p of Object.keys(placeCity)){
+        if(text.toLowerCase().includes(p.toLowerCase())){
+          guessedDest = placeCity[p]; break;
+        }
+      }
+      const rec = recommendTravel(guessedDest || '');
+      setTimeout(()=> appendChat(source,'bot', rec), 450);
+      return;
+    }
+
+    for(const c of canned){
+      if(c.q.test(text)){
+        if(/my bookings|previous booking|last booking|my hotel|hotel booking history|booking status/i.test(text)){
+          const bookings = getBookings();
+          if(!bookings.length){
+            setTimeout(()=> appendChat(source,'bot', "You have no bookings yet."), 450);
+            return;
+          }
+          const last = bookings.slice().sort((a,b)=>{
+            const ad = new Date(a.createdAt || a.paidAt || 0).getTime();
+            const bd = new Date(b.createdAt || b.paidAt || 0).getTime();
+            return bd - ad;
+          })[0] || bookings[0];
+          const status = (last.paymentStatus || 'pending').toUpperCase();
+          setTimeout(()=> appendChat(source,'bot', `Your latest booking: **${last.hotelName || 'Hotel'}** (${last.place || ''}). Total: ?${last.total || 0}. Status: **${status}**.`), 450);
+          return;
+        }
+        if(/my trips|previous trip|last trip|journey history|past journey/i.test(text)){
+          const journeys = getJourney();
+          if(!journeys.length){
+            setTimeout(()=> appendChat(source,'bot', "You have no journeys yet."), 450);
+            return;
+          }
+          const last = journeys.slice().sort((a,b)=>{
+            const ad = new Date(a.createdAt || a.arrive || 0).getTime();
+            const bd = new Date(b.createdAt || b.arrive || 0).getTime();
+            return bd - ad;
+          })[0] || journeys[journeys.length-1];
+          setTimeout(()=> appendChat(source,'bot', `Your latest journey: **${last.place || 'Trip'}** on ${last.arrive || 'date not set'}. Hotel: ${last.hotel || 'not set'}.`), 450);
+          return;
+        }
+        setTimeout(()=> appendChat(source,'bot', c.a), 450);
+        return;
+      }
+    }
+
+    for(const place in placeSeasons){
+      if(tl.includes(place)){
+        setTimeout(()=> appendChat(source,'bot', placeSeasons[place]), 450);
+        return;
+      }
+    }
+
+    setTimeout(()=> appendChat(source,'bot', "Sorry ? I don't know that exactly yet. Try: 'Where should I visit today?', 'Best travel option to Agra', or ask a budget/hotel question. You can include your origin city in the message for a tailored answer."), 450);
+  }catch(e){
+    console.error('Chatbot error:', e);
+    setTimeout(()=> appendChat(source,'bot', "Sorry ? something went wrong. Please try again."), 200);
+  }
+}
+function appendChat(source, who, text){
+  const area = (source === 'page') ? document.getElementById('chatAreaPage') : document.getElementById('chatArea');
+  if(!area) return;
+  const div = document.createElement('div');
+  div.className = 'msg ' + (who==='user' ? 'user' : 'bot');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  div.appendChild(bubble);
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+/* Provide a function to open Chat Page (used by home hero button) */
+function showChatPage(){
+  showPage('chatPage');
+  // add a starter greeting if empty
+  const area = document.getElementById('chatAreaPage');
+  if(area && area.children.length === 0){
+    setTimeout(()=> appendChat('page','bot', "Hello! I'm your AI travel assistant. Ask me about places, travel options, hotels, budgets or 'Where should I visit today?'. Include your origin city in the message for tailored suggestions."), 300);
+  }
+}
+
+/* Floating chat toggle (kept as fallback) */
+function toggleChatbot(){
+  const b = document.getElementById('chatbotBox');
+  b.style.display = (b.style.display==='block')? 'none' : 'block';
+}
+
+/* ---------- Journey storage & UI ---------- */
+function getJourney(){ return JSON.parse(localStorage.getItem('atg_journey')||'[]'); }
+function saveJourney(arr){ localStorage.setItem('atg_journey', JSON.stringify(arr)); }
+
+async function syncUserDataFromDb(){
+  if(!auth.currentUser) return;
+  try{
+    const [journeysRes, bookingsRes] = await Promise.all([
+      apiFetch('/api/journeys'),
+      apiFetch('/api/bookings')
+    ]);
+    if(Array.isArray(journeysRes.journeys)) saveJourney(journeysRes.journeys);
+    if(Array.isArray(bookingsRes.bookings)) localStorage.setItem('atg_bookings', JSON.stringify(bookingsRes.bookings));
+  }catch(e){
+    console.error('Sync error:', e);
+  }
+}
+
+async function loadAdminStatus(){
+  if(!auth.currentUser && !firebaseCurrentUser){
+    setTimeout(loadAdminStatus, 600);
+    return;
+  }
+  try{
+    const me = await apiFetch('/api/auth/me');
+    window.isAdmin = !!me.isAdmin;
+    const adminBtn = document.getElementById('navAdminBtn');
+    if(adminBtn) adminBtn.style.display = window.isAdmin ? 'inline-flex' : 'none';
+    const adminBadge = document.getElementById('adminBadge');
+    if(adminBadge) adminBadge.style.display = window.isAdmin ? 'inline-flex' : 'none';
+  }catch(e){
+    console.error('Admin status error:', e);
+  }
+}
+
+async function addToJourney(){
+  const place = document.getElementById('placeSelect').value;
+  const arrive = document.getElementById('arrive').value;
+  const hotel = document.getElementById('hotelName').value.trim();
+  const nights = Number(document.getElementById('nights').value || 1);
+  const price = Number(document.getElementById('hotelPrice').value || 0);
+  const travelMode = document.getElementById('travelMode').value;
+  const notes = document.getElementById('journeyNotes').value.trim();
+  if(!hotel){ alert('Enter a hotel name'); return; }
+  const arr = getJourney();
+  const item = {id:`local-${Date.now()}`, place, arrive, hotel, nights, price, travelMode, notes};
+  arr.push(item);
+  saveJourney(arr);
+  renderJourney();
+  updateBudgetFromData();
+  renderProfile(); // update dashboard lists
+  renderDashboardPreview(); // update preview (if present)
+  alert('Added to journey');
+  try{
+    await apiFetch('/api/journeys', {
+      method: 'POST',
+      body: JSON.stringify({ place, arrive, hotel, nights, price, travelMode, notes })
+    });
+    await syncUserDataFromDb();
+    renderAll();
+  }catch(e){
+    console.error('Journey save error:', e);
+  }
+}
+
+function renderJourney(){
+  const list = getJourney();
+  const container = document.getElementById('journeyList');
+  if(!container) return;
+  container.innerHTML = '';
+  if(list.length===0){ container.innerHTML = '<div class="small-muted">No items yet.</div>'; return; }
+  list.forEach(it=>{
+    const d = document.createElement('div');
+    d.className = 'card';
+    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'—'}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | ₹${it.price}</div></div>`;
+    const notesHtml = it.notes ? `<div style="margin-top:8px"><strong>Notes:</strong> <span class="small-muted">${escapeHtml(it.notes)}</span></div>` : '';
+    const pm = PLACE_META[it.place];
+    const imgHtml = pm ? `<div style="display:flex;gap:10px;margin-top:8px"><img src="${pm.image}" alt="${it.place}" style="width:120px;height:80px;border-radius:8px;object-fit:cover"><div style="flex:1"><strong>${it.place}</strong><div class="small-muted">${pm.info}</div></div></div>` : `<strong>${it.place}</strong>`;
+    const idSafe = String(it.id).replace(/'/g, "\\'");
+    d.innerHTML = `${imgHtml}${metaHtml}<div style="margin-top:8px"><strong>Hotel:</strong> ${it.hotel}</div>${notesHtml}
+      <div style="margin-top:8px"><button onclick="removeJourney('${idSafe}')">Remove</button></div>`;
+    container.appendChild(d);
+  });
+  applyImageFallbacks(container);
+}
+
+async function removeJourney(id){
+  const arr = getJourney().filter(x=>String(x.id)!==String(id));
+  saveJourney(arr); renderJourney(); updateBudgetFromData(); renderProfile(); renderDashboardPreview();
+  if(String(id).startsWith('local-')) return;
+  try{
+    await apiFetch(`/api/journeys/${id}`, { method: 'DELETE' });
+    await syncUserDataFromDb();
+    renderAll();
+  }catch(e){
+    console.error('Remove journey error:', e);
+  }
+}
+
+async function clearJourney(){
+  if(!confirm('Clear all journey items?')) return;
+  const items = getJourney();
+  saveJourney([]); renderJourney(); updateBudgetFromData(); renderProfile(); renderDashboardPreview();
+  try{
+    await Promise.all(items.filter(i=>!String(i.id).startsWith('local-')).map(i =>
+      apiFetch(`/api/journeys/${i.id}`, { method: 'DELETE' })
+    ));
+    await syncUserDataFromDb();
+    renderAll();
+  }catch(e){
+    console.error('Clear journey error:', e);
+  }
+}
+
+function loadSample(){
+  const sample = [
+    {id:1,place:'Taj Mahal',arrive:'2026-01-15',hotel:'Hotel Tajview',nights:2,price:6000,travelMode:'Train',notes:'Request early check-in if possible.'},
+    {id:2,place:'Agra Fort',arrive:'2026-01-17',hotel:'Fort Stay',nights:1,price:2200,travelMode:'Car',notes:'Guide recommended for the fort.'}
+  ];
+  saveJourney(sample); renderJourney(); updateBudgetFromData(); renderProfile(); renderDashboardPreview();
+}
+
+
+
+
+/* ===== FAKE PAYMENT SYSTEM ===== */
+
+async function ensureRazorpay(){
+  if(window.Razorpay) return true;
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    s.onload = () => resolve(true);
+    s.onerror = () => reject(new Error('Razorpay failed to load'));
+    document.head.appendChild(s);
+  });
+}
+
+async function createBookingAndPay(payload){
+  try{
+    const bookingRes = await apiFetch('/api/bookings', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const bookingId = bookingRes.bookingId;
+    window.currentBookingId = bookingId;
+    const bookings = getBookings();
+    bookings.unshift({ id: bookingId, ...payload, paymentStatus: 'pending' });
+    localStorage.setItem('atg_bookings', JSON.stringify(bookings));
+    renderHotelBookings();
+    if(USE_FAKE_PAYMENT){
+      window.selectedBooking = payload;
+      openFakePayment();
+    } else {
+      await startRazorpayCheckout(bookingId, payload);
+    }
+  }catch(e){
+    console.error('Booking creation error:', e);
+    alert('Booking failed: ' + e.message);
+  }
+}
+
+async function startRazorpayCheckout(bookingId, payload){
+  await ensureRazorpay();
+  const keyData = await apiFetch('/api/payments/razorpay/key');
+  const order = await apiFetch('/api/payments/razorpay/order', {
+    method: 'POST',
+    body: JSON.stringify({ bookingId })
+  });
+
+  const options = {
+    key: keyData.keyId,
+    amount: order.amount,
+    currency: order.currency || 'INR',
+    name: 'AI Tour Guide',
+    description: `Hotel Booking - ${payload.hotelName}`,
+    order_id: order.orderId,
+    handler: async function (response){
+      try{
+        await apiFetch('/api/payments/razorpay/verify', {
+          method: 'POST',
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            bookingId
+          })
+        });
+        alert('Payment successful!');
+        await syncUserDataFromDb();
+        renderAll();
+      }catch(e){
+        console.error('Payment verify error:', e);
+        alert('Payment verification failed: ' + e.message);
+      }
+    },
+    theme: { color: '#0f766e' }
+  };
+  const rzp = new Razorpay(options);
+  rzp.on('payment.failed', function () {
+    alert('Payment failed or cancelled.');
+  });
+  rzp.open();
+}
+
+function openFakePayment(){
+  const box = document.getElementById("fakePaymentBox");
+  if(box) box.style.display="flex";
+}
+
+function closeFakePayment(){
+  const box = document.getElementById("fakePaymentBox");
+  if(box) box.style.display="none";
+}
+
+function completeFakePayment(){
+  closeFakePayment();
+
+  const b = window.selectedBooking || {
+    hotelName: "Hotel Demo",
+    place: "Demo Place",
+    city: "Demo Address, India",
+    type: "normal",
+    typeLabel: "Selected Room",
+    days: 1,
+    rooms: 1,
+    perDay: 0,
+    total: Number(window.selectedTotal || 0)
+  };
+
+  const bookingId = window.currentBookingId;
+  if(bookingId){
+    apiFetch(`/api/bookings/${bookingId}/mark-paid`, { method:'POST' })
+      .then(async ()=>{
+        await syncUserDataFromDb();
+        renderAll();
+      })
+      .catch(e=>console.error('Mark paid error:', e));
+  }
+
+  if(typeof downloadReceiptPDF === 'function'){
+    downloadReceiptPDF({ hotel: b.hotelName, place: b.place, type: b.typeLabel, days: b.days, total: b.total });
+  }
+
+  alert("Payment Successful!");
+}
+
+
+
+function openReceipt(data){
+  const box = document.getElementById("receiptBox");
+  const content = document.getElementById("receiptContent");
+
+  content.innerHTML = `
+    <p><b>Hotel:</b> ${data.hotel}</p>
+    <p><b>Place:</b> ${data.place}</p>
+    <p><b>Room Type:</b> ${data.type}</p>
+    <p><b>Days:</b> ${data.days}</p>
+    <p><b>Total Paid:</b> ₹${data.total}</p>
+    <p><b>Date:</b> ${new Date().toLocaleString()}</p>
+  `;
+
+  box.style.display = "flex";
+}
+
+function closeReceipt(){
+  document.getElementById("receiptBox").style.display="none";
+}
+
+
+
+
+
+/* ---------- Budget ---------- */
+function setBudget(){
+  const v = Number(document.getElementById('totalBudget').value || 0);
+  if(v <= 0){ alert('Enter a valid budget > 0'); return; }
+  localStorage.setItem('atg_budget_total', v);
+  renderBudget();
+  alert('Budget set');
+}
+
+function renderBudget(){
+  const total = Number(localStorage.getItem('atg_budget_total')||0);
+  const journey = getJourney();
+  const expenses = journey.reduce((s,x)=>s + (Number(x.price)||0), 0);
+  const totalNights = journey.reduce((s,x)=>s + (Number(x.nights)||0),0);
+  const itineraryObj = getItinerary();
+  const itineraryDays = (Object.keys(itineraryObj).length) ? Math.max(...Object.keys(itineraryObj).map(Number)) : 0;
+  let tripDays = totalNights || itineraryDays || Math.max(1, Math.ceil(journey.length || 1));
+  tripDays = Math.max(1, tripDays);
+  const estimateOtherPerDay = 1500;
+  const estimateOther = tripDays * estimateOtherPerDay;
+  const remaining = total ? (total - expenses) : null;
+  const perDayAvailable = (remaining !== null) ? Math.floor(remaining / tripDays) : null;
+  const remainingAfterOther = (remaining !== null) ? (remaining - estimateOther) : null;
+  const statusEl = document.getElementById('budgetStatus');
+  const adviceEl = document.getElementById('budgetAdvice');
+  if(!statusEl || !adviceEl) return;
+  if(!total){
+    statusEl.textContent = 'Remaining: - (set a total budget above)';
+    adviceEl.innerHTML = `<div>Please set your total trip budget to receive tailored advice.</div>`;
+    return;
+  }
+  statusEl.textContent = `Remaining after hotel expenses: ₹${remaining} (spent on hotels: ₹${expenses}) — Trip days: ${tripDays}`;
+  const alloc = {
+    food: Math.round((perDayAvailable || 0) * 0.30),
+    transport: Math.round((perDayAvailable || 0) * 0.25),
+    attractions: Math.round((perDayAvailable || 0) * 0.20),
+    misc: Math.round((perDayAvailable || 0) * 0.25)
+  };
+  let advice = `<div><strong>Estimated other expenses (baseline):</strong> ₹${estimateOther} (₹${estimateOtherPerDay}/day × ${tripDays} days)</div>`;
+  advice += `<div style="margin-top:6px"><strong>Approx. daily available for "other" (food/transport/attractions):</strong> ₹${perDayAvailable} / day</div>`;
+  advice += `<div style="margin-top:8px"><strong>Suggested allocation per day:</strong><div class="small-muted">Food: ₹${alloc.food} • Transport: ₹${alloc.transport} • Attractions: ₹${alloc.attractions} • Misc: ₹${alloc.misc}</div></div>`;
+  if(remainingAfterOther < 0){
+    advice += `<div style="margin-top:8px;color:#991b1b"><strong>Warning:</strong> your budget is insufficient by ₹${Math.abs(remainingAfterOther)} to cover the baseline daily expenses. Suggestions:</div>`;
+    advice += `<ul style="margin-top:6px">
+      <li>Reduce hotel costs — choose cheaper hotels or fewer nights (save ~₹2000–₹5000 depending on hotel).</li>
+      <li>Cut daily spends: reduce dining or skip paid attractions to save ₹${Math.abs(remainingAfterOther)}.</li>
+      <li>Increase total budget if possible.</li>
+      <li>Book shared transport or economy options.</li>
+    </ul>`;
+  } else {
+    advice += `<div style="margin-top:8px;color:#065f46"><strong>Good:</strong> you have an estimated surplus of ₹${remainingAfterOther} after baseline daily costs. Consider allocating extra to souvenirs or a nicer hotel one night.</div>`;
+  }
+  const hotelSharePct = total ? Math.round((expenses/total)*100) : 0;
+  advice += `<div style="margin-top:8px" class="small-muted">Hotel costs are ~${hotelSharePct}% of your total budget.</div>`;
+  adviceEl.innerHTML = advice;
+}
+
+function updateBudgetFromData(){ renderBudget(); }
+
+/* ---------- Time manager (visits) ---------- */
+function addVisit(){
+  const place = document.getElementById('visitPlace').value.trim() || 'Place';
+  const dt = document.getElementById('visitDT').value;
+  const dur = Number(document.getElementById('visitDur').value || 60);
+  if(!dt){ alert('Choose date & time'); return; }
+  const visits = JSON.parse(localStorage.getItem('atg_visits')||'[]');
+  const start = new Date(dt);
+  const end = new Date(start.getTime() + dur*60000);
+  const overlap = visits.some(v=>{
+    const s = new Date(v.start); const e = new Date(s.getTime() + v.duration*60000);
+    return (start < e && end > s);
+  });
+  if(overlap && !confirm('This visit overlaps existing one. Add anyway?')) return;
+  visits.push({id:Date.now(),place,start: start.toISOString(),duration:dur});
+  localStorage.setItem('atg_visits', JSON.stringify(visits));
+  renderVisits();
+  renderProfile();
+  renderDashboardPreview();
+}
+
+function renderVisits(){
+  const visits = JSON.parse(localStorage.getItem('atg_visits')||'[]');
+  const el = document.getElementById('visitList');
+  if(!el) return;
+  if(!visits.length){ el.textContent = 'No visits yet.'; return; }
+  visits.sort((a,b)=> new Date(a.start)-new Date(b.start));
+  el.innerHTML = visits.map(v => {
+    const sd = new Date(v.start);
+    return `<div style="margin-bottom:8px"><strong>${v.place}</strong> — ${sd.toLocaleString()} for ${v.duration} mins</div>`;
+  }).join('');
+}
+
+/* ---------- Daily Itinerary (new) ---------- */
+function getItinerary(){ return JSON.parse(localStorage.getItem('atg_itinerary')||'{}'); }
+function saveItinerary(obj){ localStorage.setItem('atg_itinerary', JSON.stringify(obj)); }
+
+function addItinerary(){
+  const day = Number(document.getElementById('itDay').value || 1);
+  const act = document.getElementById('itActivity').value.trim();
+  if(!act){ alert('Enter an activity'); return; }
+  const obj = getItinerary();
+  if(!obj[day]) obj[day] = [];
+  obj[day].push({id:Date.now(), activity: act});
+  saveItinerary(obj);
+  document.getElementById('itActivity').value = '';
+  renderItinerary();
+  renderProfile();
+  renderDashboardPreview();
+}
+
+function renderItinerary(){
+  const obj = getItinerary();
+  const container = document.getElementById('itineraryContainer');
+  container.innerHTML = '';
+  if(Object.keys(obj).length===0){ container.innerHTML = '<div class="small-muted">No itinerary days yet.</div>'; return; }
+  Object.keys(obj).sort((a,b)=>a-b).forEach(day=>{
+    const activities = obj[day];
+    const div = document.createElement('div');
+    div.className = 'itinerary-day';
+    div.innerHTML = `<strong>Day ${day}</strong><div style="margin-top:8px">${activities.map(a=>`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><div>${escapeHtml(a.activity)}</div><div><button onclick="removeIt(${day},${a.id})" class="mini">Remove</button></div></div>`).join('')}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function removeIt(day,id){
+  const obj = getItinerary();
+  if(!obj[day]) return;
+  obj[day] = obj[day].filter(a=>a.id !== id);
+  if(obj[day].length===0) delete obj[day];
+  saveItinerary(obj);
+  renderItinerary();
+  renderProfile();
+  renderDashboardPreview();
+}
+
+function exportItinerary(){
+  const data = JSON.stringify(getItinerary(), null, 2);
+  const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'itinerary.json'; a.click(); URL.revokeObjectURL(url);
+}
+function clearItinerary(){ if(confirm('Clear itinerary?')){ saveItinerary({}); renderItinerary(); renderProfile(); renderDashboardPreview(); } }
+
+/* ---------- Export (JSON) ---------- */
+function exportJourney(){
+  const data = JSON.stringify(getJourney(), null, 2);
+  const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'journey.json'; a.click(); URL.revokeObjectURL(url);
+}
+
+/* Export user profile/data */
+function exportUserData(){
+  const user = window.user || {name:'Guest',email:''};
+  const payload = {
+    user,
+    journey: getJourney(),
+    bookings: getBookings(),
+    itinerary: getItinerary(),
+    visits: JSON.parse(localStorage.getItem('atg_visits')||'[]')
+  };
+  const data = JSON.stringify(payload, null, 2);
+  const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'ai-tourguide-profile.json'; a.click(); URL.revokeObjectURL(url);
+}
+
+/* ---------- Bookings helpers ---------- */
+function getBookings(){ return JSON.parse(localStorage.getItem('atg_bookings')||'[]'); }
+function clearBookings(){ if(confirm('Clear all bookings?')){ localStorage.removeItem('atg_bookings'); renderAll(); } }
+
+function openBookingsPage(){
+  showPage("hotelBookingsPage");
+  syncUserDataFromDb().then(()=> renderHotelBookings());
+}
+
+
+
+function renderHotelBookings(){
+  const list = document.getElementById("hotelBookingsList");
+  const bookings = getBookings();
+
+  if(!bookings.length){
+    list.innerHTML = "No bookings yet.";
+    return;
+  }
+
+  list.innerHTML = bookings.map(b => `
+    <div style="background:#fff;padding:15px;margin-bottom:10px;border-radius:10px">
+      <h3>${b.hotelName}</h3>
+      <div>📍 ${b.hotelAddress || "Demo Address, India"}</div>
+      <div>📅 Days: ${b.days}</div>
+      <div>💰 Total: ₹${b.total}</div>
+      <div style="color:${(b.paymentStatus||'pending')==='paid'?'green':'#b45309'};font-weight:bold">
+        ${(b.paymentStatus||'pending')==='paid'?'✅ Payment Done':'⏳ Payment Pending'}
+      </div>
+      ${b.paidAt ? `<div>🕒 Paid At: ${formatDate(b.paidAt)}</div>` : ''}
+    </div>
+  `).join("");
+}
+
+function formatDate(value){
+  if(!value) return '-';
+  const d = (typeof value === 'string') ? new Date(value) : (value.toDate ? value.toDate() : new Date(value));
+  if(isNaN(d.getTime())) return '-';
+  return d.toLocaleString();
+}
+
+async function renderAdminPage(){
+  const meta = document.getElementById('adminMeta');
+  const usersEl = document.getElementById('adminUsers');
+  const detailsEl = document.getElementById('adminUserDetails');
+  const bookingsEl = document.getElementById('adminBookings');
+  const journeysEl = document.getElementById('adminJourneys');
+  if(!usersEl || !bookingsEl || !journeysEl) return;
+  if(!window.isAdmin){
+    if(meta) meta.textContent = 'Admin access required.';
+    usersEl.innerHTML = '';
+    if(detailsEl) detailsEl.innerHTML = '';
+    bookingsEl.innerHTML = '';
+    journeysEl.innerHTML = '';
+    return;
+  }
+  if(meta) meta.textContent = 'Loading...';
+  try{
+    const data = await apiFetch('/api/admin/overview');
+    const bookings = data.bookings || [];
+    const journeys = data.journeys || [];
+    const users = data.users || [];
+    window.adminData = { users, bookings, journeys };
+    if(meta) meta.textContent = `Updated ${new Date().toLocaleString()} • ${users.length} users • ${bookings.length} bookings • ${journeys.length} journeys`;
+
+    if(!users.length){
+      usersEl.innerHTML = '<div class="small-muted">No users found.</div>';
+    } else {
+      usersEl.innerHTML = `
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Bookings</th>
+              <th>Journeys</th>
+              <th>Last Booking</th>
+              <th>Last Paid</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${users.map(u => `
+              <tr data-uid="${escapeHtml(u.id)}">
+                <td>${escapeHtml(u.name || '-')}</td>
+                <td>${escapeHtml(u.email || '-')}</td>
+                <td>${escapeHtml(u.phone || '-')}</td>
+                <td>${u.bookings || 0}</td>
+                <td>${u.journeys || 0}</td>
+                <td>
+                  <span class="admin-badge ${u.lastBookingStatus==='paid'?'admin-paid':(u.lastBookingStatus==='pending'?'admin-pending':'')}">
+                    ${u.lastBookingStatus || 'none'}
+                  </span>
+                  ${u.lastBookingTotal ? ` • ₹${u.lastBookingTotal}` : ''}
+                </td>
+                <td>${formatDate(u.lastPaidAt)}</td>
+                <td>${formatDate(u.createdAt)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    if(detailsEl) detailsEl.innerHTML = 'Select a user to view full booking and journey history.';
+
+    if(!bookings.length){
+      bookingsEl.innerHTML = '<div class="small-muted">No bookings found.</div>';
+    } else {
+      bookingsEl.innerHTML = `
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Hotel</th>
+              <th>Place</th>
+              <th>User</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Paid At</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${bookings.map(b => `
+              <tr>
+                <td>${escapeHtml(b.hotelName||'')}</td>
+                <td>${escapeHtml(b.place||'')}</td>
+                <td>${escapeHtml(b.userEmail||b.userId||'')}</td>
+                <td>₹${b.total||0}</td>
+                <td>
+                  <span class="admin-badge ${(b.paymentStatus||'pending')==='paid'?'admin-paid':'admin-pending'}">
+                    ${(b.paymentStatus||'pending')==='paid'?'Paid':'Pending'}
+                  </span>
+                </td>
+                <td>${formatDate(b.paidAt)}</td>
+                <td>${formatDate(b.createdAt)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    if(!journeys.length){
+      journeysEl.innerHTML = '<div class="small-muted">No journeys found.</div>';
+    } else {
+      journeysEl.innerHTML = `
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Place</th>
+              <th>User</th>
+              <th>Arrive</th>
+              <th>Hotel</th>
+              <th>Nights</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${journeys.map(j => `
+              <tr>
+                <td>${escapeHtml(j.place||'')}</td>
+                <td>${escapeHtml(j.userEmail||j.userId||'')}</td>
+                <td>${escapeHtml(j.arrive||'-')}</td>
+                <td>${escapeHtml(j.hotel||'-')}</td>
+                <td>${j.nights||1}</td>
+                <td>${formatDate(j.createdAt)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    if(usersEl){
+      usersEl.querySelectorAll('tr[data-uid]').forEach(row => {
+        row.addEventListener('click', () => {
+          usersEl.querySelectorAll('tr[data-uid]').forEach(r => r.classList.remove('admin-row-active'));
+          row.classList.add('admin-row-active');
+          renderAdminUserDetails(row.getAttribute('data-uid'));
+        });
+      });
+    }
+  }catch(e){
+    console.error('Admin render error:', e);
+    if(meta) meta.textContent = 'Failed to load admin data.';
+    bookingsEl.innerHTML = '<div class="small-muted">Error loading bookings.</div>';
+    journeysEl.innerHTML = '<div class="small-muted">Error loading journeys.</div>';
+  }
+}
+
+function renderAdminUserDetails(uid){
+  const detailsEl = document.getElementById('adminUserDetails');
+  if(!detailsEl || !window.adminData) return;
+  const { users, bookings, journeys } = window.adminData;
+  const user = (users || []).find(u => String(u.id) === String(uid));
+  if(!user){
+    detailsEl.innerHTML = '<div class="small-muted">User not found.</div>';
+    return;
+  }
+  const userBookings = (bookings || []).filter(b => String(b.userId) === String(uid));
+  const userJourneys = (journeys || []).filter(j => String(j.userId) === String(uid));
+
+  const bookingsHtml = userBookings.length ? `
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Hotel</th>
+          <th>Place</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Paid At</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${userBookings.map(b => `
+          <tr>
+            <td>${escapeHtml(b.hotelName||'')}</td>
+            <td>${escapeHtml(b.place||'')}</td>
+            <td>₹${b.total||0}</td>
+            <td>
+              <span class="admin-badge ${(b.paymentStatus||'pending')==='paid'?'admin-paid':'admin-pending'}">
+                ${(b.paymentStatus||'pending')==='paid'?'Paid':'Pending'}
+              </span>
+            </td>
+            <td>${formatDate(b.paidAt)}</td>
+            <td>${formatDate(b.createdAt)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : `<div class="small-muted">No bookings for this user.</div>`;
+
+  const journeysHtml = userJourneys.length ? `
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Arrive</th>
+          <th>Hotel</th>
+          <th>Nights</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${userJourneys.map(j => `
+          <tr>
+            <td>${escapeHtml(j.place||'')}</td>
+            <td>${escapeHtml(j.arrive||'-')}</td>
+            <td>${escapeHtml(j.hotel||'-')}</td>
+            <td>${j.nights||1}</td>
+            <td>${formatDate(j.createdAt)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : `<div class="small-muted">No journeys for this user.</div>`;
+
+  detailsEl.innerHTML = `
+    <div><strong>${escapeHtml(user.name || '-')}</strong> • ${escapeHtml(user.email || '-')} • ${escapeHtml(user.phone || '-')}</div>
+    <div style="margin-top:8px">
+      <div><strong>Booking History</strong></div>
+      ${bookingsHtml}
+    </div>
+    <div style="margin-top:12px">
+      <div><strong>Journey History</strong></div>
+      ${journeysHtml}
+    </div>
+  `;
+}
+
+/* ---------- Generate PDF (includes bookings) ---------- */
+function generatePDF(){
+  const journey = getJourney();
+  if(!journey.length){ alert('No saved journey items to generate PDF.'); return; }
+  const visits = JSON.parse(localStorage.getItem('atg_visits')||'[]');
+  const itinerary = getItinerary();
+  const bookings = getBookings();
+  let html = `<!doctype html><html><head><meta charset="utf-8"><title>Trip Itinerary</title>
+    <style>
+
+      body{font-family:Arial,Helvetica,sans-serif;color:#0b1320;margin:20px}
+      .header{display:flex;align-items:center;gap:12px}
+      .banner{height:120px;width:120px;object-fit:cover;border-radius:8px}
+      h1{margin:0 0 6px 0}
+      .section{margin-top:14px}
+      .place{display:flex;gap:12px;margin-bottom:12px}
+      .place img{width:140px;height:90px;object-fit:cover;border-radius:6px}
+      .meta{font-size:13px;color:#374151}
+      .notes{font-size:13px;color:#374151;background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #eef6ff}
+      .small{font-size:12px;color:#6b7280}
+      table{border-collapse:collapse;width:100%}
+      th,td{border:1px solid #e6eef8;padding:8px;text-align:left}
+      @media print{ body{margin:10mm} .no-print{display:none} }
+    </style>
+    </head><body>
+    <div class="header">
+      <img class="banner" src="${PLACE_META[journey[0].place] ? PLACE_META[journey[0].place].image : ''}" alt="banner">
+      <div>
+        <h1>Trip Itinerary</h1>
+        <div class="small">Generated: ${new Date().toLocaleString()}</div>
+      </div>
+    </div>
+    <div class="section"><strong>Traveler:</strong> ${escapeHtml((window.user && window.user.name) || 'Guest')} — <span class="small">${escapeHtml((window.user && window.user.email) || '')}</span></div>
+  `;
+
+  // Bookings summary
+  html += `<div class="section"><h2>Bookings</h2>`;
+  if(!bookings.length) html += `<div class="small-muted">No bookings made.</div>`;
+  else {
+    html += `<table><thead><tr><th>Hotel</th><th>Place</th><th>Type</th><th>Days</th><th>Rooms</th><th>Per day</th><th>Total</th></tr></thead><tbody>`;
+    bookings.forEach(b => {
+      html += `<tr><td>${escapeHtml(b.hotelName)}</td><td>${escapeHtml(b.place)}</td><td>${escapeHtml(b.typeLabel)}</td><td>${b.days}</td><td>${b.rooms}</td><td>₹${b.perDay}</td><td>₹${b.total}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+  html += `</div>`;
+
+  // planned visits / journey
+  html += `<div class="section"><h2>Planned Visits</h2>`;
+  journey.forEach(it=>{
+    const pm = PLACE_META[it.place] || {};
+    html += `<div class="place"><img src="${pm.image || ''}" loading="lazy">
+alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'—')} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | ₹${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
+      ${it.notes ? `<div style="margin-top:8px" class="notes"><strong>Notes:</strong> ${escapeHtml(it.notes)}</div>` : ''}
+    </div></div>`;
+  });
+  html += `</div>`;
+
+  // visits
+  html += `<div class="section"><h2>Scheduled Visits</h2>`;
+  if(visits.length===0) html += `<div class="small-muted">No scheduled visits.</div>`;
+  else {
+    visits.sort((a,b)=>new Date(a.start)-new Date(b.start));
+    visits.forEach(v=>{
+      const sd = new Date(v.start);
+      html += `<div style="margin-bottom:8px"><strong>${escapeHtml(v.place)}</strong> — ${sd.toLocaleString()} for ${v.duration} mins</div>`;
+    });
+  }
+  html += `</div>`;
+
+  // daily itinerary
+  html += `<div class="section"><h2>Daily Itinerary</h2>`;
+  if(Object.keys(itinerary).length===0) html += `<div class="small-muted">No daily itinerary added.</div>`;
+  else {
+    Object.keys(itinerary).sort((a,b)=>a-b).forEach(day=>{
+      html += `<div style="margin-top:8px"><strong>Day ${day}</strong><ul>`;
+      itinerary[day].forEach(act=>{
+        html += `<li>${escapeHtml(act.activity)}</li>`;
+      });
+      html += `</ul></div>`;
+    });
+  }
+  html += `</div>`;
+
+  html += `<div class="section small muted">This itinerary was generated by AI Tour Guide demo. Verify local opening times and ticket requirements before travel.</div>`;
+
+  html += `<div style="margin-top:18px" class="no-print"><button onclick="window.print()" style="padding:10px 14px;border-radius:8px;background:#111;color:#fff;border:none;cursor:pointer">Print / Save as PDF</button> <button onclick="window.close()" style="padding:10px 14px;border-radius:8px;border:1px solid #e6eef8;background:#fff;cursor:pointer">Close</button></div>`;
+
+  html += `</body></html>`;
+
+  const w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
+  if(!w){ alert('Popup blocked. Allow popups for this site to generate PDF.'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>{ try{ w.focus(); }catch(e){} }, 250);
+}
+
+/* ---------- Render everything on page show ---------- */
+function renderAll(){
+  renderJourney(); renderVisits(); renderBudget(); renderProfile();
+  renderItinerary();
+  renderDashboardPreview();
+  populateHotelFilter();
+  applyImageFallbacks();
+}
+
+/* ---------- helper: update on load ---------- */
+window.addEventListener('load', ()=>{
+  if(window.user){ onLogin(); } else { showPage('landingPage'); }
+  renderAll();
+  startSlideshow();
+  startSquareSlideshow();
+  tryLoadHotelsJSON();
+});
+
+/* ---------- helpers ---------- */
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+/* ======= HOTEL FEATURES ======= */
+
+/* ---------- Add styles for hotel page + UI polish ---------- */
+(function injectStyles(){
+  const css = `
+  /* Hotel page styles */
+  #hotelPage { display:none; }
+  #hotelPage.active { display:block; }
+  .hotel-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-top:12px }
+  .hotel-card { background:var(--card); border-radius:12px; padding:12px; box-shadow: var(--shadow); display:flex; gap:10px; align-items:flex-start }
+  .hotel-thumb { width:120px;height:84px;object-fit:cover;border-radius:8px; flex-shrink:0 }
+  .hotel-info { flex:1 }
+  .hotel-title { font-weight:700; margin-bottom:4px }
+  .hotel-meta { color:var(--muted); font-size:13px; margin-bottom:8px }
+  .hotel-actions { display:flex; gap:8px; }
+  .room-type { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .room-type button { padding:6px 8px; border-radius:8px; border:1px solid rgba(11,19,32,0.06); background:transparent; cursor:pointer; }
+  .room-type button.selected { border-color:var(--accent); background:rgba(59,130,246,0.08); }
+  .book-panel { padding:12px; border-radius:10px; border:1px solid #eef6ff; background:#fcfeff; margin-top:12px }
+  .modal-overlay { position:fixed; inset:0;background:rgba(2,6,23,0.45); display:flex; align-items:center; justify-content:center; z-index:10000 }
+  .modal { width:560px; max-width:95%; background:var(--card); border-radius:12px; padding:16px; box-shadow:0 18px 40px rgba(2,6,23,0.25); }
+  .hotel-filter { display:flex; gap:8px; margin-top:10px; align-items:center }
+  .atg-badge { display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--accent); font-weight:600; }
+  `;
+  const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
+})();
+
+/* ---------- Create the hotel page HTML (injected) ---------- */
+(function injectHotelPage(){
+  if(document.getElementById('hotelPage')) return; // already injected
+  const html = `
+    <div id="hotelPage" class="page">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h2 style="margin:0">Hotel Suggestions — Historical Places (India)</h2>
+            <div class="small-muted" style="margin-top:6px">Select a place and click Search to view hotels (default: show 10 popular suggestions).</div>
+          </div>
+          <div>
+            <button class="btn-ghost" onclick="showPage('homePage')">Back</button>
+          </div>
+        </div>
+
+        <div class="hotel-filter">
+          <select id="hotelPlaceFilter" style="min-width:220px">
+            <option value="">-- Select place to view hotels --</option>
+          </select>
+          <input id="hotelSearch" placeholder="Search hotels or city" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e6eef8" />
+          <button class="primary" id="hotelSearchBtn">Search</button>
+        </div>
+
+        <div id="hotelGrid" class="hotel-grid"></div>
+        <div id="hotelPageNote" class="small-muted" style="margin-top:10px">Showing 10 suggestions by default. Use the filter to view hotels for a specific place.</div>
+      </div>
+    </div>
+  `;
+  const profile = document.getElementById('profilePage');
+  if(profile){ profile.insertAdjacentHTML('beforebegin', html); }
+  else { document.querySelector('.wrap').insertAdjacentHTML('beforeend', html); }
+})();
+
+/* ---------- Room types ---------- */
+const ROOM_TYPES = [
+  {key:'lux', label:'Luxurious', mult:1.9, desc:'Spacious room with premium amenities'},
+  {key:'normal', label:'Normal', mult:1.0, desc:'Standard comfortable room'},
+  {key:'luggage', label:'Luggage-keeping', mult:0.35, desc:'Secure luggage-only service, no stay'}
+];
+
+/* ---------- Fallback images for hotels ---------- */
+const HOTEL_FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1551892589-865f69869472?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1505691723518-36a2b60b8a40?auto=format&fit=crop&w=1200&q=80"
+];
+
+/* ---------- Utility: slug ---------- */
+function slug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+
+/* ---------- HOTELS array (will be loaded from hotels.json when available) ---------- */
+let HOTELS = [];
+let HOTELS_LOADED_FROM_JSON = false;
+
+/* ---------- Try to fetch hotels.json from same server (non-blocking) ---------- */
+function tryLoadHotelsJSON(){
+  fetch('hotels.json', {cache: "no-store"}).then(r=>{
+    if(!r.ok) throw new Error('no json');
+    return r.json();
+  }).then(data=>{
+    if(Array.isArray(data) && data.length){
+      HOTELS = data.map(h => {
+        return {
+          id: h.id || (slug(h.place||'') + '-' + Math.random().toString(36).slice(2,8)),
+          name: h.name || (h.place + ' Hotel'),
+          place: h.place || (h.name || 'Unknown'),
+          city: h.city || '',
+          image: h.image || HOTEL_FALLBACK_IMAGES[Math.floor(Math.random()*HOTEL_FALLBACK_IMAGES.length)],
+          baseRate: Number(h.baseRate || h.baseRate === 0 ? h.baseRate : (1200 + Math.floor(Math.random()*300)))
+        };
+      });
+      HOTELS_LOADED_FROM_JSON = true;
+      populateHotelFilter();
+      const grid = document.getElementById('hotelGrid');
+      if(grid && document.getElementById('hotelPage') && document.getElementById('hotelPage').classList.contains('active')){
+        renderHotels(HOTELS);
+      }
+    } else {
+      buildHotelsFromPlaces();
+    }
+  }).catch(err=>{
+    buildHotelsFromPlaces();
+  });
+}
+
+/* ---------- Build hotels from PLACE_META if hotels.json not present ---------- */
+function buildHotelsFromPlaces(){
+  const places = Object.keys(window.PLACE_META || {});
+  HOTELS = [];
+  let idx = 0;
+  places.forEach(place => {
+    const pm = window.PLACE_META[place] || {};
+    const cityMatch = (pm.info || '').match(/located in ([^,\.]+)/i);
+    const city = cityMatch ? cityMatch[1].trim() : (pm.info || '').split(',')[0] || 'Unknown';
+
+    const base = 1200 + (idx % 12) * 250;
+    const img1 = HOTEL_FALLBACK_IMAGES[idx % HOTEL_FALLBACK_IMAGES.length];
+    const img2 = HOTEL_FALLBACK_IMAGES[(idx+1) % HOTEL_FALLBACK_IMAGES.length];
+
+    // create two hotels per place
+    HOTELS.push({
+      id: `${slug(place)}-01`,
+      name: `${place} Grand Hotel`,
+      place,
+      city: city,
+      image: pm.image || img1,
+      baseRate: Math.round(base * 1.8)
+    });
+    HOTELS.push({
+      id: `${slug(place)}-02`,
+      name: `${place} Heritage Inn`,
+      place,
+      city: city,
+      image: pm.image || img2,
+      baseRate: Math.round(base * 1.0)
+    });
+
+    idx++;
+  });
+
+  populateHotelFilter();
+}
+
+/* ---------- Populate filter select (initial) ---------- */
+function populateHotelFilter(){
+  const sel = document.getElementById('hotelPlaceFilter');
+  if(!sel) return;
+  if(HOTELS.length === 0) buildHotelsFromPlaces();
+  const places = Array.from(new Set(HOTELS.map(h=>h.place)));
+  sel.innerHTML = `<option value="">-- Select place to view hotels --</option>`;
+  places.forEach(p=> {
+    sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`);
+  });
+}
+
+/* ---------- Render hotels ---------- */
+function renderHotels(list, options = {limitDefault: true, showNote:true}){
+  if(!Array.isArray(list)) list = HOTELS || [];
+  const grid = document.getElementById('hotelGrid');
+  const note = document.getElementById('hotelPageNote');
+  if(!grid) return;
+  if(options.limitDefault && (!document.getElementById('hotelPlaceFilter').value && !(document.getElementById('hotelSearch').value||'').trim())){
+    const top10 = list.slice(0,10);
+    grid.innerHTML = '';
+    top10.forEach(h => grid.appendChild(createHotelCard(h)));
+    if(note) note.textContent = `Showing ${top10.length} suggestions. Use the place filter or search to view hotels for a specific place.`;
+    return;
+  }
+  grid.innerHTML = '';
+  if(list.length === 0){
+    grid.innerHTML = '<div class="small-muted">No hotels found.</div>';
+    if(note) note.textContent = '';
+    return;
+  }
+  list.forEach(h => grid.appendChild(createHotelCard(h)));
+  if(note) note.textContent = `Showing ${list.length} hotel(s).`;
+  applyImageFallbacks(grid);
+}
+
+/* helper: create DOM card for a hotel */
+function createHotelCard(h){
+  const card = document.createElement('div');
+  card.className = 'hotel-card';
+  card.innerHTML = `
+    <img class="hotel-thumb" src="${h.image}" alt="${escapeHtml(h.name)}">
+    <div class="hotel-info">
+      <div class="hotel-title">${escapeHtml(h.name)}</div>
+      <div class="hotel-meta">${escapeHtml(h.place)} • ${escapeHtml(h.city)} • from ₹${h.baseRate} / baseline</div>
+      <div class="hotel-actions">
+        <button class="primary" data-hid="${h.id}">Select</button>
+        <button class="btn-ghost" data-hid-details="${h.id}">Details</button>
+      </div>
+      <div style="margin-top:8px" class="small-muted">Room types: <span class="atg-badge">Luxurious</span> <span class="atg-badge">Normal</span> <span class="atg-badge">Luggage</span></div>
+    </div>
+  `;
+  setTimeout(()=> {
+    const selBtn = card.querySelector('button[data-hid]');
+    if(selBtn) selBtn.addEventListener('click', ()=> openHotelModal(h.id));
+    const detBtn = card.querySelector('button[data-hid-details]');
+    if(detBtn) detBtn.addEventListener('click', ()=> showHotelDetails(h.id));
+  },0);
+  return card;
+}
+
+/* ---------- Search handler (wired to Search button) ---------- */
+document.addEventListener('click', function(evt){
+  if(evt.target && evt.target.id === 'hotelSearchBtn'){
+    const q = (document.getElementById('hotelSearch').value||'').toLowerCase().trim();
+    const place = document.getElementById('hotelPlaceFilter').value;
+    let filtered = (HOTELS || []).filter(h=>{
+      const matchQ = !q || h.name.toLowerCase().includes(q) || h.city.toLowerCase().includes(q);
+      const matchP = !place || h.place === place;
+      return matchQ && matchP;
+    });
+    renderHotels(filtered, {limitDefault:false});
+  }
+});
+
+/* Also render default limited set when navigating to hotelPage via nav button */
+(function integrateNavHotels(){
+  const navBtn = document.getElementById('navHotelsBtn');
+  if(navBtn) navBtn.addEventListener('click', ()=> {
+    showPage('hotelPage');
+    if(HOTELS.length===0) buildHotelsFromPlaces();
+    renderHotels(HOTELS, {limitDefault:true});
+  });
+})();
+
+/* ---------- Hotel modal / booking flow (uses HOTELS) ---------- */
+function showHotelDetails(id){
+  const hotel = (HOTELS||[]).find(h=>h.id===id);
+  if(!hotel) return alert('No details found');
+  const html = `
+    <div class="modal-overlay" id="hotelDetailsModal">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h3 style="margin:0">${escapeHtml(hotel.name)}</h3>
+            <div class="small-muted">${escapeHtml(hotel.place)} • ${escapeHtml(hotel.city)}</div>
+          </div>
+          <div><button onclick="closeModal('hotelDetailsModal')" class="btn-ghost">Close</button></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:12px">
+          <img src="${hotel.image}" style="width:180px;height:120px;object-fit:cover;border-radius:8px">
+          <div style="flex:1">
+            <div class="small-muted">Description: Hotel near ${escapeHtml(hotel.place)}. Base rate: ₹${hotel.baseRate} (used to calculate room rates).</div>
+            <div style="margin-top:10px">
+              ${ROOM_TYPES.map(rt => `<div style="margin-bottom:6px"><strong>${rt.label}</strong> — ${rt.desc} — from ₹${Math.round(hotel.baseRate * rt.mult)}</div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px; text-align:right">
+          <button class="primary" onclick="openHotelModal('${hotel.id}')">Book this hotel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function openHotelModal(id){
+  const hotel = (HOTELS||[]).find(h=>h.id===id);
+  if(!hotel) return alert('Hotel not found');
+  const modalId = 'hotelBookModal';
+  const html = `
+    <div class="modal-overlay" id="${modalId}">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h3 style="margin:0">${escapeHtml(hotel.name)}</h3>
+            <div class="small-muted">${escapeHtml(hotel.place)} • ${escapeHtml(hotel.city)}</div>
+          </div>
+          <div><button onclick="closeModal('${modalId}')" class="btn-ghost">Close</button></div>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:12px">
+          <img src="${hotel.image}" style="width:180px;height:120px;object-fit:cover;border-radius:8px">
+          <div style="flex:1">
+            <div class="small-muted">Choose room type & number of days</div>
+
+            <div class="room-type" id="roomTypesWrap">
+              ${ROOM_TYPES.map(rt => `<button data-type="${rt.key}" data-label="${escapeHtml(rt.label)}" data-mult="${rt.mult}" class="${rt.key==='normal' ? 'selected' : ''}">${escapeHtml(rt.label)} — ₹${Math.round(hotel.baseRate * rt.mult)} / baseline</button>`).join('')}
+            </div>
+
+            <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+              <label style="margin:0">Days</label>
+              <input id="bookDays" type="number" min="1" value="1" style="width:80px;padding:6px;border-radius:8px;border:1px solid #e6eef8;margin-left:6px" />
+              <label style="margin-left:12px">Rooms</label>
+              <input id="bookRooms" type="number" min="1" value="1" style="width:80px;padding:6px;border-radius:8px;border:1px solid #e6eef8;margin-left:6px" />
+            </div>
+
+            <div style="margin-top:10px" class="book-panel">
+              <div>Price per day: <strong id="pricePerDay">₹${Math.round(hotel.baseRate)}</strong></div>
+              <div style="margin-top:6px">Total estimate: <strong id="priceTotal">₹${Math.round(hotel.baseRate)}</strong></div>
+              <div class="small-muted" style="margin-top:6px">Note: This is an estimate. Taxes and fees not included.</div>
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+              <button class="btn-ghost" onclick="closeModal('${modalId}')">Cancel</button>
+              <button class="primary" id="proceedPayBtn">Proceed To Payment</button>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', html);
+
+  const wrap = document.getElementById(modalId).querySelector('#roomTypesWrap');
+  function getSelected(){
+    const btns = wrap.querySelectorAll('button[data-type]');
+    let sel = null;
+    btns.forEach(b=> { if(b.classList.contains('selected')) sel = b; });
+    return sel;
+  }
+  wrap.querySelectorAll('button[data-type]').forEach(btn=>{
+    btn.addEventListener('click', ()=> {
+      wrap.querySelectorAll('button').forEach(b=> b.classList.remove('selected'));
+      btn.classList.add('selected');
+      recalc();
+    });
+  });
+  const daysInput = document.getElementById('bookDays');
+  const roomsInput = document.getElementById('bookRooms');
+  daysInput.addEventListener('input', recalc);
+  roomsInput.addEventListener('input', recalc);
+
+  function recalc(){
+    const sel = getSelected();
+    const mult = sel ? Number(sel.dataset.mult) : 1;
+    const perDay = Math.round(hotel.baseRate * mult);
+    const days = Math.max(1, Number(daysInput.value||1));
+    const rooms = Math.max(1, Number(roomsInput.value||1));
+    const total = perDay * days * rooms;
+    document.getElementById('pricePerDay').textContent = `₹${perDay}`;
+    document.getElementById('priceTotal').textContent = `₹${total}`;
+  }
+  recalc();
+
+  const payBtn = document.getElementById(modalId).querySelector('#proceedPayBtn');
+  if(payBtn) payBtn.addEventListener('click', ()=>{
+    const sel = getSelected();
+    const typeKey = sel ? sel.dataset.type : 'normal';
+    const typeLabel = sel ? (sel.dataset.label || sel.textContent.trim()) : 'Normal';
+    const days = Math.max(1, Number(daysInput.value||1));
+    const rooms = Math.max(1, Number(roomsInput.value||1));
+    const perDay = Math.round(hotel.baseRate * (sel ? Number(sel.dataset.mult) : 1));
+    const total = perDay * days * rooms;
+    const payload = {
+      hotelName: hotel.name,
+      hotelAddress: hotel.city,
+      place: hotel.place,
+      city: hotel.city,
+      type: typeKey,
+      typeLabel,
+      days,
+      rooms,
+      perDay,
+      total
+    };
+    createBookingAndPay(payload);
+    closeModal(modalId);
+  });
+}
+
+/* ---------- close modal util ---------- */
+function closeModal(id){
+  const el = document.getElementById(id);
+  if(el) el.remove();
+  const det = document.getElementById('hotelDetailsModal');
+  if(det && id!=='hotelDetailsModal') det.remove();
+}
+
+/* ---------- Expose module functions for inline handlers + other scripts ---------- */
+window.PLACE_META = PLACE_META;
+try{
+  Object.defineProperty(window, 'HOTELS', {
+    get(){ return HOTELS; },
+    set(v){ HOTELS = v; }
+  });
+}catch(e){}
+
+Object.assign(window, {
+  login,
+  register,
+  logout,
+  showPage,
+  showChatPage,
+  sendChat,
+  addToJourney,
+  addItinerary,
+  addVisit,
+  removeJourney,
+  removeIt,
+  clearJourney,
+  clearItinerary,
+  exportJourney,
+  exportItinerary,
+  generatePDF,
+  loadSample,
+  nextSquare,
+  prevSquare,
+  toggleSquareSlideshow,
+  toggleDarkMode,
+  openBookingsPage,
+  openHotelModal,
+  openFakePayment,
+  closeFakePayment,
+  completeFakePayment,
+  uploadTripPhotos,
+  closeModal,
+  closeReceipt,
+  buildHotelsFromPlaces,
+  renderAll,
+  renderHotels,
+  getBookings,
+  renderHotelBookings,
+  renderProfile,
+  applyImageFallbacks
+});
+
+/* ======= END HOTEL FEATURES ======= */
+
+</script>
+
+<!-- ===== ADD: Script that injects 45 main historical places and populates Create Journey select ===== -->
+<script>
+function addPlacesToPlaceSelect(){
+  const PLACES = [
+    ["Taj Mahal","Agra, Uttar Pradesh"],
+    ["Agra Fort","Agra, Uttar Pradesh"],
+    ["Fatehpur Sikri","Fatehpur Sikri, Uttar Pradesh"],
+    ["Red Fort","Delhi"],
+    ["Qutub Minar","Delhi"],
+    ["Humayun's Tomb","Delhi"],
+    ["India Gate","Delhi"],
+    ["Jama Masjid","Delhi"],
+    ["Lotus Temple","Delhi"],
+    ["Charminar","Hyderabad, Telangana"],
+    ["Golconda Fort","Hyderabad, Telangana"],
+    ["Meenakshi Amman Temple","Madurai, Tamil Nadu"],
+    ["Brihadeshwara Temple","Thanjavur, Tamil Nadu"],
+    ["Mahabalipuram (Mamallapuram)","Tamil Nadu"],
+    ["Konark Sun Temple","Konark, Odisha"],
+    ["Jagannath Temple, Puri","Puri, Odisha"],
+    ["Sanchi Stupa","Sanchi, Madhya Pradesh"],
+    ["Khajuraho Group of Monuments","Khajuraho, Madhya Pradesh"],
+    ["Ellora Caves","Aurangabad, Maharashtra"],
+    ["Ajanta Caves","Aurangabad, Maharashtra"],
+    ["Elephanta Caves","Mumbai, Maharashtra"],
+    ["Gateway of India","Mumbai, Maharashtra"],
+    ["Victoria Memorial","Kolkata, West Bengal"],
+    ["Mysore Palace","Mysore, Karnataka"],
+    ["Hampi (Vijayanagara)","Hampi, Karnataka"],
+    ["Gol Gumbaz","Bijapur (Vijayapura), Karnataka"],
+    ["Chittorgarh Fort","Chittorgarh, Rajasthan"],
+    ["Mehrangarh Fort","Jodhpur, Rajasthan"],
+    ["Jaisalmer Fort","Jaisalmer, Rajasthan"],
+    ["Amber Fort","Jaipur, Rajasthan"],
+    ["Hawa Mahal","Jaipur, Rajasthan"],
+    ["Nalanda University Ruins","Nalanda, Bihar"],
+    ["Bodh Gaya (Mahabodhi Temple)","Bodh Gaya, Bihar"],
+    ["Kumbhalgarh Fort","Kumbhalgarh, Rajasthan"],
+    ["Rani ki Vav (Patan)","Patan, Gujarat"],
+    ["Somnath Temple","Somnath, Gujarat"],
+    ["Basilica of Bom Jesus","Old Goa, Goa"],
+    ["Golden Temple (Harmandir Sahib)","Amritsar, Punjab"],
+    ["Jallianwala Bagh","Amritsar, Punjab"],
+    ["Statue of Unity (memorial)","Kevadia, Gujarat"],
+    ["Bhimbetka Rock Shelters","Madhya Pradesh"],
+    ["Kailasa Temple (Ellora)","Ellora, Maharashtra"],
+    ["Aihole & Pattadakal","Karnataka"],
+    ["Ramanathaswamy Temple (Rameshwaram)","Ramanathapuram, Tamil Nadu"]
+  ];
+
+  const FALLBACK_IMAGES = [
+    "https://images.unsplash.com/photo-1505765050359-0101643d6e9d?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1533777324565-a040eb52fac2?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
+  ];
+  let fi = 0;
+  function nextFallback(){ const u = FALLBACK_IMAGES[fi % FALLBACK_IMAGES.length]; fi++; return u; }
+
+  if(typeof window.PLACE_META !== 'object') window.PLACE_META = window.PLACE_META || {};
+
+  const select = document.getElementById('placeSelect');
+  const hotelFilter = document.getElementById('hotelPlaceFilter');
+
+  PLACES.forEach(function(pair){
+    const name = pair[0];
+    const city = pair[1] || '';
+
+    if(!window.PLACE_META[name]){
+      window.PLACE_META[name] = {
+        image: nextFallback(),
+        info: `${name} — located in ${city}. A notable historical site; check local timings before visiting.`
+      };
+    }
+
+    if(select){
+      const exists = Array.from(select.options).some(o => o.value.trim().toLowerCase() === name.trim().toLowerCase());
+      if(!exists){
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      }
+    }
+
+    if(hotelFilter){
+      const existsH = Array.from(hotelFilter.options).some(o => o.value.trim().toLowerCase() === name.trim().toLowerCase());
+      if(!existsH){
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        hotelFilter.appendChild(opt);
+      }
+    }
+  });
+
+  const hotels = window.HOTELS || [];
+  if(typeof buildHotelsFromPlaces === 'function' && hotels.length === 0) buildHotelsFromPlaces();
+
+  try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
+  try{ if(document.getElementById('hotelGrid') && typeof renderHotels === 'function') renderHotels(window.HOTELS || []); }catch(e){}
+}
+window.addEventListener('load', addPlacesToPlaceSelect);
+
+
+
+
+
+function suggestDestination(){
+
+ const month=document.getElementById("monthSelect").value;
+ const result=document.getElementById("destinationResult");
+
+ if(!month){
+  result.innerHTML="Please select month";
+  return;
+ }
+
+ const places=MONTH_DESTINATIONS[month];
+
+ let html = `<h3>Best Places in ${month}</h3>`;
+ html += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px">`;
+
+ places.forEach(p=>{
+  html += `
+  <div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.15)">
+    <img src="${p.img}" loading="lazy" style="width:100%;height:160px;object-fit:cover">
+    <div style="padding:12px">
+      <h4>${p.name}</h4>
+    </div>
+  </div>
+  `;
+ });
+
+ html += `</div>`;
+
+ result.innerHTML = html;
+}
+
+
+const MONTH_DESTINATIONS = {
+
+January:[
+{name:"Jaipur Amber Fort",img:"https://images.unsplash.com/photo-1599661046289-e31897846e41"},
+{name:"Rann of Kutch",img:"https://images.unsplash.com/photo-1589308078055-ebf36d2b0e95"},
+{name:"Goa Churches",img:"https://images.unsplash.com/photo-1560179707-f14e90ef3623"},
+{name:"Mount Abu Trek",img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"},
+{name:"Alleppey Backwaters",img:"https://images.unsplash.com/photo-1602216056096-3b40cc0c9944"}
+],
+
+February:[
+{name:"Taj Mahal",img:"https://images.unsplash.com/photo-1548013146-72479768bada"},
+{name:"Udaipur City Palace",img:"https://images.unsplash.com/photo-1593696954577-ab3d39317b97"},
+{name:"Hampi Ruins",img:"https://images.unsplash.com/photo-1605640840605-14ac1855827b"},
+{name:"Coorg Trek",img:"https://images.unsplash.com/photo-1501785888041-af3ef285b470"},
+{name:"Jodhpur Mehrangarh Fort",img:"https://images.unsplash.com/photo-1588099768531-a72d4a198538"}
+],
+
+March:[
+{name:"Varanasi Ghats",img:"https://images.unsplash.com/photo-1561361058-c24cecae35ca"},
+{name:"Khajuraho Temples",img:"https://images.unsplash.com/photo-1583212292454-1fe6229603b7"},
+{name:"Rishikesh Trek",img:"https://images.unsplash.com/photo-1501555088652-021faa106b9b"},
+{name:"Sikkim Monasteries",img:"https://images.unsplash.com/photo-1544735716-392fe2489ffa"},
+{name:"Kaziranga Park",img:"https://images.unsplash.com/photo-1571406255390-3b1d764e1e32"}
+],
+
+April:[
+{name:"Ooty Hills",img:"https://images.unsplash.com/photo-1587474260584-136574528ed5"},
+{name:"Darjeeling Tea Gardens",img:"https://images.unsplash.com/photo-1597074866923-dc0589150358"},
+{name:"Munnar Hills",img:"https://images.unsplash.com/photo-1593693411515-c20261bcad6e"},
+{name:"Tawang Monastery",img:"https://images.unsplash.com/photo-1582456891925-a53965520520"}
+],
+
+May:[
+{name:"Shimla",img:"https://images.unsplash.com/photo-1622308644420-b20142dc993c"},
+{name:"Manali",img:"https://images.unsplash.com/photo-1581793745862-99fde7fa73d2"},
+{name:"Nainital",img:"https://images.unsplash.com/photo-1627894483216-2138af692e32"},
+{name:"Mussoorie Trek",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"}
+],
+
+June:[
+{name:"Leh Palace",img:"https://images.unsplash.com/photo-1597047084897-51e81819a499"},
+{name:"Ladakh Monasteries",img:"https://images.unsplash.com/photo-1595933548862-3f0c6e7a0e6c"},
+{name:"Spiti Valley",img:"https://images.unsplash.com/photo-1605540436563-5bca919ae766"},
+{name:"Kashmir Valley",img:"https://images.unsplash.com/photo-1598091383021-15ddea10925d"}
+],
+
+July:[
+{name:"Mysore Palace",img:"https://images.unsplash.com/photo-1564507592333-c60657eea523"},
+{name:"Coorg Hills",img:"https://images.unsplash.com/photo-1501785888041-af3ef285b470"},
+{name:"Cherrapunji",img:"https://images.unsplash.com/photo-1549887534-3ec93abae5b1"},
+{name:"Valley of Flowers Trek",img:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b"}
+],
+
+August:[
+{name:"Red Fort Delhi",img:"https://images.unsplash.com/photo-1587474260584-136574528ed5"},
+{name:"Qutub Minar",img:"https://images.unsplash.com/photo-1585130040316-7a43b82bdfd6"},
+{name:"Udaipur Lakes",img:"https://images.unsplash.com/photo-1593696954577-ab3d39317b97"},
+{name:"Mahabaleshwar Trek",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"}
+],
+
+September:[
+{name:"Ajanta Caves",img:"https://images.unsplash.com/photo-1627894483216-2138af692e32"},
+{name:"Ellora Caves",img:"https://images.unsplash.com/photo-1627308595229-7830a5c91f9f"},
+{name:"Hyderabad Golconda Fort",img:"https://images.unsplash.com/photo-1595846519845-68e298c2edd8"},
+{name:"Ziro Valley",img:"https://images.unsplash.com/photo-1501785888041-af3ef285b470"}
+],
+
+October:[
+{name:"Hampi",img:"https://images.unsplash.com/photo-1605640840605-14ac1855827b"},
+{name:"Konark Sun Temple",img:"https://images.unsplash.com/photo-1593693411515-c20261bcad6e"},
+{name:"Kullu Valley",img:"https://images.unsplash.com/photo-1597047084897-51e81819a499"},
+{name:"Sundarbans",img:"https://images.unsplash.com/photo-1571406255390-3b1d764e1e32"}
+],
+
+November:[
+{name:"Hyderabad Fort",img:"https://images.unsplash.com/photo-1595846519845-68e298c2edd8"},
+{name:"Golden Temple",img:"https://images.unsplash.com/photo-1587735570212-6b5c4f9e26ef"},
+{name:"Jaisalmer Fort",img:"https://images.unsplash.com/photo-1593693411515-c20261bcad6e"},
+{name:"Pushkar Desert Trek",img:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b"}
+],
+
+December:[
+{name:"Goa Beaches",img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e"},
+{name:"Kerala Backwaters",img:"https://images.unsplash.com/photo-1602216056096-3b40cc0c9944"},
+{name:"Andaman Islands",img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e"},
+{name:"Auli Snow Trek",img:"https://images.unsplash.com/photo-1483721310020-03333e577078"}
+]
+
+};
+
+
+function suggestDestination(){
+ const month=document.getElementById("monthSelect").value;
+ const result=document.getElementById("destinationResult");
+
+ if(!month){
+  result.innerHTML="Select month first";
+  return;
+ }
+
+ const places=MONTH_DESTINATIONS[month];
+ const pick=places[Math.floor(Math.random()*places.length)];
+
+ result.innerHTML="<h3>"+pick+"</h3>";
+}
+
+function generateAIPlan(){
+
+  const month = document.getElementById("aiMonth").value;
+  const budget = Number(document.getElementById("aiBudget").value);
+  const days = Number(document.getElementById("aiDays").value);
+  const resultDiv = document.getElementById("aiResult");
+
+  if(!month || !budget || !days){
+    resultDiv.innerHTML = "<b style='color:red'>Please fill all fields</b>";
+    return;
+  }
+
+  // ---------- PLACE + TRAVEL AI ----------
+  let places = [];
+  let travelMode = "Train";
+
+  if(month === "December" || month === "January"){
+    places = ["Taj Mahal", "Jaipur", "Varanasi", "Rann of Kutch"];
+    travelMode = "Train";
+  }
+  else if(month === "March" || month === "February"){
+    places = ["Hampi", "Mysore", "Madurai", "Goa Churches"];
+    travelMode = "Bus";
+  }
+  else if(month === "June" || month === "July"){
+    places = ["Ladakh", "Spiti Valley", "Manali", "Shimla"];
+    travelMode = "Flight";
+  }
+  else{
+    places = ["Delhi", "Agra", "Khajuraho", "Sanchi"];
+    travelMode = "Train";
+  }
+
+  // ---------- COST CALCULATION AI ----------
+
+  let travelCost = 0;
+  let hotelPerNight = 0;
+  let foodPerDay = 0;
+
+  // Travel cost based on mode
+  if(travelMode === "Train") travelCost = 1200;
+  if(travelMode === "Bus") travelCost = 1800;
+  if(travelMode === "Flight") travelCost = 6000;
+
+  // Hotel AI based on budget category
+  if(budget >= 60000){
+    hotelPerNight = 3500;
+    foodPerDay = 900;
+  }
+  else if(budget >= 40000){
+    hotelPerNight = 2200;
+    foodPerDay = 700;
+  }
+  else{
+    hotelPerNight = 1400;
+    foodPerDay = 500;
+  }
+
+  // Total Calculations
+  let hotelTotal = hotelPerNight * days;
+  let foodTotal = foodPerDay * days;
+  let totalExpense = travelCost + hotelTotal + foodTotal;
+  let remaining = budget - totalExpense;
+
+  // ---------- OUTPUT ----------
+  resultDiv.innerHTML = `
+    <h3>🧠 AI Trip Cost Analysis</h3>
+
+    <p><b>Best Places:</b> ${places.join(", ")}</p>
+    <p><b>Suggested Travel Mode:</b> ${travelMode}</p>
+
+    <hr>
+
+    <h4>💰 Cost Breakdown</h4>
+    <p>🚆 Travel Cost: ₹${travelCost}</p>
+    <p>🏨 Hotel Cost (${days} nights): ₹${hotelTotal}</p>
+    <p>🍽 Food Cost (${days} days): ₹${foodTotal}</p>
+
+    <hr>
+
+    <h4>📊 Total Trip Expense: ₹${totalExpense}</h4>
+    <h4 style="color:${remaining>=0?'green':'red'}">
+      Remaining Budget: ₹${remaining}
+    </h4>
+
+    <p class="small-muted">
+      AI estimated using seasonal travel trends + average India travel cost dataset.
+    </p>
+  `;
+}
+/* ===== FORCE TOURIST IMAGES (FIX BLANK IMAGES) ===== */
+
+
+
+function editProfile(){
+
+  let newName = prompt("Enter Name", window.user.name || "");
+  let newPhone = prompt("Enter Phone", window.user.phone || "");
+
+  if(newName) window.user.name = newName;
+  if(newPhone) window.user.phone = newPhone;
+
+  localStorage.setItem("atg_session", JSON.stringify(window.user));
+
+  renderProfile();
+}
+
+function uploadPhoto(){
+
+  let file = document.getElementById("photoUpload").files[0];
+
+  if(!file) return;
+
+  let reader = new FileReader();
+
+  reader.onload = function(e){
+
+    window.user.photo = e.target.result;
+
+    localStorage.setItem("atg_session", JSON.stringify(window.user));
+
+    renderProfile();
+
+  }
+
+  reader.readAsDataURL(file);
+
+}
+
+
+
+
+
+function downloadReceiptPDF(data){
+  const receiptHTML = `
+    <html>
+    <head>
+      <title>Payment Receipt</title>
+      <style>
+        body{font-family:Arial;padding:20px}
+        h2{color:#3b82f6}
+        .box{border:1px solid #ddd;padding:15px;border-radius:10px}
+      </style>
+    </head>
+    <body>
+      <h2>Hotel Booking Receipt</h2>
+      <div class="box">
+        <p><b>Hotel:</b> ${data.hotel || "-"}</p>
+        <p><b>Place:</b> ${data.place || "-"}</p>
+        <p><b>Room Type:</b> ${data.type || "-"}</p>
+        <p><b>Days:</b> ${data.days || "-"}</p>
+        <p><b>Total Paid:</b> ?${data.total || "0"}</p>
+        <p><b>Date:</b> ${new Date().toLocaleString()}</p>
+      </div>
+      <div style="margin-top:16px">
+        <button onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </body>
+    </html>
+  `;
+  const w = window.open('', '_blank');
+  if(!w){ alert('Popup blocked. Please allow popups to view the receipt.'); return; }
+  w.document.open();
+  w.document.write(receiptHTML);
+  w.document.close();
+}
+
+
+
+
+
+</script>
+
+
+
+
+<input 
+ type="file"
+ id="tripPhotoUpload"
+ accept="image/*"
+ multiple
+ style="display:none"
+ onchange="uploadTripPhotos()">
+
+
+ <div id="fakePaymentBox" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+z-index:9999;
+justify-content:center;
+align-items:center;
+">
+
+<div style="
+background:white;
+padding:25px;
+border-radius:15px;
+width:320px;
+text-align:center;
+">
+
+<h3>💳 Payment Gateway</h3>
+
+<input placeholder="Card Number" style="width:100%;padding:10px;margin-top:10px">
+<input placeholder="MM/YY" style="width:100%;padding:10px;margin-top:10px">
+<input placeholder="CVV" style="width:100%;padding:10px;margin-top:10px">
+
+<button class="primary"
+style="margin-top:15px;width:100%"
+onclick="completeFakePayment()">
+Pay Now
+</button>
+
+<button style="margin-top:10px" onclick="closeFakePayment()">
+Cancel
+</button>
+
+</div>
+</div>
+
+
+
+<!-- RECEIPT POPUP -->
+<div id="receiptBox" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+z-index:99999;
+justify-content:center;
+align-items:center;
+">
+
+<div style="background:white;padding:25px;border-radius:15px;width:350px">
+
+<h3>🧾 Payment Receipt</h3>
+
+<div id="receiptContent"></div>
+
+<button class="primary"
+style="margin-top:15px;width:100%"
+onclick="closeReceipt()">
+Close
+</button>
+
+</div>
+</div>
+
+
+
+</body>
+</html>
