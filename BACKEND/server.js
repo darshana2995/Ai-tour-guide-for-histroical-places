@@ -150,6 +150,46 @@ app.get('/api/auth/me', verifyAuth, async (req, res) => {
   });
 });
 
+// Sync current user's profile (upsert)
+app.post('/api/users/sync', verifyAuth, async (req, res) => {
+  try {
+    const { name, phone, email } = req.body || {};
+    const uid = req.user.uid;
+    const userRef = db.collection('users').doc(uid);
+    const snap = await userRef.get();
+
+    const updateData = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    if (typeof email === 'string' && email.trim()) {
+      updateData.email = email.trim();
+    } else if (!snap.exists && req.user.email) {
+      updateData.email = req.user.email;
+    }
+
+    if (typeof name === 'string' && name.trim()) {
+      updateData.name = name.trim();
+    } else if (!snap.exists && req.user.email) {
+      updateData.name = req.user.email.split('@')[0];
+    }
+
+    if (typeof phone === 'string') {
+      updateData.phone = phone;
+    }
+
+    if (!snap.exists) {
+      updateData.createdAt = admin.firestore.FieldValue.serverTimestamp();
+    }
+
+    await userRef.set(updateData, { merge: true });
+    res.json({ message: 'User synced successfully', uid });
+  } catch (error) {
+    console.error('Sync user error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get User Profile
 app.get('/api/users/:uid', verifyAuth, async (req, res) => {
   try {

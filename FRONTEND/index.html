@@ -748,11 +748,30 @@ const USE_FAKE_PAYMENT = true;
 
 /* ====================== API Helpers ====================== */
 const API_BASE = "http://localhost:3000";
+const EXPECTED_FIREBASE_PROJECT_ID = firebaseConfig.projectId;
+
+function decodeJwtPayload(token){
+  try{
+    const payload = token.split('.')[1];
+    if(!payload) return null;
+    const b64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(b64));
+  }catch(_){
+    return null;
+  }
+}
 
 async function getIdTokenSafe(){
   const u = auth.currentUser || firebaseCurrentUser;
   if(!u) return null;
-  return await u.getIdToken();
+  const token = await u.getIdToken(true);
+  const payload = decodeJwtPayload(token);
+  if(payload && payload.aud && payload.aud !== EXPECTED_FIREBASE_PROJECT_ID){
+    console.error(`Token project mismatch: expected ${EXPECTED_FIREBASE_PROJECT_ID}, got ${payload.aud}`);
+    await signOut(auth);
+    throw new Error('Session token belongs to old Firebase project. Please log in again.');
+  }
+  return token;
 }
 
 async function apiFetch(path, options = {}){
@@ -781,19 +800,48 @@ async function apiFetch(path, options = {}){
 
 // Save user data to Firestore
 async function saveUserToFirestore(userId, userData) {
+  const current = auth.currentUser || firebaseCurrentUser;
+  if (current && current.uid === userId) {
+    try {
+      await apiFetch('/api/users/sync', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: userData?.email || current.email || '',
+          name: userData?.name || '',
+          phone: userData?.phone || ''
+        })
+      });
+      return true;
+    } catch (apiError) {
+      console.error("Error syncing user via API:", apiError);
+    }
+  }
+
   try {
     await setDoc(doc(db, "users", userId), {
       ...userData,
       createdAt: new Date().toISOString()
     }, { merge: true });
     console.log("User data saved to Firestore");
+    return true;
   } catch (error) {
     console.error("Error saving user data:", error);
+    return false;
   }
 }
 
 // Get user data from Firestore
 async function getUserFromFirestore(userId) {
+  const current = auth.currentUser || firebaseCurrentUser;
+  if (current && current.uid === userId) {
+    try {
+      const data = await apiFetch(`/api/users/${userId}`);
+      return data || null;
+    } catch (apiError) {
+      console.error("Error getting user data via API:", apiError);
+    }
+  }
+
   try {
     const docSnap = await getDoc(doc(db, "users", userId));
     if (docSnap.exists()) {
@@ -984,11 +1032,14 @@ onAuthStateChanged(auth, async (user) => {
       onLogin();
     } else {
       // Create new user in Firestore if not exists
-      await saveUserToFirestore(user.uid, {
+      const saved = await saveUserToFirestore(user.uid, {
         email: user.email,
         name: user.email.split('@')[0],
         phone: ''
       });
+      if (!saved) {
+        alert('Signed in, but profile sync failed. Please check backend/Firebase setup.');
+      }
       window.user = {
         uid: user.uid,
         email: user.email,
@@ -1025,11 +1076,14 @@ function register(){
     .then(async (userCredential) => {
       const user = userCredential.user;
       // Save user data to Firestore
-      await saveUserToFirestore(user.uid, {
+      const saved = await saveUserToFirestore(user.uid, {
         email: email,
         name: name,
         phone: phone
       });
+      if (!saved) {
+        alert('Registration done, but profile data sync failed.');
+      }
       window.user = { uid: user.uid, email, name, phone };
       alert('Registration successful!');
       onLogin();
