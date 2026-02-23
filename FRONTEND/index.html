@@ -247,15 +247,26 @@
     <!-- top navigation (hidden until login) -->
     <nav id="navbar" style="display:none">
       <span id="adminBadge" class="small-pill" style="display:none;margin-right:auto;background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.2)">Admin Mode</span>
-      <button onclick="showPage('homePage')">Home</button>
-      <button onclick="showPage('journeyPage')">Create Journey</button>
-      <button onclick="showPage('aiPlannerPage')">AI Planner</button>
+      <button id="navHomeBtn" onclick="showPage('homePage')">Home</button>
+      <button id="navJourneyBtn" onclick="showPage('journeyPage')">Create Journey</button>
+      <button id="navPlannerBtn" onclick="showPage('aiPlannerPage')">AI Planner</button>
       <button id="navHotelsBtn" onclick="showPage('hotelPage')">Hotels</button>
-      <button onclick="openBookingsPage()">Hotel Bookings</button>
-      <button onclick="showPage('profilePage')">Profile</button>
-      <button onclick="showPage('achievementPage')">Achievements</button>
+      <button id="navHotelBookingsBtn" onclick="openBookingsPage()">Hotel Bookings</button>
+      <button id="navProfileBtn" onclick="showPage('profilePage')">Profile</button>
+      <button id="navAchievementsBtn" onclick="showPage('achievementPage')">Achievements</button>
       <button id="navAdminBtn" onclick="showPage('adminPage')" style="display:none">Admin</button>
-      <button onclick="logout()">Logout</button>
+      <button id="langToggleBtn" onclick="toggleLanguageMenu()">Multi-language</button>
+      <select id="langSelect" style="display:none;max-width:150px" onchange="onLanguageChange(this.value)">
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="mr">Marathi</option>
+        <option value="gu">Gujarati</option>
+        <option value="ta">Tamil</option>
+        <option value="bn">Bengali</option>
+        <option value="fr">French</option>
+        <option value="es">Spanish</option>
+      </select>
+      <button id="navLogoutBtn" onclick="logout()">Logout</button>
     </nav>
 
     <!-- LANDING PAGE -->
@@ -294,13 +305,13 @@
     <!-- LOGIN PAGE -->
     <div id="loginPage" class="page">
       <div class="card" style="max-width:520px;margin:18px auto;text-align:center">
-        <h1>Welcome back</h1>
-        <p class="small-muted">Login to your AI Tour Guide account</p>
+        <h1 id="loginTitle">Welcome back</h1>
+        <p id="loginSubtitle" class="small-muted">Login to your AI Tour Guide account</p>
         <input id="loginEmail" type="email" placeholder="Email" />
         <input id="loginPass" type="password" placeholder="Password" />
         <div style="display:flex;gap:10px; margin-top:12px">
-          <button class="primary" style="flex:1" onclick="login()">Login</button>
-          <button style="flex:1" onclick="showPage('registerPage')">Register</button>
+          <button id="loginBtn" class="primary" style="flex:1" onclick="login()">Login</button>
+          <button id="gotoRegisterBtn" style="flex:1" onclick="showPage('registerPage')">Register</button>
         </div>
         <p class="small-muted" style="margin-top:12px">Demo: demo@example.com / demo123</p>
       </div>
@@ -309,7 +320,7 @@
     <!-- REGISTER PAGE -->
     <div id="registerPage" class="page">
       <div class="card" style="max-width:520px;margin:18px auto">
-        <h2>Create account</h2>
+        <h2 id="registerTitle">Create account</h2>
         <input id="regName" placeholder="Full name" />
         <div style="display:flex;gap:10px">
           <select id="regCountry" style="width:45%">
@@ -324,8 +335,8 @@
         <input id="regEmail" type="email" placeholder="Email" />
         <input id="regPass" type="password" placeholder="Password" />
         <div style="display:flex;gap:10px; margin-top:12px">
-          <button class="primary" style="flex:1" onclick="register()">Register</button>
-          <button style="flex:1" onclick="showPage('loginPage')">Back</button>
+          <button id="registerBtn" class="primary" style="flex:1" onclick="register()">Register</button>
+          <button id="registerBackBtn" style="flex:1" onclick="showPage('loginPage')">Back</button>
         </div>
       </div>
     </div>
@@ -495,8 +506,8 @@
       <div style="display:flex;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:320px">
           <div class="card">
-            <h2>Create Your Journey</h2>
-            <label>Choose place</label>
+            <h2 id="journeyTitle">Create Your Journey</h2>
+            <label id="labelChoosePlace">Choose place</label>
             <select id="placeSelect">
               <option>Taj Mahal</option>
               <option>Red Fort</option>
@@ -504,11 +515,11 @@
               <option>Hampi</option>
             </select>
 
-            <label style="margin-top:10px">Arrival date</label>
+            <label id="labelArrivalDate" style="margin-top:10px">Arrival date</label>
             <input id="arrive" type="date" />
 
             <!-- NEW: travel mode -->
-            <label style="margin-top:10px">Travel mode</label>
+            <label id="labelTravelMode" style="margin-top:10px">Travel mode</label>
             <select id="travelMode">
               <option>Train</option>
               <option>Bus</option>
@@ -516,24 +527,31 @@
               <option>Car</option>
             </select>
 
-            <label>Hotel name</label>
+            <label id="labelTravelType" style="margin-top:10px">Travel type</label>
+            <select id="travelType">
+              <option value="Solo">Solo</option>
+              <option value="Family">Family</option>
+              <option value="Friends">Friends</option>
+            </select>
+
+            <label id="labelHotelName">Hotel name</label>
             <input id="hotelName" placeholder="Hotel / Guesthouse" />
 
-            <label>Number of nights</label>
+            <label id="labelNights">Number of nights</label>
             <input id="nights" type="number" min="1" value="1" />
 
-            <label>Estimated hotel price (total)</label>
+            <label id="labelPrice">Estimated hotel price (total)</label>
             <input id="hotelPrice" type="number" placeholder="e.g., 4500" />
 
             <!-- NEW: notes -->
-            <label style="margin-top:10px">Notes (optional)</label>
+            <label id="labelNotes" style="margin-top:10px">Notes (optional)</label>
             <textarea id="journeyNotes" placeholder="Any notes for this journey item (e.g., room preferences, contact info)"></textarea>
 
             <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-              <button class="primary" onclick="addToJourney()">Add to Journey</button>
-              <button onclick="exportJourney()">Export JSON</button>
+              <button id="addJourneyBtn" class="primary" onclick="addToJourney()">Add to Journey</button>
+              <button id="exportJourneyBtn" onclick="exportJourney()">Export JSON</button>
               <!-- NEW: generate PDF for saved journey -->
-              <button onclick="generatePDF()" class="btn-ghost">Generate PDF</button>
+              <button id="generatePdfBtn" onclick="generatePDF()" class="btn-ghost">Generate PDF</button>
             </div>
           </div>
 
@@ -545,11 +563,11 @@
 
         <div style="flex:1;min-width:320px">
           <div class="card">
-            <h2>Your Journey Plan</h2>
+            <h2 id="journeyPlanTitle">Your Journey Plan</h2>
             <div id="journeyList"></div>
             <div style="margin-top:12px;display:flex;gap:10px">
-              <button onclick="loadSample()">Load sample</button>
-              <button onclick="clearJourney()">Clear</button>
+              <button id="loadSampleBtn" onclick="loadSample()">Load sample</button>
+              <button id="clearJourneyBtn" onclick="clearJourney()">Clear</button>
             </div>
           </div>
 
@@ -591,31 +609,38 @@
 
   <div class="card ai-planner-card">
 
-    <h2>🧠 AI Trip Planner</h2>
+    <h2 id="aiPlannerTitle">🧠 AI Trip Planner</h2>
 
-    <label>Select Month</label>
+    <label id="aiMonthLabel">Select Month</label>
     <select id="aiMonth">
-      <option>January</option>
-      <option>February</option>
-      <option>March</option>
-      <option>April</option>
-      <option>May</option>
-      <option>June</option>
-      <option>July</option>
-      <option>August</option>
-      <option>September</option>
-      <option>October</option>
-      <option>November</option>
-      <option>December</option>
+      <option value="January">January</option>
+      <option value="February">February</option>
+      <option value="March">March</option>
+      <option value="April">April</option>
+      <option value="May">May</option>
+      <option value="June">June</option>
+      <option value="July">July</option>
+      <option value="August">August</option>
+      <option value="September">September</option>
+      <option value="October">October</option>
+      <option value="November">November</option>
+      <option value="December">December</option>
     </select>
 
-    <label>Budget</label>
+    <label id="aiBudgetLabel">Budget</label>
     <input type="number" id="aiBudget">
 
-    <label>Days</label>
+    <label id="aiDaysLabel">Days</label>
     <input type="number" id="aiDays">
 
-    <button class="primary" onclick="generateAIPlan()">
+    <label id="aiTravelTypeLabel">Travel Type</label>
+    <select id="aiTravelType">
+      <option value="Solo">Solo</option>
+      <option value="Family">Family</option>
+      <option value="Friends">Friends</option>
+    </select>
+
+    <button id="aiGenerateBtn" class="primary" onclick="generateAIPlan()">
       Generate AI Plan
     </button>
 
@@ -1664,10 +1689,11 @@ async function addToJourney(){
   const nights = Number(document.getElementById('nights').value || 1);
   const price = Number(document.getElementById('hotelPrice').value || 0);
   const travelMode = document.getElementById('travelMode').value;
+  const travelType = document.getElementById('travelType').value;
   const notes = document.getElementById('journeyNotes').value.trim();
   if(!hotel){ alert('Enter a hotel name'); return; }
   const arr = getJourney();
-  const item = {id:`local-${Date.now()}`, place, arrive, hotel, nights, price, travelMode, notes};
+  const item = {id:`local-${Date.now()}`, place, arrive, hotel, nights, price, travelMode, travelType, notes};
   arr.push(item);
   saveJourney(arr);
   renderJourney();
@@ -1678,7 +1704,7 @@ async function addToJourney(){
   try{
     await apiFetch('/api/journeys', {
       method: 'POST',
-      body: JSON.stringify({ place, arrive, hotel, nights, price, travelMode, notes })
+      body: JSON.stringify({ place, arrive, hotel, nights, price, travelMode, travelType, notes })
     });
     await syncUserDataFromDb();
     renderAll();
@@ -1696,7 +1722,7 @@ function renderJourney(){
   list.forEach(it=>{
     const d = document.createElement('div');
     d.className = 'card';
-    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'—'}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | ₹${it.price}</div></div>`;
+    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'—'}</span><span class="small-pill">${translateTravelType(it.travelType||'Solo')}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | ₹${it.price}</div></div>`;
     const notesHtml = it.notes ? `<div style="margin-top:8px"><strong>Notes:</strong> <span class="small-muted">${escapeHtml(it.notes)}</span></div>` : '';
     const pm = PLACE_META[it.place];
     const imgHtml = pm ? `<div style="display:flex;gap:10px;margin-top:8px"><img src="${pm.image}" alt="${it.place}" style="width:120px;height:80px;border-radius:8px;object-fit:cover"><div style="flex:1"><strong>${it.place}</strong><div class="small-muted">${pm.info}</div></div></div>` : `<strong>${it.place}</strong>`;
@@ -1738,8 +1764,8 @@ async function clearJourney(){
 
 function loadSample(){
   const sample = [
-    {id:1,place:'Taj Mahal',arrive:'2026-01-15',hotel:'Hotel Tajview',nights:2,price:6000,travelMode:'Train',notes:'Request early check-in if possible.'},
-    {id:2,place:'Agra Fort',arrive:'2026-01-17',hotel:'Fort Stay',nights:1,price:2200,travelMode:'Car',notes:'Guide recommended for the fort.'}
+    {id:1,place:'Taj Mahal',arrive:'2026-01-15',hotel:'Hotel Tajview',nights:2,price:6000,travelMode:'Train',travelType:'Family',notes:'Request early check-in if possible.'},
+    {id:2,place:'Agra Fort',arrive:'2026-01-17',hotel:'Fort Stay',nights:1,price:2200,travelMode:'Car',travelType:'Friends',notes:'Guide recommended for the fort.'}
   ];
   saveJourney(sample); renderJourney(); updateBudgetFromData(); renderProfile(); renderDashboardPreview();
 }
@@ -2384,7 +2410,7 @@ function generatePDF(){
   journey.forEach(it=>{
     const pm = PLACE_META[it.place] || {};
     html += `<div class="place"><img src="${pm.image || ''}" loading="lazy">
-alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'—')} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | ₹${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
+alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'—')} | Type: ${escapeHtml(translateTravelType(it.travelType||'Solo'))} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | ₹${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
       ${it.notes ? `<div style="margin-top:8px" class="notes"><strong>Notes:</strong> ${escapeHtml(it.notes)}</div>` : ''}
     </div></div>`;
   });
@@ -2430,6 +2456,597 @@ alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div 
   setTimeout(()=>{ try{ w.focus(); }catch(e){} }, 250);
 }
 
+/* ---------- Multi-language ---------- */
+const I18N = {
+  en: {
+    title: 'AI Tour Guide - Demo',
+    nav_home: 'Home',
+    nav_create_journey: 'Create Journey',
+    nav_ai_planner: 'AI Planner',
+    nav_hotels: 'Hotels',
+    nav_hotel_bookings: 'Hotel Bookings',
+    nav_profile: 'Profile',
+    nav_achievements: 'Achievements',
+    nav_admin: 'Admin',
+    nav_logout: 'Logout',
+    nav_multilang: 'Multi-language',
+    login_title: 'Welcome back',
+    login_subtitle: 'Login to your AI Tour Guide account',
+    login_btn: 'Login',
+    register_btn: 'Register',
+    register_title: 'Create account',
+    back_btn: 'Back',
+    journey_title: 'Create Your Journey',
+    choose_place: 'Choose place',
+    arrival_date: 'Arrival date',
+    travel_mode: 'Travel mode',
+    travel_type: 'Travel type',
+    hotel_name: 'Hotel name',
+    nights: 'Number of nights',
+    est_price: 'Estimated hotel price (total)',
+    notes_optional: 'Notes (optional)',
+    add_journey: 'Add to Journey',
+    export_json: 'Export JSON',
+    generate_pdf: 'Generate PDF',
+    journey_plan: 'Your Journey Plan',
+    load_sample: 'Load sample',
+    clear: 'Clear',
+    ai_title: 'AI Trip Planner',
+    select_month: 'Select Month',
+    budget: 'Budget',
+    days: 'Days',
+    generate_ai_plan: 'Generate AI Plan',
+    travel_solo: 'Solo',
+    travel_family: 'Family',
+    travel_friends: 'Friends',
+    month_january: 'January',
+    month_february: 'February',
+    month_march: 'March',
+    month_april: 'April',
+    month_may: 'May',
+    month_june: 'June',
+    month_july: 'July',
+    month_august: 'August',
+    month_september: 'September',
+    month_october: 'October',
+    month_november: 'November',
+    month_december: 'December',
+    ph_hotel_name: 'Hotel / Guesthouse',
+    ph_hotel_price: 'e.g., 4500',
+    ph_notes: 'Any notes for this journey item (e.g., room preferences, contact info)'
+  },
+  hi: {
+    title: 'एआई टूर गाइड - डेमो',
+    nav_home: 'होम',
+    nav_create_journey: 'यात्रा बनाएं',
+    nav_ai_planner: 'एआई प्लानर',
+    nav_hotels: 'होटल',
+    nav_hotel_bookings: 'होटल बुकिंग',
+    nav_profile: 'प्रोफाइल',
+    nav_achievements: 'उपलब्धियां',
+    nav_admin: 'एडमिन',
+    nav_logout: 'लॉगआउट',
+    nav_multilang: 'बहुभाषी',
+    login_title: 'वापसी पर स्वागत है',
+    login_subtitle: 'अपने एआई टूर गाइड खाते में लॉगिन करें',
+    login_btn: 'लॉगिन',
+    register_btn: 'रजिस्टर',
+    register_title: 'खाता बनाएं',
+    back_btn: 'वापस',
+    journey_title: 'अपनी यात्रा बनाएं',
+    choose_place: 'स्थान चुनें',
+    arrival_date: 'आगमन तिथि',
+    travel_mode: 'यात्रा का माध्यम',
+    travel_type: 'यात्रा प्रकार',
+    hotel_name: 'होटल नाम',
+    nights: 'रातों की संख्या',
+    est_price: 'अनुमानित होटल कीमत (कुल)',
+    notes_optional: 'नोट्स (वैकल्पिक)',
+    add_journey: 'यात्रा में जोड़ें',
+    export_json: 'JSON निर्यात करें',
+    generate_pdf: 'PDF बनाएं',
+    journey_plan: 'आपकी यात्रा योजना',
+    load_sample: 'नमूना लोड करें',
+    clear: 'साफ करें',
+    ai_title: 'एआई ट्रिप प्लानर',
+    select_month: 'महीना चुनें',
+    budget: 'बजट',
+    days: 'दिन',
+    generate_ai_plan: 'एआई योजना बनाएं',
+    travel_solo: 'एकल',
+    travel_family: 'परिवार',
+    travel_friends: 'दोस्त',
+    month_january: 'जनवरी',
+    month_february: 'फरवरी',
+    month_march: 'मार्च',
+    month_april: 'अप्रैल',
+    month_may: 'मई',
+    month_june: 'जून',
+    month_july: 'जुलाई',
+    month_august: 'अगस्त',
+    month_september: 'सितंबर',
+    month_october: 'अक्टूबर',
+    month_november: 'नवंबर',
+    month_december: 'दिसंबर',
+    ph_hotel_name: 'होटल / गेस्टहाउस',
+    ph_hotel_price: 'जैसे, 4500',
+    ph_notes: 'इस यात्रा आइटम के लिए नोट्स (जैसे, रूम पसंद, संपर्क जानकारी)'
+  },
+  mr: {
+    title: 'एआय टूर गाईड - डेमो',
+    nav_home: 'मुख्यपृष्ठ',
+    nav_create_journey: 'प्रवास तयार करा',
+    nav_ai_planner: 'एआय प्लॅनर',
+    nav_hotels: 'हॉटेल्स',
+    nav_hotel_bookings: 'हॉटेल बुकिंग',
+    nav_profile: 'प्रोफाइल',
+    nav_achievements: 'यश',
+    nav_admin: 'अॅडमिन',
+    nav_logout: 'लॉगआउट',
+    nav_multilang: 'बहुभाषिक',
+    login_title: 'पुन्हा स्वागत आहे',
+    login_subtitle: 'तुमच्या एआय टूर गाईड खात्यात लॉगिन करा',
+    login_btn: 'लॉगिन',
+    register_btn: 'नोंदणी',
+    register_title: 'खाते तयार करा',
+    back_btn: 'मागे',
+    journey_title: 'तुमचा प्रवास तयार करा',
+    choose_place: 'ठिकाण निवडा',
+    arrival_date: 'आगमन दिनांक',
+    travel_mode: 'प्रवास पद्धत',
+    travel_type: 'प्रवास प्रकार',
+    hotel_name: 'हॉटेल नाव',
+    nights: 'रात्रींची संख्या',
+    est_price: 'अंदाजे हॉटेल किंमत (एकूण)',
+    notes_optional: 'नोट्स (ऐच्छिक)',
+    add_journey: 'प्रवासात जोडा',
+    export_json: 'JSON निर्यात करा',
+    generate_pdf: 'PDF तयार करा',
+    journey_plan: 'तुमची प्रवास योजना',
+    load_sample: 'नमुना लोड करा',
+    clear: 'क्लिअर',
+    ai_title: 'एआय ट्रिप प्लॅनर',
+    select_month: 'महिना निवडा',
+    budget: 'बजेट',
+    days: 'दिवस',
+    generate_ai_plan: 'एआय योजना तयार करा',
+    travel_solo: 'एकटे',
+    travel_family: 'कुटुंब',
+    travel_friends: 'मित्र',
+    month_january: 'जानेवारी',
+    month_february: 'फेब्रुवारी',
+    month_march: 'मार्च',
+    month_april: 'एप्रिल',
+    month_may: 'मे',
+    month_june: 'जून',
+    month_july: 'जुलै',
+    month_august: 'ऑगस्ट',
+    month_september: 'सप्टेंबर',
+    month_october: 'ऑक्टोबर',
+    month_november: 'नोव्हेंबर',
+    month_december: 'डिसेंबर',
+    ph_hotel_name: 'हॉटेल / गेस्टहाउस',
+    ph_hotel_price: 'उदा., 4500',
+    ph_notes: 'या प्रवासासाठी नोंदी (उदा., रूम पसंती, संपर्क माहिती)'
+  },
+  gu: {
+    title: 'એઆઈ ટૂર ગાઈડ - ડેમો',
+    nav_home: 'હોમ',
+    nav_create_journey: 'યાત્રા બનાવો',
+    nav_ai_planner: 'એઆઈ પ્લાનર',
+    nav_hotels: 'હોટેલ્સ',
+    nav_hotel_bookings: 'હોટેલ બુકિંગ્સ',
+    nav_profile: 'પ્રોફાઇલ',
+    nav_achievements: 'સિદ્ધિઓ',
+    nav_admin: 'એડમિન',
+    nav_logout: 'લૉગઆઉટ',
+    nav_multilang: 'બહુભાષી',
+    login_title: 'ફરી સ્વાગત છે',
+    login_subtitle: 'તમારા એઆઈ ટૂર ગાઈડ ખાતામાં લૉગિન કરો',
+    login_btn: 'લૉગિન',
+    register_btn: 'રજિસ્ટર',
+    register_title: 'ખાતું બનાવો',
+    back_btn: 'પાછળ',
+    journey_title: 'તમારી યાત્રા બનાવો',
+    choose_place: 'સ્થળ પસંદ કરો',
+    arrival_date: 'આગમન તારીખ',
+    travel_mode: 'પ્રવાસ મોડ',
+    travel_type: 'પ્રવાસ પ્રકાર',
+    hotel_name: 'હોટેલ નામ',
+    nights: 'રાતોની સંખ્યા',
+    est_price: 'અંદાજિત હોટેલ કિંમત (કુલ)',
+    notes_optional: 'નોંધો (વૈકલ્પિક)',
+    add_journey: 'યાત્રામાં ઉમેરો',
+    export_json: 'JSON એક્સપોર્ટ કરો',
+    generate_pdf: 'PDF બનાવો',
+    journey_plan: 'તમારી યાત્રા યોજના',
+    load_sample: 'નમૂનો લોડ કરો',
+    clear: 'સાફ કરો',
+    ai_title: 'એઆઈ ટ્રિપ પ્લાનર',
+    select_month: 'મહિનો પસંદ કરો',
+    budget: 'બજેટ',
+    days: 'દિવસ',
+    generate_ai_plan: 'એઆઈ યોજના બનાવો',
+    travel_solo: 'એકલા',
+    travel_family: 'પરિવાર',
+    travel_friends: 'મિત્રો',
+    month_january: 'જાન્યુઆરી',
+    month_february: 'ફેબ્રુઆરી',
+    month_march: 'માર્ચ',
+    month_april: 'એપ્રિલ',
+    month_may: 'મે',
+    month_june: 'જૂન',
+    month_july: 'જુલાઈ',
+    month_august: 'ઑગસ્ટ',
+    month_september: 'સપ્ટેમ્બર',
+    month_october: 'ઓક્ટોબર',
+    month_november: 'નવેમ્બર',
+    month_december: 'ડિસેમ્બર',
+    ph_hotel_name: 'હોટેલ / ગેસ્ટહાઉસ',
+    ph_hotel_price: 'જેમ કે, 4500',
+    ph_notes: 'આ યાત્રા આઇટમ માટે નોંધો (જેમ કે, રૂમ પસંદગી, સંપર્ક માહિતી)'
+  },
+  ta: {
+    title: 'ஏஐ டூர் கையேடு - டெமோ',
+    nav_home: 'முகப்பு',
+    nav_create_journey: 'பயணத்தை உருவாக்கு',
+    nav_ai_planner: 'ஏஐ திட்டமிடி',
+    nav_hotels: 'ஹோட்டல்கள்',
+    nav_hotel_bookings: 'ஹோட்டல் முன்பதிவுகள்',
+    nav_profile: 'சுயவிவரம்',
+    nav_achievements: 'சாதனைகள்',
+    nav_admin: 'அட்மின்',
+    nav_logout: 'வெளியேறு',
+    nav_multilang: 'பன்மொழி',
+    login_title: 'மீண்டும் வரவேற்கிறோம்',
+    login_subtitle: 'உங்கள் ஏஐ டூர் கையேடு கணக்கில் உள்நுழைக',
+    login_btn: 'உள்நுழை',
+    register_btn: 'பதிவு செய்',
+    register_title: 'கணக்கை உருவாக்கு',
+    back_btn: 'பின்செல்',
+    journey_title: 'உங்கள் பயணத்தை உருவாக்குங்கள்',
+    choose_place: 'இடத்தை தேர்வுசெய்க',
+    arrival_date: 'வருகை தேதி',
+    travel_mode: 'பயண முறை',
+    travel_type: 'பயண வகை',
+    hotel_name: 'ஹோட்டல் பெயர்',
+    nights: 'இரவு எண்ணிக்கை',
+    est_price: 'மதிப்பிடப்பட்ட ஹோட்டல் செலவு (மொத்தம்)',
+    notes_optional: 'குறிப்புகள் (விருப்பம்)',
+    add_journey: 'பயணத்தில் சேர்',
+    export_json: 'JSON ஏற்றுமதி',
+    generate_pdf: 'PDF உருவாக்கு',
+    journey_plan: 'உங்கள் பயண திட்டம்',
+    load_sample: 'மாதிரி ஏற்று',
+    clear: 'அழி',
+    ai_title: 'ஏஐ பயண திட்டமிடி',
+    select_month: 'மாதத்தை தேர்வுசெய்க',
+    budget: 'பட்ஜெட்',
+    days: 'நாட்கள்',
+    generate_ai_plan: 'ஏஐ திட்டம் உருவாக்கு',
+    travel_solo: 'தனியாக',
+    travel_family: 'குடும்பம்',
+    travel_friends: 'நண்பர்கள்',
+    month_january: 'ஜனவரி',
+    month_february: 'பிப்ரவரி',
+    month_march: 'மார்ச்',
+    month_april: 'ஏப்ரல்',
+    month_may: 'மே',
+    month_june: 'ஜூன்',
+    month_july: 'ஜூலை',
+    month_august: 'ஆகஸ்ட்',
+    month_september: 'செப்டம்பர்',
+    month_october: 'அக்டோபர்',
+    month_november: 'நவம்பர்',
+    month_december: 'டிசம்பர்',
+    ph_hotel_name: 'ஹோட்டல் / கெஸ்ட் ஹவுஸ்',
+    ph_hotel_price: 'எ.கா., 4500',
+    ph_notes: 'இந்த பயணத்திற்கான குறிப்புகள் (எ.கா., அறை விருப்பம், தொடர்பு தகவல்)'
+  },
+  bn: {
+    title: 'এআই ট্যুর গাইড - ডেমো',
+    nav_home: 'হোম',
+    nav_create_journey: 'ভ্রমণ তৈরি করুন',
+    nav_ai_planner: 'এআই প্ল্যানার',
+    nav_hotels: 'হোটেল',
+    nav_hotel_bookings: 'হোটেল বুকিং',
+    nav_profile: 'প্রোফাইল',
+    nav_achievements: 'অর্জন',
+    nav_admin: 'অ্যাডমিন',
+    nav_logout: 'লগআউট',
+    nav_multilang: 'বহুভাষা',
+    login_title: 'আবার স্বাগতম',
+    login_subtitle: 'আপনার এআই ট্যুর গাইড অ্যাকাউন্টে লগইন করুন',
+    login_btn: 'লগইন',
+    register_btn: 'রেজিস্টার',
+    register_title: 'অ্যাকাউন্ট তৈরি করুন',
+    back_btn: 'ফিরে যান',
+    journey_title: 'আপনার ভ্রমণ তৈরি করুন',
+    choose_place: 'স্থান নির্বাচন করুন',
+    arrival_date: 'আগমনের তারিখ',
+    travel_mode: 'ভ্রমণ মাধ্যম',
+    travel_type: 'ভ্রমণের ধরন',
+    hotel_name: 'হোটেলের নাম',
+    nights: 'রাতের সংখ্যা',
+    est_price: 'আনুমানিক হোটেল খরচ (মোট)',
+    notes_optional: 'নোট (ঐচ্ছিক)',
+    add_journey: 'ভ্রমণে যোগ করুন',
+    export_json: 'JSON এক্সপোর্ট',
+    generate_pdf: 'PDF তৈরি করুন',
+    journey_plan: 'আপনার ভ্রমণ পরিকল্পনা',
+    load_sample: 'নমুনা লোড',
+    clear: 'মুছুন',
+    ai_title: 'এআই ট্রিপ প্ল্যানার',
+    select_month: 'মাস নির্বাচন করুন',
+    budget: 'বাজেট',
+    days: 'দিন',
+    generate_ai_plan: 'এআই পরিকল্পনা তৈরি করুন',
+    travel_solo: 'একাই',
+    travel_family: 'পরিবার',
+    travel_friends: 'বন্ধুরা',
+    month_january: 'জানুয়ারি',
+    month_february: 'ফেব্রুয়ারি',
+    month_march: 'মার্চ',
+    month_april: 'এপ্রিল',
+    month_may: 'মে',
+    month_june: 'জুন',
+    month_july: 'জুলাই',
+    month_august: 'আগস্ট',
+    month_september: 'সেপ্টেম্বর',
+    month_october: 'অক্টোবর',
+    month_november: 'নভেম্বর',
+    month_december: 'ডিসেম্বর',
+    ph_hotel_name: 'হোটেল / গেস্টহাউস',
+    ph_hotel_price: 'যেমন, 4500',
+    ph_notes: 'এই ভ্রমণের জন্য নোট (যেমন, রুম পছন্দ, যোগাযোগের তথ্য)'
+  },
+  fr: {
+    title: 'Guide Tour IA - Démo',
+    nav_home: 'Accueil',
+    nav_create_journey: 'Créer un voyage',
+    nav_ai_planner: 'Planificateur IA',
+    nav_hotels: 'Hôtels',
+    nav_hotel_bookings: 'Réservations hôtel',
+    nav_profile: 'Profil',
+    nav_achievements: 'Réalisations',
+    nav_admin: 'Admin',
+    nav_logout: 'Déconnexion',
+    nav_multilang: 'Multi-langue',
+    login_title: 'Bon retour',
+    login_subtitle: 'Connectez-vous à votre compte AI Tour Guide',
+    login_btn: 'Connexion',
+    register_btn: "S'inscrire",
+    register_title: 'Créer un compte',
+    back_btn: 'Retour',
+    journey_title: 'Créez votre voyage',
+    choose_place: 'Choisir un lieu',
+    arrival_date: "Date d'arrivée",
+    travel_mode: 'Mode de voyage',
+    travel_type: 'Type de voyage',
+    hotel_name: "Nom de l'hôtel",
+    nights: 'Nombre de nuits',
+    est_price: 'Prix estimé de l’hôtel (total)',
+    notes_optional: 'Notes (optionnel)',
+    add_journey: 'Ajouter au voyage',
+    export_json: 'Exporter JSON',
+    generate_pdf: 'Générer PDF',
+    journey_plan: 'Votre plan de voyage',
+    load_sample: 'Charger un exemple',
+    clear: 'Effacer',
+    ai_title: 'Planificateur de voyage IA',
+    select_month: 'Choisir le mois',
+    budget: 'Budget',
+    days: 'Jours',
+    generate_ai_plan: 'Générer le plan IA',
+    travel_solo: 'Solo',
+    travel_family: 'Famille',
+    travel_friends: 'Amis',
+    month_january: 'Janvier',
+    month_february: 'Février',
+    month_march: 'Mars',
+    month_april: 'Avril',
+    month_may: 'Mai',
+    month_june: 'Juin',
+    month_july: 'Juillet',
+    month_august: 'Août',
+    month_september: 'Septembre',
+    month_october: 'Octobre',
+    month_november: 'Novembre',
+    month_december: 'Décembre',
+    ph_hotel_name: 'Hôtel / Maison d’hôtes',
+    ph_hotel_price: 'ex., 4500',
+    ph_notes: 'Notes pour cet élément du voyage (ex. préférences de chambre, contact)'
+  },
+  es: {
+    title: 'Guía Turística IA - Demo',
+    nav_home: 'Inicio',
+    nav_create_journey: 'Crear viaje',
+    nav_ai_planner: 'Planificador IA',
+    nav_hotels: 'Hoteles',
+    nav_hotel_bookings: 'Reservas de hotel',
+    nav_profile: 'Perfil',
+    nav_achievements: 'Logros',
+    nav_admin: 'Admin',
+    nav_logout: 'Cerrar sesión',
+    nav_multilang: 'Multi-idioma',
+    login_title: 'Bienvenido de nuevo',
+    login_subtitle: 'Inicia sesión en tu cuenta de AI Tour Guide',
+    login_btn: 'Iniciar sesión',
+    register_btn: 'Registrarse',
+    register_title: 'Crear cuenta',
+    back_btn: 'Atrás',
+    journey_title: 'Crea tu viaje',
+    choose_place: 'Elige lugar',
+    arrival_date: 'Fecha de llegada',
+    travel_mode: 'Modo de viaje',
+    travel_type: 'Tipo de viaje',
+    hotel_name: 'Nombre del hotel',
+    nights: 'Número de noches',
+    est_price: 'Precio estimado del hotel (total)',
+    notes_optional: 'Notas (opcional)',
+    add_journey: 'Agregar al viaje',
+    export_json: 'Exportar JSON',
+    generate_pdf: 'Generar PDF',
+    journey_plan: 'Tu plan de viaje',
+    load_sample: 'Cargar ejemplo',
+    clear: 'Limpiar',
+    ai_title: 'Planificador de viaje IA',
+    select_month: 'Selecciona mes',
+    budget: 'Presupuesto',
+    days: 'Días',
+    generate_ai_plan: 'Generar plan IA',
+    travel_solo: 'Solo',
+    travel_family: 'Familia',
+    travel_friends: 'Amigos',
+    month_january: 'Enero',
+    month_february: 'Febrero',
+    month_march: 'Marzo',
+    month_april: 'Abril',
+    month_may: 'Mayo',
+    month_june: 'Junio',
+    month_july: 'Julio',
+    month_august: 'Agosto',
+    month_september: 'Septiembre',
+    month_october: 'Octubre',
+    month_november: 'Noviembre',
+    month_december: 'Diciembre',
+    ph_hotel_name: 'Hotel / Casa de huéspedes',
+    ph_hotel_price: 'p. ej., 4500',
+    ph_notes: 'Notas para este viaje (p. ej., preferencias de habitación, contacto)'
+  }
+};
+
+const MONTH_KEYS = {
+  January: 'month_january',
+  February: 'month_february',
+  March: 'month_march',
+  April: 'month_april',
+  May: 'month_may',
+  June: 'month_june',
+  July: 'month_july',
+  August: 'month_august',
+  September: 'month_september',
+  October: 'month_october',
+  November: 'month_november',
+  December: 'month_december'
+};
+
+function t(key){
+  const lang = window.currentLang || 'en';
+  return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
+}
+
+function translateTravelType(v){
+  if(v === 'Family') return t('travel_family');
+  if(v === 'Friends') return t('travel_friends');
+  return t('travel_solo');
+}
+
+function setText(id, key){
+  const el = document.getElementById(id);
+  if(el) el.textContent = t(key);
+}
+
+function setPlaceholder(id, key){
+  const el = document.getElementById(id);
+  if(el) el.placeholder = t(key);
+}
+
+function setSelectOptionByValue(selectId, value, key){
+  const select = document.getElementById(selectId);
+  if(!select) return;
+  const opt = select.querySelector(`option[value="${value}"]`);
+  if(opt) opt.textContent = t(key);
+}
+
+function applyLanguage(lang){
+  window.currentLang = I18N[lang] ? lang : 'en';
+  localStorage.setItem('atg_lang', window.currentLang);
+  document.documentElement.lang = window.currentLang;
+  document.title = t('title');
+
+  setText('navHomeBtn', 'nav_home');
+  setText('navJourneyBtn', 'nav_create_journey');
+  setText('navPlannerBtn', 'nav_ai_planner');
+  setText('navHotelsBtn', 'nav_hotels');
+  setText('navHotelBookingsBtn', 'nav_hotel_bookings');
+  setText('navProfileBtn', 'nav_profile');
+  setText('navAchievementsBtn', 'nav_achievements');
+  setText('navAdminBtn', 'nav_admin');
+  setText('navLogoutBtn', 'nav_logout');
+  setText('langToggleBtn', 'nav_multilang');
+
+  setText('loginTitle', 'login_title');
+  setText('loginSubtitle', 'login_subtitle');
+  setText('loginBtn', 'login_btn');
+  setText('gotoRegisterBtn', 'register_btn');
+  setText('registerTitle', 'register_title');
+  setText('registerBtn', 'register_btn');
+  setText('registerBackBtn', 'back_btn');
+
+  setText('journeyTitle', 'journey_title');
+  setText('labelChoosePlace', 'choose_place');
+  setText('labelArrivalDate', 'arrival_date');
+  setText('labelTravelMode', 'travel_mode');
+  setText('labelTravelType', 'travel_type');
+  setText('labelHotelName', 'hotel_name');
+  setText('labelNights', 'nights');
+  setText('labelPrice', 'est_price');
+  setText('labelNotes', 'notes_optional');
+  setText('addJourneyBtn', 'add_journey');
+  setText('exportJourneyBtn', 'export_json');
+  setText('generatePdfBtn', 'generate_pdf');
+  setText('journeyPlanTitle', 'journey_plan');
+  setText('loadSampleBtn', 'load_sample');
+  setText('clearJourneyBtn', 'clear');
+
+  setText('aiPlannerTitle', 'ai_title');
+  setText('aiMonthLabel', 'select_month');
+  setText('aiBudgetLabel', 'budget');
+  setText('aiDaysLabel', 'days');
+  setText('aiTravelTypeLabel', 'travel_type');
+  setText('aiGenerateBtn', 'generate_ai_plan');
+
+  setPlaceholder('hotelName', 'ph_hotel_name');
+  setPlaceholder('hotelPrice', 'ph_hotel_price');
+  setPlaceholder('journeyNotes', 'ph_notes');
+
+  setSelectOptionByValue('travelType', 'Solo', 'travel_solo');
+  setSelectOptionByValue('travelType', 'Family', 'travel_family');
+  setSelectOptionByValue('travelType', 'Friends', 'travel_friends');
+  setSelectOptionByValue('aiTravelType', 'Solo', 'travel_solo');
+  setSelectOptionByValue('aiTravelType', 'Family', 'travel_family');
+  setSelectOptionByValue('aiTravelType', 'Friends', 'travel_friends');
+
+  const monthSelect = document.getElementById('aiMonth');
+  if(monthSelect){
+    Array.from(monthSelect.options).forEach(opt=>{
+      const key = MONTH_KEYS[opt.value];
+      if(key) opt.textContent = t(key);
+    });
+  }
+
+  const langSelect = document.getElementById('langSelect');
+  if(langSelect) langSelect.value = window.currentLang;
+
+  renderJourney();
+}
+
+function onLanguageChange(lang){
+  applyLanguage(lang);
+}
+
+function toggleLanguageMenu(){
+  const select = document.getElementById('langSelect');
+  if(!select) return;
+  select.style.display = (select.style.display === 'none' || !select.style.display) ? 'inline-block' : 'none';
+}
+
+function initLanguage(){
+  const saved = localStorage.getItem('atg_lang') || 'en';
+  applyLanguage(saved);
+}
+
 /* ---------- Render everything on page show ---------- */
 function renderAll(){
   renderJourney(); renderVisits(); renderBudget(); renderProfile();
@@ -2442,6 +3059,7 @@ function renderAll(){
 /* ---------- helper: update on load ---------- */
 window.addEventListener('load', ()=>{
   if(window.user){ onLogin(); } else { showPage('landingPage'); }
+  initLanguage();
   renderAll();
   startSlideshow();
   startSquareSlideshow();
@@ -2884,7 +3502,10 @@ Object.assign(window, {
   getBookings,
   renderHotelBookings,
   renderProfile,
-  applyImageFallbacks
+  applyImageFallbacks,
+  onLanguageChange,
+  toggleLanguageMenu,
+  applyLanguage
 });
 
 /* ======= END HOTEL FEATURES ======= */
@@ -3144,6 +3765,7 @@ function generateAIPlan(){
   const month = document.getElementById("aiMonth").value;
   const budget = Number(document.getElementById("aiBudget").value);
   const days = Number(document.getElementById("aiDays").value);
+  const travelType = document.getElementById("aiTravelType").value;
   const resultDiv = document.getElementById("aiResult");
 
   if(!month || !budget || !days){
@@ -3183,6 +3805,11 @@ function generateAIPlan(){
   if(travelMode === "Bus") travelCost = 1800;
   if(travelMode === "Flight") travelCost = 6000;
 
+  // Travel type multiplier (group travel usually costs more total)
+  let typeMultiplier = 1;
+  if(travelType === "Family") typeMultiplier = 1.7;
+  if(travelType === "Friends") typeMultiplier = 1.4;
+
   // Hotel AI based on budget category
   if(budget >= 60000){
     hotelPerNight = 3500;
@@ -3200,7 +3827,9 @@ function generateAIPlan(){
   // Total Calculations
   let hotelTotal = hotelPerNight * days;
   let foodTotal = foodPerDay * days;
-  let totalExpense = travelCost + hotelTotal + foodTotal;
+  hotelTotal = Math.round(hotelTotal * typeMultiplier);
+  foodTotal = Math.round(foodTotal * typeMultiplier);
+  let totalExpense = Math.round((travelCost * typeMultiplier) + hotelTotal + foodTotal);
   let remaining = budget - totalExpense;
 
   // ---------- OUTPUT ----------
@@ -3209,6 +3838,7 @@ function generateAIPlan(){
 
     <p><b>Best Places:</b> ${places.join(", ")}</p>
     <p><b>Suggested Travel Mode:</b> ${travelMode}</p>
+    <p><b>Travel Type:</b> ${translateTravelType(travelType)}</p>
 
     <hr>
 
