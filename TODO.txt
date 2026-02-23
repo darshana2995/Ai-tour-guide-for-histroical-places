@@ -1,4 +1,4 @@
-Install the new backend dependency:
+﻿Install the new backend dependency:
 
 cd BACKEND
 npm install
@@ -7,4 +7,5 @@ npm run dev
 Restart frontend:
 
 cd FRONTEND
+Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
 npx http-server -p 5173
