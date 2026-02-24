@@ -746,6 +746,7 @@
     <div style="padding:8px;font-size:12px;color:var(--muted);text-align:center">Tip: include your origin city in the message for tailored travel suggestions.</div>
   </div>
 
+<script src="./config.js"></script>
 <script type="module">
 /* ====================== Firebase SDK Imports ====================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
@@ -772,7 +773,9 @@ const storage = getStorage(firebaseApp);
 const USE_FAKE_PAYMENT = true;
 
 /* ====================== API Helpers ====================== */
-const API_BASE = "http://localhost:3000";
+const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE)
+  ? window.APP_CONFIG.API_BASE
+  : "http://localhost:3000";
 const EXPECTED_FIREBASE_PROJECT_ID = firebaseConfig.projectId;
 
 function decodeJwtPayload(token){

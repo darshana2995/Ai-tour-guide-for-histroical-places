@@ -5,13 +5,28 @@
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
+const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Initialize Firebase Admin SDK
 // You'll need to download serviceAccountKey.json from Firebase Console
 // Go to Project Settings > Service Accounts > Generate New Private Key
-const serviceAccount = require('./serviceAccountKey.json');
+function loadServiceAccount() {
+  const keyPath = path.join(__dirname, 'serviceAccountKey.json');
+  if (fs.existsSync(keyPath)) {
+    return require('./serviceAccountKey.json');
+  }
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    } catch (error) {
+      throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT JSON');
+    }
+  }
+  throw new Error('Missing Firebase credentials. Add BACKEND/serviceAccountKey.json or FIREBASE_SERVICE_ACCOUNT env var.');
+}
+const serviceAccount = loadServiceAccount();
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -21,8 +36,24 @@ const db = admin.firestore();
 const auth = admin.auth();
 
 const app = express();
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (!allowedOrigins.length) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  }
+}));
 app.use(express.json());
+
+app.get('/api/health', (_req, res) => {
+  res.json({ ok: true, service: 'tourism-backend' });
+});
 
 // ============================================
 // AUTH MIDDLEWARE & ADMIN CONFIG
