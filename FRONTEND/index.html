@@ -82,31 +82,61 @@
     .wrap{max-width:1100px;margin:28px auto;padding:18px}
     nav{
       display:flex;
-      gap:10px;
+      gap:8px;
       align-items:center;
-      justify-content:flex-end;
+      justify-content:flex-start;
+      flex-wrap:nowrap;
+      overflow-x:auto;
       margin:12px 0 18px;
       position:sticky;
       top:12px;
       z-index:10;
-      padding:10px;
-      background:rgba(255,255,255,0.7);
-      border:1px solid rgba(15,23,42,0.08);
-      border-radius:14px;
-      backdrop-filter:blur(10px);
-      box-shadow:0 6px 20px rgba(15,23,42,0.08);
+      padding:8px;
+      background:linear-gradient(180deg,#0f1d2f 0%, #0a1726 100%);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:999px;
+      box-shadow:0 10px 22px rgba(8,15,28,0.32), inset 0 1px 0 rgba(255,255,255,0.12);
+      scrollbar-width:none;
     }
+    nav::-webkit-scrollbar{display:none}
     nav button{
       background:transparent;
-      border:1px solid rgba(15,23,42,0.12);
-      padding:8px 12px;
-      border-radius:10px;
+      border:1px solid transparent;
+      padding:10px 16px;
+      border-radius:999px;
       cursor:pointer;
-      color:var(--text);
-      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      color:#dbe7f4;
+      font-weight:600;
+      white-space:nowrap;
+      transition:color .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
     }
-    nav button:hover{transform:translateY(-1px);border-color:rgba(15,23,42,0.25);box-shadow:0 6px 14px rgba(15,23,42,0.08)}
-    .page{display:none;opacity:0;transform:translateY(8px)}
+    nav button:hover{
+      color:#ffffff;
+      border-color:rgba(255,255,255,0.22);
+      background:rgba(255,255,255,0.06);
+      transform:none;
+      box-shadow:none;
+    }
+    nav button.active-nav{
+      color:#ecfff7;
+      border-color:rgba(124,241,207,0.55);
+      background:linear-gradient(180deg, rgba(68,163,133,0.3), rgba(36,110,91,0.25));
+      box-shadow:0 0 0 1px rgba(124,241,207,0.18) inset, 0 0 22px rgba(85,211,171,0.35);
+    }
+    nav select{
+      background:rgba(255,255,255,0.08);
+      color:#dbe7f4;
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:999px;
+      padding:8px 12px;
+      margin-top:0;
+      max-width:160px;
+    }
+    #adminBadge{
+      margin-right:8px !important;
+      white-space:nowrap;
+      border-radius:999px;
+    }    .page{display:none;opacity:0;transform:translateY(8px)}
     .page.active{display:block;animation:pageReveal .5s ease forwards}
     .card{
       background:var(--card);
@@ -632,13 +662,6 @@
 
     <label id="aiDaysLabel">Days</label>
     <input type="number" id="aiDays">
-
-    <label id="aiTravelTypeLabel">Travel Type</label>
-    <select id="aiTravelType">
-      <option value="Solo">Solo</option>
-      <option value="Family">Family</option>
-      <option value="Friends">Friends</option>
-    </select>
 
     <button id="aiGenerateBtn" class="primary" onclick="generateAIPlan()">
       Generate AI Plan
@@ -1191,6 +1214,22 @@ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const pg = document.getElementById(id);
   if(!pg) return;
   pg.classList.add('active');
+  const navPageMap = {
+    homePage: 'navHomeBtn',
+    journeyPage: 'navJourneyBtn',
+    aiPlannerPage: 'navPlannerBtn',
+    hotelPage: 'navHotelsBtn',
+    hotelBookingsPage: 'navHotelBookingsBtn',
+    profilePage: 'navProfileBtn',
+    achievementPage: 'navAchievementsBtn',
+    adminPage: 'navAdminBtn'
+  };
+  document.querySelectorAll('#navbar button').forEach(btn => btn.classList.remove('active-nav'));
+  const activeBtnId = navPageMap[id];
+  if(activeBtnId){
+    const activeBtn = document.getElementById(activeBtnId);
+    if(activeBtn) activeBtn.classList.add('active-nav');
+  }
   if(id !== 'loginPage' && id !== 'registerPage'){
     document.getElementById('navbar').style.display = 'flex';
   }
@@ -1480,7 +1519,7 @@ const canned = [
    a:"Near Mumbai you can visit **Lonavala, Alibaug, Matheran, Mahabaleshwar, Igatpuri**."},
 
   {q:/budget for .* days/i,
-   a:"For a 2-3 day trip, budget ?5000??15000 per person** depending on travel and hotel type."},
+   a:"For a 2-3 day trip, budget ₹5000–₹15000 per person** depending on travel and hotel type."},
 
   {q:/camping|where camping/i,
    a:"Good camping places: **Rishikesh riverside, Manali camps, Pawna Lake (near Pune)**."},
@@ -1725,7 +1764,7 @@ function renderJourney(){
   list.forEach(it=>{
     const d = document.createElement('div');
     d.className = 'card';
-    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'—'}</span><span class="small-pill">${translateTravelType(it.travelType||'Solo')}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | ₹${it.price}</div></div>`;
+    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'—'}</span><span class="small-pill">${translateTravelType(it.travelType||'Solo')}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | ?${it.price}</div></div>`;
     const notesHtml = it.notes ? `<div style="margin-top:8px"><strong>Notes:</strong> <span class="small-muted">${escapeHtml(it.notes)}</span></div>` : '';
     const pm = PLACE_META[it.place];
     const imgHtml = pm ? `<div style="display:flex;gap:10px;margin-top:8px"><img src="${pm.image}" alt="${it.place}" style="width:120px;height:80px;border-radius:8px;object-fit:cover"><div style="flex:1"><strong>${it.place}</strong><div class="small-muted">${pm.info}</div></div></div>` : `<strong>${it.place}</strong>`;
@@ -1909,7 +1948,7 @@ function openReceipt(data){
     <p><b>Place:</b> ${data.place}</p>
     <p><b>Room Type:</b> ${data.type}</p>
     <p><b>Days:</b> ${data.days}</p>
-    <p><b>Total Paid:</b> ₹${data.total}</p>
+    <p><b>Total Paid:</b> ?${data.total}</p>
     <p><b>Date:</b> ${new Date().toLocaleString()}</p>
   `;
 
@@ -1955,26 +1994,26 @@ function renderBudget(){
     adviceEl.innerHTML = `<div>Please set your total trip budget to receive tailored advice.</div>`;
     return;
   }
-  statusEl.textContent = `Remaining after hotel expenses: ₹${remaining} (spent on hotels: ₹${expenses}) — Trip days: ${tripDays}`;
+  statusEl.textContent = `Remaining after hotel expenses: ?${remaining} (spent on hotels: ?${expenses}) — Trip days: ${tripDays}`;
   const alloc = {
     food: Math.round((perDayAvailable || 0) * 0.30),
     transport: Math.round((perDayAvailable || 0) * 0.25),
     attractions: Math.round((perDayAvailable || 0) * 0.20),
     misc: Math.round((perDayAvailable || 0) * 0.25)
   };
-  let advice = `<div><strong>Estimated other expenses (baseline):</strong> ₹${estimateOther} (₹${estimateOtherPerDay}/day × ${tripDays} days)</div>`;
-  advice += `<div style="margin-top:6px"><strong>Approx. daily available for "other" (food/transport/attractions):</strong> ₹${perDayAvailable} / day</div>`;
-  advice += `<div style="margin-top:8px"><strong>Suggested allocation per day:</strong><div class="small-muted">Food: ₹${alloc.food} • Transport: ₹${alloc.transport} • Attractions: ₹${alloc.attractions} • Misc: ₹${alloc.misc}</div></div>`;
+  let advice = `<div><strong>Estimated other expenses (baseline):</strong> ?${estimateOther} (?${estimateOtherPerDay}/day × ${tripDays} days)</div>`;
+  advice += `<div style="margin-top:6px"><strong>Approx. daily available for "other" (food/transport/attractions):</strong> ?${perDayAvailable} / day</div>`;
+  advice += `<div style="margin-top:8px"><strong>Suggested allocation per day:</strong><div class="small-muted">Food: ?${alloc.food} • Transport: ?${alloc.transport} • Attractions: ?${alloc.attractions} • Misc: ?${alloc.misc}</div></div>`;
   if(remainingAfterOther < 0){
-    advice += `<div style="margin-top:8px;color:#991b1b"><strong>Warning:</strong> your budget is insufficient by ₹${Math.abs(remainingAfterOther)} to cover the baseline daily expenses. Suggestions:</div>`;
+    advice += `<div style="margin-top:8px;color:#991b1b"><strong>Warning:</strong> your budget is insufficient by ?${Math.abs(remainingAfterOther)} to cover the baseline daily expenses. Suggestions:</div>`;
     advice += `<ul style="margin-top:6px">
-      <li>Reduce hotel costs — choose cheaper hotels or fewer nights (save ~₹2000–₹5000 depending on hotel).</li>
-      <li>Cut daily spends: reduce dining or skip paid attractions to save ₹${Math.abs(remainingAfterOther)}.</li>
+      <li>Reduce hotel costs — choose cheaper hotels or fewer nights (save ~?2000–?5000 depending on hotel).</li>
+      <li>Cut daily spends: reduce dining or skip paid attractions to save ?${Math.abs(remainingAfterOther)}.</li>
       <li>Increase total budget if possible.</li>
       <li>Book shared transport or economy options.</li>
     </ul>`;
   } else {
-    advice += `<div style="margin-top:8px;color:#065f46"><strong>Good:</strong> you have an estimated surplus of ₹${remainingAfterOther} after baseline daily costs. Consider allocating extra to souvenirs or a nicer hotel one night.</div>`;
+    advice += `<div style="margin-top:8px;color:#065f46"><strong>Good:</strong> you have an estimated surplus of ?${remainingAfterOther} after baseline daily costs. Consider allocating extra to souvenirs or a nicer hotel one night.</div>`;
   }
   const hotelSharePct = total ? Math.round((expenses/total)*100) : 0;
   advice += `<div style="margin-top:8px" class="small-muted">Hotel costs are ~${hotelSharePct}% of your total budget.</div>`;
@@ -2182,7 +2221,7 @@ async function renderAdminPage(){
                   <span class="admin-badge ${u.lastBookingStatus==='paid'?'admin-paid':(u.lastBookingStatus==='pending'?'admin-pending':'')}">
                     ${u.lastBookingStatus || 'none'}
                   </span>
-                  ${u.lastBookingTotal ? ` • ₹${u.lastBookingTotal}` : ''}
+                  ${u.lastBookingTotal ? ` • ?${u.lastBookingTotal}` : ''}
                 </td>
                 <td>${formatDate(u.lastPaidAt)}</td>
                 <td>${formatDate(u.createdAt)}</td>
@@ -2217,7 +2256,7 @@ async function renderAdminPage(){
                 <td>${escapeHtml(b.hotelName||'')}</td>
                 <td>${escapeHtml(b.place||'')}</td>
                 <td>${escapeHtml(b.userEmail||b.userId||'')}</td>
-                <td>₹${b.total||0}</td>
+                <td>?${b.total||0}</td>
                 <td>
                   <span class="admin-badge ${(b.paymentStatus||'pending')==='paid'?'admin-paid':'admin-pending'}">
                     ${(b.paymentStatus||'pending')==='paid'?'Paid':'Pending'}
@@ -2309,7 +2348,7 @@ function renderAdminUserDetails(uid){
           <tr>
             <td>${escapeHtml(b.hotelName||'')}</td>
             <td>${escapeHtml(b.place||'')}</td>
-            <td>₹${b.total||0}</td>
+            <td>?${b.total||0}</td>
             <td>
               <span class="admin-badge ${(b.paymentStatus||'pending')==='paid'?'admin-paid':'admin-pending'}">
                 ${(b.paymentStatus||'pending')==='paid'?'Paid':'Pending'}
@@ -2402,7 +2441,7 @@ function generatePDF(){
   else {
     html += `<table><thead><tr><th>Hotel</th><th>Place</th><th>Type</th><th>Days</th><th>Rooms</th><th>Per day</th><th>Total</th></tr></thead><tbody>`;
     bookings.forEach(b => {
-      html += `<tr><td>${escapeHtml(b.hotelName)}</td><td>${escapeHtml(b.place)}</td><td>${escapeHtml(b.typeLabel)}</td><td>${b.days}</td><td>${b.rooms}</td><td>₹${b.perDay}</td><td>₹${b.total}</td></tr>`;
+      html += `<tr><td>${escapeHtml(b.hotelName)}</td><td>${escapeHtml(b.place)}</td><td>${escapeHtml(b.typeLabel)}</td><td>${b.days}</td><td>${b.rooms}</td><td>?${b.perDay}</td><td>?${b.total}</td></tr>`;
     });
     html += `</tbody></table>`;
   }
@@ -2413,7 +2452,7 @@ function generatePDF(){
   journey.forEach(it=>{
     const pm = PLACE_META[it.place] || {};
     html += `<div class="place"><img src="${pm.image || ''}" loading="lazy">
-alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'—')} | Type: ${escapeHtml(translateTravelType(it.travelType||'Solo'))} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | ₹${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
+alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'—')} | Type: ${escapeHtml(translateTravelType(it.travelType||'Solo'))} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | ?${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
       ${it.notes ? `<div style="margin-top:8px" class="notes"><strong>Notes:</strong> ${escapeHtml(it.notes)}</div>` : ''}
     </div></div>`;
   });
@@ -2519,289 +2558,289 @@ const I18N = {
     ph_notes: 'Any notes for this journey item (e.g., room preferences, contact info)'
   },
   hi: {
-    title: 'एआई टूर गाइड - डेमो',
-    nav_home: 'होम',
-    nav_create_journey: 'यात्रा बनाएं',
-    nav_ai_planner: 'एआई प्लानर',
-    nav_hotels: 'होटल',
-    nav_hotel_bookings: 'होटल बुकिंग',
-    nav_profile: 'प्रोफाइल',
-    nav_achievements: 'उपलब्धियां',
-    nav_admin: 'एडमिन',
-    nav_logout: 'लॉगआउट',
-    nav_multilang: 'बहुभाषी',
-    login_title: 'वापसी पर स्वागत है',
-    login_subtitle: 'अपने एआई टूर गाइड खाते में लॉगिन करें',
-    login_btn: 'लॉगिन',
-    register_btn: 'रजिस्टर',
-    register_title: 'खाता बनाएं',
-    back_btn: 'वापस',
-    journey_title: 'अपनी यात्रा बनाएं',
-    choose_place: 'स्थान चुनें',
-    arrival_date: 'आगमन तिथि',
-    travel_mode: 'यात्रा का माध्यम',
-    travel_type: 'यात्रा प्रकार',
-    hotel_name: 'होटल नाम',
-    nights: 'रातों की संख्या',
-    est_price: 'अनुमानित होटल कीमत (कुल)',
-    notes_optional: 'नोट्स (वैकल्पिक)',
-    add_journey: 'यात्रा में जोड़ें',
-    export_json: 'JSON निर्यात करें',
-    generate_pdf: 'PDF बनाएं',
-    journey_plan: 'आपकी यात्रा योजना',
-    load_sample: 'नमूना लोड करें',
-    clear: 'साफ करें',
-    ai_title: 'एआई ट्रिप प्लानर',
-    select_month: 'महीना चुनें',
-    budget: 'बजट',
-    days: 'दिन',
-    generate_ai_plan: 'एआई योजना बनाएं',
-    travel_solo: 'एकल',
-    travel_family: 'परिवार',
-    travel_friends: 'दोस्त',
-    month_january: 'जनवरी',
-    month_february: 'फरवरी',
-    month_march: 'मार्च',
-    month_april: 'अप्रैल',
-    month_may: 'मई',
-    month_june: 'जून',
-    month_july: 'जुलाई',
-    month_august: 'अगस्त',
-    month_september: 'सितंबर',
-    month_october: 'अक्टूबर',
-    month_november: 'नवंबर',
-    month_december: 'दिसंबर',
-    ph_hotel_name: 'होटल / गेस्टहाउस',
-    ph_hotel_price: 'जैसे, 4500',
-    ph_notes: 'इस यात्रा आइटम के लिए नोट्स (जैसे, रूम पसंद, संपर्क जानकारी)'
+    title: '??? ??? ???? - ????',
+    nav_home: '???',
+    nav_create_journey: '?????? ?????',
+    nav_ai_planner: '??? ??????',
+    nav_hotels: '????',
+    nav_hotel_bookings: '???? ??????',
+    nav_profile: '????????',
+    nav_achievements: '??????????',
+    nav_admin: '?????',
+    nav_logout: '??????',
+    nav_multilang: '???????',
+    login_title: '????? ?? ?????? ??',
+    login_subtitle: '???? ??? ??? ???? ???? ??? ????? ????',
+    login_btn: '?????',
+    register_btn: '???????',
+    register_title: '???? ?????',
+    back_btn: '????',
+    journey_title: '???? ?????? ?????',
+    choose_place: '????? ?????',
+    arrival_date: '???? ????',
+    travel_mode: '?????? ?? ??????',
+    travel_type: '?????? ??????',
+    hotel_name: '???? ???',
+    nights: '????? ?? ??????',
+    est_price: '???????? ???? ???? (???)',
+    notes_optional: '????? (????????)',
+    add_journey: '?????? ??? ??????',
+    export_json: 'JSON ??????? ????',
+    generate_pdf: 'PDF ?????',
+    journey_plan: '???? ?????? ?????',
+    load_sample: '????? ??? ????',
+    clear: '??? ????',
+    ai_title: '??? ????? ??????',
+    select_month: '????? ?????',
+    budget: '???',
+    days: '???',
+    generate_ai_plan: '??? ????? ?????',
+    travel_solo: '???',
+    travel_family: '??????',
+    travel_friends: '?????',
+    month_january: '?????',
+    month_february: '?????',
+    month_march: '?????',
+    month_april: '??????',
+    month_may: '??',
+    month_june: '???',
+    month_july: '?????',
+    month_august: '?????',
+    month_september: '??????',
+    month_october: '???????',
+    month_november: '?????',
+    month_december: '??????',
+    ph_hotel_name: '???? / ?????????',
+    ph_hotel_price: '????, 4500',
+    ph_notes: '?? ?????? ???? ?? ??? ????? (????, ??? ????, ?????? ???????)'
   },
   mr: {
-    title: 'एआय टूर गाईड - डेमो',
-    nav_home: 'मुख्यपृष्ठ',
-    nav_create_journey: 'प्रवास तयार करा',
-    nav_ai_planner: 'एआय प्लॅनर',
-    nav_hotels: 'हॉटेल्स',
-    nav_hotel_bookings: 'हॉटेल बुकिंग',
-    nav_profile: 'प्रोफाइल',
-    nav_achievements: 'यश',
-    nav_admin: 'अॅडमिन',
-    nav_logout: 'लॉगआउट',
-    nav_multilang: 'बहुभाषिक',
-    login_title: 'पुन्हा स्वागत आहे',
-    login_subtitle: 'तुमच्या एआय टूर गाईड खात्यात लॉगिन करा',
-    login_btn: 'लॉगिन',
-    register_btn: 'नोंदणी',
-    register_title: 'खाते तयार करा',
-    back_btn: 'मागे',
-    journey_title: 'तुमचा प्रवास तयार करा',
-    choose_place: 'ठिकाण निवडा',
-    arrival_date: 'आगमन दिनांक',
-    travel_mode: 'प्रवास पद्धत',
-    travel_type: 'प्रवास प्रकार',
-    hotel_name: 'हॉटेल नाव',
-    nights: 'रात्रींची संख्या',
-    est_price: 'अंदाजे हॉटेल किंमत (एकूण)',
-    notes_optional: 'नोट्स (ऐच्छिक)',
-    add_journey: 'प्रवासात जोडा',
-    export_json: 'JSON निर्यात करा',
-    generate_pdf: 'PDF तयार करा',
-    journey_plan: 'तुमची प्रवास योजना',
-    load_sample: 'नमुना लोड करा',
-    clear: 'क्लिअर',
-    ai_title: 'एआय ट्रिप प्लॅनर',
-    select_month: 'महिना निवडा',
-    budget: 'बजेट',
-    days: 'दिवस',
-    generate_ai_plan: 'एआय योजना तयार करा',
-    travel_solo: 'एकटे',
-    travel_family: 'कुटुंब',
-    travel_friends: 'मित्र',
-    month_january: 'जानेवारी',
-    month_february: 'फेब्रुवारी',
-    month_march: 'मार्च',
-    month_april: 'एप्रिल',
-    month_may: 'मे',
-    month_june: 'जून',
-    month_july: 'जुलै',
-    month_august: 'ऑगस्ट',
-    month_september: 'सप्टेंबर',
-    month_october: 'ऑक्टोबर',
-    month_november: 'नोव्हेंबर',
-    month_december: 'डिसेंबर',
-    ph_hotel_name: 'हॉटेल / गेस्टहाउस',
-    ph_hotel_price: 'उदा., 4500',
-    ph_notes: 'या प्रवासासाठी नोंदी (उदा., रूम पसंती, संपर्क माहिती)'
+    title: '??? ??? ???? - ????',
+    nav_home: '??????????',
+    nav_create_journey: '?????? ???? ???',
+    nav_ai_planner: '??? ??????',
+    nav_hotels: '???????',
+    nav_hotel_bookings: '????? ??????',
+    nav_profile: '????????',
+    nav_achievements: '??',
+    nav_admin: '??????',
+    nav_logout: '??????',
+    nav_multilang: '????????',
+    login_title: '?????? ?????? ???',
+    login_subtitle: '??????? ??? ??? ???? ??????? ????? ???',
+    login_btn: '?????',
+    register_btn: '??????',
+    register_title: '???? ???? ???',
+    back_btn: '????',
+    journey_title: '????? ?????? ???? ???',
+    choose_place: '????? ?????',
+    arrival_date: '???? ??????',
+    travel_mode: '?????? ?????',
+    travel_type: '?????? ??????',
+    hotel_name: '????? ???',
+    nights: '????????? ??????',
+    est_price: '?????? ????? ????? (????)',
+    notes_optional: '????? (??????)',
+    add_journey: '???????? ????',
+    export_json: 'JSON ??????? ???',
+    generate_pdf: 'PDF ???? ???',
+    journey_plan: '????? ?????? ?????',
+    load_sample: '????? ??? ???',
+    clear: '??????',
+    ai_title: '??? ????? ??????',
+    select_month: '????? ?????',
+    budget: '????',
+    days: '????',
+    generate_ai_plan: '??? ????? ???? ???',
+    travel_solo: '????',
+    travel_family: '??????',
+    travel_friends: '?????',
+    month_january: '????????',
+    month_february: '??????????',
+    month_march: '?????',
+    month_april: '??????',
+    month_may: '??',
+    month_june: '???',
+    month_july: '????',
+    month_august: '?????',
+    month_september: '????????',
+    month_october: '???????',
+    month_november: '?????????',
+    month_december: '???????',
+    ph_hotel_name: '????? / ?????????',
+    ph_hotel_price: '???., 4500',
+    ph_notes: '?? ??????????? ????? (???., ??? ?????, ?????? ??????)'
   },
   gu: {
-    title: 'એઆઈ ટૂર ગાઈડ - ડેમો',
-    nav_home: 'હોમ',
-    nav_create_journey: 'યાત્રા બનાવો',
-    nav_ai_planner: 'એઆઈ પ્લાનર',
-    nav_hotels: 'હોટેલ્સ',
-    nav_hotel_bookings: 'હોટેલ બુકિંગ્સ',
-    nav_profile: 'પ્રોફાઇલ',
-    nav_achievements: 'સિદ્ધિઓ',
-    nav_admin: 'એડમિન',
-    nav_logout: 'લૉગઆઉટ',
-    nav_multilang: 'બહુભાષી',
-    login_title: 'ફરી સ્વાગત છે',
-    login_subtitle: 'તમારા એઆઈ ટૂર ગાઈડ ખાતામાં લૉગિન કરો',
-    login_btn: 'લૉગિન',
-    register_btn: 'રજિસ્ટર',
-    register_title: 'ખાતું બનાવો',
-    back_btn: 'પાછળ',
-    journey_title: 'તમારી યાત્રા બનાવો',
-    choose_place: 'સ્થળ પસંદ કરો',
-    arrival_date: 'આગમન તારીખ',
-    travel_mode: 'પ્રવાસ મોડ',
-    travel_type: 'પ્રવાસ પ્રકાર',
-    hotel_name: 'હોટેલ નામ',
-    nights: 'રાતોની સંખ્યા',
-    est_price: 'અંદાજિત હોટેલ કિંમત (કુલ)',
-    notes_optional: 'નોંધો (વૈકલ્પિક)',
-    add_journey: 'યાત્રામાં ઉમેરો',
-    export_json: 'JSON એક્સપોર્ટ કરો',
-    generate_pdf: 'PDF બનાવો',
-    journey_plan: 'તમારી યાત્રા યોજના',
-    load_sample: 'નમૂનો લોડ કરો',
-    clear: 'સાફ કરો',
-    ai_title: 'એઆઈ ટ્રિપ પ્લાનર',
-    select_month: 'મહિનો પસંદ કરો',
-    budget: 'બજેટ',
-    days: 'દિવસ',
-    generate_ai_plan: 'એઆઈ યોજના બનાવો',
-    travel_solo: 'એકલા',
-    travel_family: 'પરિવાર',
-    travel_friends: 'મિત્રો',
-    month_january: 'જાન્યુઆરી',
-    month_february: 'ફેબ્રુઆરી',
-    month_march: 'માર્ચ',
-    month_april: 'એપ્રિલ',
-    month_may: 'મે',
-    month_june: 'જૂન',
-    month_july: 'જુલાઈ',
-    month_august: 'ઑગસ્ટ',
-    month_september: 'સપ્ટેમ્બર',
-    month_october: 'ઓક્ટોબર',
-    month_november: 'નવેમ્બર',
-    month_december: 'ડિસેમ્બર',
-    ph_hotel_name: 'હોટેલ / ગેસ્ટહાઉસ',
-    ph_hotel_price: 'જેમ કે, 4500',
-    ph_notes: 'આ યાત્રા આઇટમ માટે નોંધો (જેમ કે, રૂમ પસંદગી, સંપર્ક માહિતી)'
+    title: '??? ??? ???? - ????',
+    nav_home: '???',
+    nav_create_journey: '?????? ?????',
+    nav_ai_planner: '??? ??????',
+    nav_hotels: '???????',
+    nav_hotel_bookings: '????? ????????',
+    nav_profile: '????????',
+    nav_achievements: '???????',
+    nav_admin: '?????',
+    nav_logout: '??????',
+    nav_multilang: '???????',
+    login_title: '??? ?????? ??',
+    login_subtitle: '????? ??? ??? ???? ??????? ????? ???',
+    login_btn: '?????',
+    register_btn: '???????',
+    register_title: '????? ?????',
+    back_btn: '????',
+    journey_title: '????? ?????? ?????',
+    choose_place: '???? ???? ???',
+    arrival_date: '???? ?????',
+    travel_mode: '?????? ???',
+    travel_type: '?????? ??????',
+    hotel_name: '????? ???',
+    nights: '?????? ??????',
+    est_price: '??????? ????? ????? (???)',
+    notes_optional: '????? (????????)',
+    add_journey: '????????? ?????',
+    export_json: 'JSON ????????? ???',
+    generate_pdf: 'PDF ?????',
+    journey_plan: '????? ?????? ?????',
+    load_sample: '????? ??? ???',
+    clear: '??? ???',
+    ai_title: '??? ????? ??????',
+    select_month: '????? ???? ???',
+    budget: '????',
+    days: '????',
+    generate_ai_plan: '??? ????? ?????',
+    travel_solo: '????',
+    travel_family: '??????',
+    travel_friends: '??????',
+    month_january: '?????????',
+    month_february: '?????????',
+    month_march: '?????',
+    month_april: '??????',
+    month_may: '??',
+    month_june: '???',
+    month_july: '?????',
+    month_august: '?????',
+    month_september: '?????????',
+    month_october: '???????',
+    month_november: '???????',
+    month_december: '????????',
+    ph_hotel_name: '????? / ?????????',
+    ph_hotel_price: '??? ??, 4500',
+    ph_notes: '? ?????? ???? ???? ????? (??? ??, ??? ??????, ?????? ??????)'
   },
   ta: {
-    title: 'ஏஐ டூர் கையேடு - டெமோ',
-    nav_home: 'முகப்பு',
-    nav_create_journey: 'பயணத்தை உருவாக்கு',
-    nav_ai_planner: 'ஏஐ திட்டமிடி',
-    nav_hotels: 'ஹோட்டல்கள்',
-    nav_hotel_bookings: 'ஹோட்டல் முன்பதிவுகள்',
-    nav_profile: 'சுயவிவரம்',
-    nav_achievements: 'சாதனைகள்',
-    nav_admin: 'அட்மின்',
-    nav_logout: 'வெளியேறு',
-    nav_multilang: 'பன்மொழி',
-    login_title: 'மீண்டும் வரவேற்கிறோம்',
-    login_subtitle: 'உங்கள் ஏஐ டூர் கையேடு கணக்கில் உள்நுழைக',
-    login_btn: 'உள்நுழை',
-    register_btn: 'பதிவு செய்',
-    register_title: 'கணக்கை உருவாக்கு',
-    back_btn: 'பின்செல்',
-    journey_title: 'உங்கள் பயணத்தை உருவாக்குங்கள்',
-    choose_place: 'இடத்தை தேர்வுசெய்க',
-    arrival_date: 'வருகை தேதி',
-    travel_mode: 'பயண முறை',
-    travel_type: 'பயண வகை',
-    hotel_name: 'ஹோட்டல் பெயர்',
-    nights: 'இரவு எண்ணிக்கை',
-    est_price: 'மதிப்பிடப்பட்ட ஹோட்டல் செலவு (மொத்தம்)',
-    notes_optional: 'குறிப்புகள் (விருப்பம்)',
-    add_journey: 'பயணத்தில் சேர்',
-    export_json: 'JSON ஏற்றுமதி',
-    generate_pdf: 'PDF உருவாக்கு',
-    journey_plan: 'உங்கள் பயண திட்டம்',
-    load_sample: 'மாதிரி ஏற்று',
-    clear: 'அழி',
-    ai_title: 'ஏஐ பயண திட்டமிடி',
-    select_month: 'மாதத்தை தேர்வுசெய்க',
-    budget: 'பட்ஜெட்',
-    days: 'நாட்கள்',
-    generate_ai_plan: 'ஏஐ திட்டம் உருவாக்கு',
-    travel_solo: 'தனியாக',
-    travel_family: 'குடும்பம்',
-    travel_friends: 'நண்பர்கள்',
-    month_january: 'ஜனவரி',
-    month_february: 'பிப்ரவரி',
-    month_march: 'மார்ச்',
-    month_april: 'ஏப்ரல்',
-    month_may: 'மே',
-    month_june: 'ஜூன்',
-    month_july: 'ஜூலை',
-    month_august: 'ஆகஸ்ட்',
-    month_september: 'செப்டம்பர்',
-    month_october: 'அக்டோபர்',
-    month_november: 'நவம்பர்',
-    month_december: 'டிசம்பர்',
-    ph_hotel_name: 'ஹோட்டல் / கெஸ்ட் ஹவுஸ்',
-    ph_hotel_price: 'எ.கா., 4500',
-    ph_notes: 'இந்த பயணத்திற்கான குறிப்புகள் (எ.கா., அறை விருப்பம், தொடர்பு தகவல்)'
+    title: '?? ???? ?????? - ????',
+    nav_home: '???????',
+    nav_create_journey: '??????? ?????????',
+    nav_ai_planner: '?? ?????????',
+    nav_hotels: '??????????',
+    nav_hotel_bookings: '??????? ????????????',
+    nav_profile: '?????????',
+    nav_achievements: '????????',
+    nav_admin: '???????',
+    nav_logout: '????????',
+    nav_multilang: '???????',
+    login_title: '???????? ????????????',
+    login_subtitle: '?????? ?? ???? ?????? ???????? ????????',
+    login_btn: '???????',
+    register_btn: '????? ????',
+    register_title: '?????? ?????????',
+    back_btn: '????????',
+    journey_title: '?????? ??????? ??????????????',
+    choose_place: '?????? ???????????',
+    arrival_date: '????? ????',
+    travel_mode: '??? ????',
+    travel_type: '??? ???',
+    hotel_name: '??????? ?????',
+    nights: '???? ?????????',
+    est_price: '?????????????? ??????? ????? (???????)',
+    notes_optional: '??????????? (?????????)',
+    add_journey: '????????? ????',
+    export_json: 'JSON ????????',
+    generate_pdf: 'PDF ?????????',
+    journey_plan: '?????? ??? ???????',
+    load_sample: '?????? ?????',
+    clear: '???',
+    ai_title: '?? ??? ?????????',
+    select_month: '??????? ???????????',
+    budget: '???????',
+    days: '???????',
+    generate_ai_plan: '?? ??????? ?????????',
+    travel_solo: '??????',
+    travel_family: '?????????',
+    travel_friends: '?????????',
+    month_january: '?????',
+    month_february: '????????',
+    month_march: '??????',
+    month_april: '??????',
+    month_may: '??',
+    month_june: '????',
+    month_july: '????',
+    month_august: '??????',
+    month_september: '??????????',
+    month_october: '????????',
+    month_november: '???????',
+    month_december: '????????',
+    ph_hotel_name: '??????? / ?????? ?????',
+    ph_hotel_price: '?.??., 4500',
+    ph_notes: '???? ???????????? ??????????? (?.??., ??? ?????????, ??????? ?????)'
   },
   bn: {
-    title: 'এআই ট্যুর গাইড - ডেমো',
-    nav_home: 'হোম',
-    nav_create_journey: 'ভ্রমণ তৈরি করুন',
-    nav_ai_planner: 'এআই প্ল্যানার',
-    nav_hotels: 'হোটেল',
-    nav_hotel_bookings: 'হোটেল বুকিং',
-    nav_profile: 'প্রোফাইল',
-    nav_achievements: 'অর্জন',
-    nav_admin: 'অ্যাডমিন',
-    nav_logout: 'লগআউট',
-    nav_multilang: 'বহুভাষা',
-    login_title: 'আবার স্বাগতম',
-    login_subtitle: 'আপনার এআই ট্যুর গাইড অ্যাকাউন্টে লগইন করুন',
-    login_btn: 'লগইন',
-    register_btn: 'রেজিস্টার',
-    register_title: 'অ্যাকাউন্ট তৈরি করুন',
-    back_btn: 'ফিরে যান',
-    journey_title: 'আপনার ভ্রমণ তৈরি করুন',
-    choose_place: 'স্থান নির্বাচন করুন',
-    arrival_date: 'আগমনের তারিখ',
-    travel_mode: 'ভ্রমণ মাধ্যম',
-    travel_type: 'ভ্রমণের ধরন',
-    hotel_name: 'হোটেলের নাম',
-    nights: 'রাতের সংখ্যা',
-    est_price: 'আনুমানিক হোটেল খরচ (মোট)',
-    notes_optional: 'নোট (ঐচ্ছিক)',
-    add_journey: 'ভ্রমণে যোগ করুন',
-    export_json: 'JSON এক্সপোর্ট',
-    generate_pdf: 'PDF তৈরি করুন',
-    journey_plan: 'আপনার ভ্রমণ পরিকল্পনা',
-    load_sample: 'নমুনা লোড',
-    clear: 'মুছুন',
-    ai_title: 'এআই ট্রিপ প্ল্যানার',
-    select_month: 'মাস নির্বাচন করুন',
-    budget: 'বাজেট',
-    days: 'দিন',
-    generate_ai_plan: 'এআই পরিকল্পনা তৈরি করুন',
-    travel_solo: 'একাই',
-    travel_family: 'পরিবার',
-    travel_friends: 'বন্ধুরা',
-    month_january: 'জানুয়ারি',
-    month_february: 'ফেব্রুয়ারি',
-    month_march: 'মার্চ',
-    month_april: 'এপ্রিল',
-    month_may: 'মে',
-    month_june: 'জুন',
-    month_july: 'জুলাই',
-    month_august: 'আগস্ট',
-    month_september: 'সেপ্টেম্বর',
-    month_october: 'অক্টোবর',
-    month_november: 'নভেম্বর',
-    month_december: 'ডিসেম্বর',
-    ph_hotel_name: 'হোটেল / গেস্টহাউস',
-    ph_hotel_price: 'যেমন, 4500',
-    ph_notes: 'এই ভ্রমণের জন্য নোট (যেমন, রুম পছন্দ, যোগাযোগের তথ্য)'
+    title: '??? ????? ???? - ????',
+    nav_home: '???',
+    nav_create_journey: '????? ???? ????',
+    nav_ai_planner: '??? ?????????',
+    nav_hotels: '?????',
+    nav_hotel_bookings: '????? ?????',
+    nav_profile: '????????',
+    nav_achievements: '?????',
+    nav_admin: '????????',
+    nav_logout: '?????',
+    nav_multilang: '???????',
+    login_title: '???? ???????',
+    login_subtitle: '????? ??? ????? ???? ??????????? ???? ????',
+    login_btn: '????',
+    register_btn: '?????????',
+    register_title: '?????????? ???? ????',
+    back_btn: '???? ???',
+    journey_title: '????? ????? ???? ????',
+    choose_place: '????? ???????? ????',
+    arrival_date: '?????? ?????',
+    travel_mode: '????? ??????',
+    travel_type: '??????? ???',
+    hotel_name: '??????? ???',
+    nights: '????? ??????',
+    est_price: '???????? ????? ??? (???)',
+    notes_optional: '??? (??????)',
+    add_journey: '?????? ??? ????',
+    export_json: 'JSON ?????????',
+    generate_pdf: 'PDF ???? ????',
+    journey_plan: '????? ????? ?????????',
+    load_sample: '????? ???',
+    clear: '?????',
+    ai_title: '??? ????? ?????????',
+    select_month: '??? ???????? ????',
+    budget: '?????',
+    days: '???',
+    generate_ai_plan: '??? ????????? ???? ????',
+    travel_solo: '????',
+    travel_family: '??????',
+    travel_friends: '???????',
+    month_january: '?????????',
+    month_february: '???????????',
+    month_march: '?????',
+    month_april: '??????',
+    month_may: '??',
+    month_june: '???',
+    month_july: '?????',
+    month_august: '?????',
+    month_september: '??????????',
+    month_october: '???????',
+    month_november: '???????',
+    month_december: '????????',
+    ph_hotel_name: '????? / ?????????',
+    ph_hotel_price: '????, 4500',
+    ph_notes: '?? ??????? ???? ??? (????, ??? ?????, ????????? ????)'
   },
   fr: {
     title: 'Guide Tour IA - Démo',
@@ -3007,7 +3046,6 @@ function applyLanguage(lang){
   setText('aiMonthLabel', 'select_month');
   setText('aiBudgetLabel', 'budget');
   setText('aiDaysLabel', 'days');
-  setText('aiTravelTypeLabel', 'travel_type');
   setText('aiGenerateBtn', 'generate_ai_plan');
 
   setPlaceholder('hotelName', 'ph_hotel_name');
@@ -3017,9 +3055,6 @@ function applyLanguage(lang){
   setSelectOptionByValue('travelType', 'Solo', 'travel_solo');
   setSelectOptionByValue('travelType', 'Family', 'travel_family');
   setSelectOptionByValue('travelType', 'Friends', 'travel_friends');
-  setSelectOptionByValue('aiTravelType', 'Solo', 'travel_solo');
-  setSelectOptionByValue('aiTravelType', 'Family', 'travel_family');
-  setSelectOptionByValue('aiTravelType', 'Friends', 'travel_friends');
 
   const monthSelect = document.getElementById('aiMonth');
   if(monthSelect){
@@ -3272,7 +3307,7 @@ function createHotelCard(h){
     <img class="hotel-thumb" src="${h.image}" alt="${escapeHtml(h.name)}">
     <div class="hotel-info">
       <div class="hotel-title">${escapeHtml(h.name)}</div>
-      <div class="hotel-meta">${escapeHtml(h.place)} • ${escapeHtml(h.city)} • from ₹${h.baseRate} / baseline</div>
+      <div class="hotel-meta">${escapeHtml(h.place)} • ${escapeHtml(h.city)} • from ?${h.baseRate} / baseline</div>
       <div class="hotel-actions">
         <button class="primary" data-hid="${h.id}">Select</button>
         <button class="btn-ghost" data-hid-details="${h.id}">Details</button>
@@ -3330,9 +3365,9 @@ function showHotelDetails(id){
         <div style="display:flex;gap:12px;margin-top:12px">
           <img src="${hotel.image}" style="width:180px;height:120px;object-fit:cover;border-radius:8px">
           <div style="flex:1">
-            <div class="small-muted">Description: Hotel near ${escapeHtml(hotel.place)}. Base rate: ₹${hotel.baseRate} (used to calculate room rates).</div>
+            <div class="small-muted">Description: Hotel near ${escapeHtml(hotel.place)}. Base rate: ?${hotel.baseRate} (used to calculate room rates).</div>
             <div style="margin-top:10px">
-              ${ROOM_TYPES.map(rt => `<div style="margin-bottom:6px"><strong>${rt.label}</strong> — ${rt.desc} — from ₹${Math.round(hotel.baseRate * rt.mult)}</div>`).join('')}
+              ${ROOM_TYPES.map(rt => `<div style="margin-bottom:6px"><strong>${rt.label}</strong> — ${rt.desc} — from ?${Math.round(hotel.baseRate * rt.mult)}</div>`).join('')}
             </div>
           </div>
         </div>
@@ -3366,7 +3401,7 @@ function openHotelModal(id){
             <div class="small-muted">Choose room type & number of days</div>
 
             <div class="room-type" id="roomTypesWrap">
-              ${ROOM_TYPES.map(rt => `<button data-type="${rt.key}" data-label="${escapeHtml(rt.label)}" data-mult="${rt.mult}" class="${rt.key==='normal' ? 'selected' : ''}">${escapeHtml(rt.label)} — ₹${Math.round(hotel.baseRate * rt.mult)} / baseline</button>`).join('')}
+              ${ROOM_TYPES.map(rt => `<button data-type="${rt.key}" data-label="${escapeHtml(rt.label)}" data-mult="${rt.mult}" class="${rt.key==='normal' ? 'selected' : ''}">${escapeHtml(rt.label)} — ?${Math.round(hotel.baseRate * rt.mult)} / baseline</button>`).join('')}
             </div>
 
             <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
@@ -3377,8 +3412,8 @@ function openHotelModal(id){
             </div>
 
             <div style="margin-top:10px" class="book-panel">
-              <div>Price per day: <strong id="pricePerDay">₹${Math.round(hotel.baseRate)}</strong></div>
-              <div style="margin-top:6px">Total estimate: <strong id="priceTotal">₹${Math.round(hotel.baseRate)}</strong></div>
+              <div>Price per day: <strong id="pricePerDay">?${Math.round(hotel.baseRate)}</strong></div>
+              <div style="margin-top:6px">Total estimate: <strong id="priceTotal">?${Math.round(hotel.baseRate)}</strong></div>
               <div class="small-muted" style="margin-top:6px">Note: This is an estimate. Taxes and fees not included.</div>
             </div>
 
@@ -3421,8 +3456,8 @@ function openHotelModal(id){
     const days = Math.max(1, Number(daysInput.value||1));
     const rooms = Math.max(1, Number(roomsInput.value||1));
     const total = perDay * days * rooms;
-    document.getElementById('pricePerDay').textContent = `₹${perDay}`;
-    document.getElementById('priceTotal').textContent = `₹${total}`;
+    document.getElementById('pricePerDay').textContent = `?${perDay}`;
+    document.getElementById('priceTotal').textContent = `?${total}`;
   }
   recalc();
 
@@ -3768,7 +3803,6 @@ function generateAIPlan(){
   const month = document.getElementById("aiMonth").value;
   const budget = Number(document.getElementById("aiBudget").value);
   const days = Number(document.getElementById("aiDays").value);
-  const travelType = document.getElementById("aiTravelType").value;
   const resultDiv = document.getElementById("aiResult");
 
   if(!month || !budget || !days){
@@ -3807,11 +3841,8 @@ function generateAIPlan(){
   if(travelMode === "Train") travelCost = 1200;
   if(travelMode === "Bus") travelCost = 1800;
   if(travelMode === "Flight") travelCost = 6000;
-
-  // Travel type multiplier (group travel usually costs more total)
-  let typeMultiplier = 1;
-  if(travelType === "Family") typeMultiplier = 1.7;
-  if(travelType === "Friends") typeMultiplier = 1.4;
+  // Travel type removed from planner UI; keep baseline estimates.
+  const typeMultiplier = 1;
 
   // Hotel AI based on budget category
   if(budget >= 60000){
@@ -3839,22 +3870,21 @@ function generateAIPlan(){
   resultDiv.innerHTML = `
     <h3>🧠 AI Trip Cost Analysis</h3>
 
-    <p><b>Best Places:</b> ${places.join(", ")}</p>
-    <p><b>Suggested Travel Mode:</b> ${travelMode}</p>
-    <p><b>Travel Type:</b> ${translateTravelType(travelType)}</p>
+    <p><b>📍 Best Places:</b> ${places.join(", ")}</p>
+    <p><b>🚆 Suggested Travel Mode:</b> ${travelMode}</p>
 
     <hr>
 
     <h4>💰 Cost Breakdown</h4>
     <p>🚆 Travel Cost: ₹${travelCost}</p>
     <p>🏨 Hotel Cost (${days} nights): ₹${hotelTotal}</p>
-    <p>🍽 Food Cost (${days} days): ₹${foodTotal}</p>
+    <p>🍽️ Food Cost (${days} days): ₹${foodTotal}</p>
 
     <hr>
 
     <h4>📊 Total Trip Expense: ₹${totalExpense}</h4>
     <h4 style="color:${remaining>=0?'green':'red'}">
-      Remaining Budget: ₹${remaining}
+      💵 Remaining Budget: ₹${remaining}
     </h4>
 
     <p class="small-muted">
@@ -4032,3 +4062,10 @@ Close
 
 </body>
 </html>
+
+
+
+
+
+
+
