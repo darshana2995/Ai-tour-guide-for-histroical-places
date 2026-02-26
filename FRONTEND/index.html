@@ -793,7 +793,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
-const USE_FAKE_PAYMENT = true;
+const USE_FAKE_PAYMENT = false;
 
 /* ====================== API Helpers ====================== */
 const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE)
