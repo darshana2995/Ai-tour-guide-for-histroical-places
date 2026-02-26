@@ -264,6 +264,103 @@
       --accent-2:#fbbf24;
       --shadow:0 16px 40px rgba(0,0,0,0.35);
       --ring:rgba(52,211,153,0.25);
+      color-scheme:dark;
+    }
+    .dark body,
+    body.dark{
+      color:var(--text);
+      background:linear-gradient(160deg,var(--bg) 0%,var(--bg-2) 60%,#081a18 100%);
+    }
+    .dark .card,
+    .dark .modal,
+    .dark .hotel-card,
+    .dark .book-panel,
+    .dark .muted-block,
+    .dark .itinerary-day,
+    .dark #chatbotBox{
+      background:#102824 !important;
+      color:var(--text) !important;
+      border-color:rgba(148,163,184,0.26) !important;
+    }
+    .dark input,
+    .dark select,
+    .dark textarea{
+      background:#0f172a !important;
+      color:#f8fafc !important;
+      border-color:#334155 !important;
+    }
+    .dark input::placeholder,
+    .dark textarea::placeholder{
+      color:#94a3b8 !important;
+    }
+    .dark button:not(.primary){
+      background:#182b44 !important;
+      color:#e2e8f0 !important;
+      border-color:#3b4d68 !important;
+    }
+    .dark .small-muted,
+    .dark footer{
+      color:#cbd5e1 !important;
+    }
+    .dark .small-pill,
+    .dark .atg-badge{
+      background:#1d334f !important;
+      color:#dbeafe !important;
+      border-color:#3b82f6 !important;
+    }
+    .dark .admin-table th,
+    .dark .admin-table td{
+      border-color:#334155 !important;
+      color:#e5e7eb !important;
+      background:transparent !important;
+    }
+    .dark .admin-table tr[data-uid]:hover{
+      background:#13263f !important;
+    }
+    .dark .admin-row-active{
+      background:#1e3a5f !important;
+    }
+    .dark .admin-paid{
+      background:#14532d !important;
+      color:#dcfce7 !important;
+    }
+    .dark .admin-pending{
+      background:#713f12 !important;
+      color:#fef3c7 !important;
+    }
+    .dark #chatArea,
+    .dark #chatAreaPage{
+      background:#0b1726 !important;
+      color:#e5e7eb !important;
+    }
+    .dark .msg.bot .bubble{
+      background:#1e293b !important;
+      color:#e5e7eb !important;
+    }
+    .dark .chatMeta{
+      background:#0f172a !important;
+      border-top-color:#334155 !important;
+    }
+    .dark .room-type button{
+      border-color:#3b4d68 !important;
+      color:#e2e8f0 !important;
+      background:#111f34 !important;
+    }
+    .dark .room-type button.selected{
+      background:#113a33 !important;
+      border-color:#34d399 !important;
+      color:#d1fae5 !important;
+    }
+    .dark .modal-overlay{
+      background:rgba(2,6,23,0.7) !important;
+    }
+    .dark [style*="background:white"],
+    .dark [style*="background:#fff"],
+    .dark [style*="background:#fbfdff"],
+    .dark [style*="background:#fcfeff"]{
+      background:#102824 !important;
+      color:var(--text) !important;
+      border-color:#334155 !important;
     }
     @keyframes pageReveal{
       from{opacity:0;transform:translateY(10px)}
@@ -665,6 +762,9 @@
 
     <button id="aiGenerateBtn" class="primary" onclick="generateAIPlan()">
       Generate AI Plan
+    </button>
+    <button id="aiSurpriseBtn" class="btn-ghost" onclick="surpriseWeekendPlan()" style="margin-top:8px">
+      Surprise Me: 3 Days in ₹10,000
     </button>
 
     <div id="aiResult"></div>
@@ -3925,6 +4025,93 @@ function generateAIPlan(){
     <p class="small-muted">
       AI estimated using seasonal travel trends + average India travel cost dataset.
     </p>
+  `;
+}
+
+function surpriseWeekendPlan(){
+  const resultDiv = document.getElementById("aiResult");
+  const budget = 10000;
+  const days = 3;
+  const month = document.getElementById("aiMonth").value;
+  const monthly = Array.isArray(MONTH_DESTINATIONS[month]) ? MONTH_DESTINATIONS[month].map(p => p.name) : [];
+  const fallbackHistorical = [
+    "Taj Mahal",
+    "Red Fort Delhi",
+    "Qutub Minar",
+    "Hampi",
+    "Konark Sun Temple",
+    "Ajanta Caves",
+    "Ellora Caves",
+    "Khajuraho Temples",
+    "Jaisalmer Fort",
+    "Golden Temple"
+  ];
+
+  const unique = [];
+  const seen = new Set();
+  [...monthly, ...fallbackHistorical].forEach(name => {
+    if(!name || seen.has(name)) return;
+    seen.add(name);
+    unique.push(name);
+  });
+
+  while(unique.length < 5){
+    unique.push(`Historical Spot ${unique.length + 1}`);
+  }
+  const places = unique.slice(0, 5);
+
+  // Fixed breakdown to exactly match 10,000 budget for 3 days.
+  const travelCost = 3000;
+  const hotelCost = 3600;      // 2 nights
+  const foodCost = 1800;       // 3 days
+  const ticketsCost = 1000;
+  const localCost = 600;
+  const total = travelCost + hotelCost + foodCost + ticketsCost + localCost;
+  const remaining = budget - total;
+  const perPlaceSightseeing = Math.floor((ticketsCost + localCost) / places.length);
+
+  resultDiv.innerHTML = `
+    <h3>Surprise Historical Plan (Instant)</h3>
+    <p><b>Month:</b> ${month}</p>
+    <p><b>Duration:</b> ${days} days</p>
+    <p><b>Places (5):</b> ${places.join(", ")}</p>
+    <p><b>Travel:</b> Train/Bus (budget mode)</p>
+    <p><b>Stay:</b> Budget hotel/guest house</p>
+
+    <div class="itinerary-day">
+      <b>Day 1</b>
+      <ul>
+        <li>Morning: Visit ${places[0]}</li>
+        <li>Afternoon: Explore ${places[1]}</li>
+        <li>Evening: Local food + rest</li>
+      </ul>
+    </div>
+    <div class="itinerary-day">
+      <b>Day 2</b>
+      <ul>
+        <li>Morning: Visit ${places[2]}</li>
+        <li>Afternoon: Explore ${places[3]}</li>
+        <li>Evening: Cultural walk</li>
+      </ul>
+    </div>
+    <div class="itinerary-day">
+      <b>Day 3</b>
+      <ul>
+        <li>Morning: Visit ${places[4]}</li>
+        <li>Afternoon: Shopping/food trail</li>
+        <li>Evening: Return trip</li>
+      </ul>
+    </div>
+
+    <h4 style="margin-top:10px">💰 Budget (Max ₹10,000)</h4>
+    <p>Travel: ₹${travelCost}</p>
+    <p>Hotel (2 nights): ₹${hotelCost}</p>
+    <p>Food (3 days): ₹${foodCost}</p>
+    <p>Entry tickets: ₹${ticketsCost}</p>
+    <p>Local transport: ₹${localCost}</p>
+    <p>Per-place sightseeing allocation (5 places): ₹${perPlaceSightseeing} each</p>
+    <h4>Total: ₹${total}</h4>
+    <h4 style="color:${remaining>=0?'green':'red'}">Remaining: ₹${remaining}</h4>
   `;
 }
 /* ===== FORCE TOURIST IMAGES (FIX BLANK IMAGES) ===== */
