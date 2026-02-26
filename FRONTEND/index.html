@@ -1817,15 +1817,26 @@ function loadSample(){
 
 /* ===== FAKE PAYMENT SYSTEM ===== */
 
+let razorpayLoadPromise = null;
+let razorpayKeyCache = null;
+
 async function ensureRazorpay(){
   if(window.Razorpay) return true;
-  return new Promise((resolve, reject) => {
+  if(razorpayLoadPromise) return razorpayLoadPromise;
+  razorpayLoadPromise = new Promise((resolve, reject) => {
     const s = document.createElement('script');
     s.src = 'https://checkout.razorpay.com/v1/checkout.js';
     s.onload = () => resolve(true);
     s.onerror = () => reject(new Error('Razorpay failed to load'));
     document.head.appendChild(s);
   });
+  return razorpayLoadPromise;
+}
+
+async function getRazorpayKey(){
+  if(razorpayKeyCache && razorpayKeyCache.keyId) return razorpayKeyCache;
+  razorpayKeyCache = await apiFetch('/api/payments/razorpay/key');
+  return razorpayKeyCache;
 }
 
 async function createBookingAndPay(payload){
@@ -1854,11 +1865,13 @@ async function createBookingAndPay(payload){
 
 async function startRazorpayCheckout(bookingId, payload){
   await ensureRazorpay();
-  const keyData = await apiFetch('/api/payments/razorpay/key');
-  const order = await apiFetch('/api/payments/razorpay/order', {
-    method: 'POST',
-    body: JSON.stringify({ bookingId })
-  });
+  const [keyData, order] = await Promise.all([
+    getRazorpayKey(),
+    apiFetch('/api/payments/razorpay/order', {
+      method: 'POST',
+      body: JSON.stringify({ bookingId })
+    })
+  ]);
 
   const options = {
     key: keyData.keyId,
@@ -3462,7 +3475,8 @@ function openHotelModal(id){
   recalc();
 
   const payBtn = document.getElementById(modalId).querySelector('#proceedPayBtn');
-  if(payBtn) payBtn.addEventListener('click', ()=>{
+  if(payBtn) payBtn.addEventListener('click', async ()=>{
+    if(payBtn.dataset.loading === '1') return;
     const sel = getSelected();
     const typeKey = sel ? sel.dataset.type : 'normal';
     const typeLabel = sel ? (sel.dataset.label || sel.textContent.trim()) : 'Normal';
@@ -3482,8 +3496,18 @@ function openHotelModal(id){
       perDay,
       total
     };
-    createBookingAndPay(payload);
-    closeModal(modalId);
+    const originalText = payBtn.textContent;
+    payBtn.dataset.loading = '1';
+    payBtn.disabled = true;
+    payBtn.textContent = 'Opening payment...';
+    try{
+      await createBookingAndPay(payload);
+      closeModal(modalId);
+    }finally{
+      payBtn.dataset.loading = '0';
+      payBtn.disabled = false;
+      payBtn.textContent = originalText;
+    }
   });
 }
 
@@ -3653,7 +3677,18 @@ function addPlacesToPlaceSelect(){
   try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
   try{ if(document.getElementById('hotelGrid') && typeof renderHotels === 'function') renderHotels(window.HOTELS || []); }catch(e){}
 }
-window.addEventListener('load', addPlacesToPlaceSelect);
+window.addEventListener('load', () => {
+  addPlacesToPlaceSelect();
+  const preload = () => {
+    ensureRazorpay().catch(()=>{});
+    getRazorpayKey().catch(()=>{});
+  };
+  if('requestIdleCallback' in window){
+    window.requestIdleCallback(preload, { timeout: 2000 });
+  }else{
+    setTimeout(preload, 500);
+  }
+});
 
 
 
