@@ -3071,6 +3071,28 @@ const I18N = {
   }
 };
 
+function isCorruptedTranslation(value){
+  if(typeof value !== 'string') return true;
+  const compact = value.trim();
+  if(!compact) return true;
+  return /^[?\s.,:;'"()\-]+$/.test(compact);
+}
+
+function normalizeTranslations(){
+  const fallback = I18N.en || {};
+  ['hi', 'mr', 'gu', 'ta', 'bn'].forEach(lang => {
+    const dict = I18N[lang];
+    if(!dict) return;
+    Object.keys(fallback).forEach(key => {
+      if(isCorruptedTranslation(dict[key])){
+        dict[key] = fallback[key];
+      }
+    });
+  });
+}
+
+normalizeTranslations();
+
 const MONTH_KEYS = {
   January: 'month_january',
   February: 'month_february',
@@ -3085,6 +3107,21 @@ const MONTH_KEYS = {
   November: 'month_november',
   December: 'month_december'
 };
+
+function getCurrentMonthName(){
+  return new Date().toLocaleString('en-US', { month: 'long' });
+}
+
+function syncAiMonthToCurrentMonth(){
+  const select = document.getElementById('aiMonth');
+  const currentMonth = getCurrentMonthName();
+  if(!select) return currentMonth;
+  const hasCurrentOption = Array.from(select.options).some(opt => opt.value === currentMonth);
+  if(hasCurrentOption){
+    select.value = currentMonth;
+  }
+  return select.value || currentMonth;
+}
 
 function t(key){
   const lang = window.currentLang || 'en';
@@ -3210,6 +3247,7 @@ function renderAll(){
 /* ---------- helper: update on load ---------- */
 window.addEventListener('load', ()=>{
   if(window.user){ onLogin(); } else { showPage('landingPage'); }
+  syncAiMonthToCurrentMonth();
   initLanguage();
   renderAll();
   startSlideshow();
@@ -4032,7 +4070,7 @@ function surpriseWeekendPlan(){
   const resultDiv = document.getElementById("aiResult");
   const budget = 10000;
   const days = 3;
-  const month = document.getElementById("aiMonth").value;
+  const month = syncAiMonthToCurrentMonth();
   const monthly = Array.isArray(MONTH_DESTINATIONS[month]) ? MONTH_DESTINATIONS[month].map(p => p.name) : [];
   const fallbackHistorical = [
     "Taj Mahal",
