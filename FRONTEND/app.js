@@ -68,7 +68,7 @@
     if(!window.PLACE_META[name]){
       window.PLACE_META[name] = {
         image: nextFallback(),
-        info: `${name} â€” located in ${city}. A notable historical site; check local timings before visiting.`
+        info: `${name} - located in ${city}. A notable historical site; check local timings before visiting.`
       };
     }
 
@@ -325,23 +325,23 @@ function generateAIPlan(){
 
   // ---------- OUTPUT ----------
   resultDiv.innerHTML = `
-    <h3>AI Trip Cost Analysis</h3>
+    <h3>\u{1F9E0} AI Trip Cost Analysis</h3>
 
-    <p><b>Best Places:</b> ${places.join(", ")}</p>
-    <p><b>Suggested Travel Mode:</b> ${travelMode}</p>
-
-    <hr>
-
-    <h4>Cost Breakdown</h4>
-    <p>Travel Cost: \u20B9${travelCost}</p>
-    <p>Hotel Cost (${days} nights): \u20B9${hotelTotal}</p>
-    <p>Food Cost (${days} days): \u20B9${foodTotal}</p>
+    <p><b>\u{1F4CD} Best Places:</b> ${places.join(", ")}</p>
+    <p><b>\u{1F686} Suggested Travel Mode:</b> ${travelMode}</p>
 
     <hr>
 
-    <h4>Total Trip Expense: \u20B9${totalExpense}</h4>
+    <h4>\u{1F4B0} Cost Breakdown</h4>
+    <p>\u{1F686} Travel Cost: \u20B9${travelCost}</p>
+    <p>\u{1F3E8} Hotel Cost (${days} nights): \u20B9${hotelTotal}</p>
+    <p>\u{1F37D}\uFE0F Food Cost (${days} days): \u20B9${foodTotal}</p>
+
+    <hr>
+
+    <h4>\u{1F4CA} Total Trip Expense: \u20B9${totalExpense}</h4>
     <h4 style="color:${remaining>=0?'green':'red'}">
-      Remaining Budget: \u20B9${remaining}
+      \u{1F4B5} Remaining Budget: \u20B9${remaining}
     </h4>
 
     <p class="small-muted">
@@ -433,7 +433,7 @@ function surpriseWeekendPlan(){
       </ul>
     </div>
 
-    <h4 style="margin-top:10px">Budget (Max \u20B910,000)</h4>
+    <h4 style="margin-top:10px">\u{1F4B0} Budget (Max \u20B910,000)</h4>
     <p>Travel: \u20B9${travelCost}</p>
     <p>Hotel (2 nights): \u20B9${hotelCost}</p>
     <p>Food (3 days): \u20B9${foodCost}</p>
