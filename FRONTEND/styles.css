@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+
+
+/* ===== UNIQUE ACHIEVEMENT DESIGN ===== */
+
+.achievement-card{
+  padding:14px;
+  border-radius:14px;
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:600;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.ach-easy{
+  background:#e6f9f0;
+  border-left:6px solid #22c55e;
+}
+
+.ach-medium{
+  background:#fff7e6;
+  border-left:6px solid #f59e0b;
+}
+
+.ach-hard{
+  background:#ffe6e6;
+  border-left:6px solid #ef4444;
+}
+
+.ach-special{
+  background:#f3e8ff;
+  border-left:6px solid #a855f7;
+}
+
+.ach-icon{
+  font-size:22px;
+}
+
+
+
+    :root{
+      --bg:#f4efe7;
+      --bg-2:#e9f2ef;
+      --card:#ffffff;
+      --text:#0f172a;
+      --accent:#0f766e;
+      --accent-2:#f59e0b;
+      --muted:#4b5563;
+      --shadow:0 14px 34px rgba(15, 23, 42, 0.14);
+      --ring:rgba(15, 118, 110, 0.25);
+    }
+    body{
+      font-family:'Space Grotesk', sans-serif;
+      margin:0;
+      background:linear-gradient(160deg,var(--bg) 0%,var(--bg-2) 60%,#fdf8f2 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      min-height:100vh;
+      position:relative;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-10% -10% auto -10%;
+      height:70%;
+      background:
+        radial-gradient(600px 260px at 10% 20%, rgba(15,118,110,0.12), transparent 60%),
+        radial-gradient(520px 220px at 90% 0%, rgba(245,158,11,0.12), transparent 65%);
+      pointer-events:none;
+      z-index:-1;
+    }
+    .wrap{max-width:1100px;margin:28px auto;padding:18px}
+    nav{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-start;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      margin:12px 0 18px;
+      position:sticky;
+      top:12px;
+      z-index:10;
+      padding:8px;
+      background:linear-gradient(180deg,#0f1d2f 0%, #0a1726 100%);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:999px;
+      box-shadow:0 10px 22px rgba(8,15,28,0.32), inset 0 1px 0 rgba(255,255,255,0.12);
+      scrollbar-width:none;
+    }
+    nav::-webkit-scrollbar{display:none}
+    nav button{
+      background:transparent;
+      border:1px solid transparent;
+      padding:10px 16px;
+      border-radius:999px;
+      cursor:pointer;
+      color:#dbe7f4;
+      font-weight:600;
+      white-space:nowrap;
+      transition:color .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    nav button:hover{
+      color:#ffffff;
+      border-color:rgba(255,255,255,0.22);
+      background:rgba(255,255,255,0.06);
+      transform:none;
+      box-shadow:none;
+    }
+    nav button.active-nav{
+      color:#ecfff7;
+      border-color:rgba(124,241,207,0.55);
+      background:linear-gradient(180deg, rgba(68,163,133,0.3), rgba(36,110,91,0.25));
+      box-shadow:0 0 0 1px rgba(124,241,207,0.18) inset, 0 0 22px rgba(85,211,171,0.35);
+    }
+    nav select{
+      background:rgba(255,255,255,0.08);
+      color:#dbe7f4;
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:999px;
+      padding:8px 12px;
+      margin-top:0;
+      max-width:160px;
+    }
+    #adminBadge{
+      margin-right:8px !important;
+      white-space:nowrap;
+      border-radius:999px;
+    }    .page{display:none;opacity:0;transform:translateY(8px)}
+    .page.active{display:block;animation:pageReveal .5s ease forwards}
+    .card{
+      background:var(--card);
+      padding:18px;
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      margin-bottom:16px;
+      border:1px solid rgba(15,23,42,0.06);
+    }
+    h1,h2,h3{margin:0 0 8px 0;font-family:'Fraunces', serif;letter-spacing:.2px}
+    input,select,textarea,button{font-family:inherit}
+    input,select,textarea{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,0.12);
+      margin-top:8px;
+      background:#fff;
+      transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+    button{
+      transition:transform .15s ease, box-shadow .15s ease, background .2s ease, color .2s ease;
+    }
+    button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    button.primary{
+      background:linear-gradient(135deg,#0f766e,#0b4f4a);
+      color:white;
+      border:none;
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      box-shadow:0 10px 18px rgba(15,118,110,0.22);
+    }
+    button.primary:hover{transform:translateY(-1px);box-shadow:0 14px 24px rgba(15,118,110,0.26)}
+    .hero{height:320px;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 16px 44px rgba(2,6,23,0.18)}
+    .hero img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.6)}
+    .hero .overlay{text-align:center;color:white;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-shadow:0 8px 30px rgba(0,0,0,0.35)}
+    .icons{display:flex;gap:18px;justify-content:center;margin:18px 0;align-items:stretch}
+    /* square icon cards */
+    .icon{
+      width:110px;
+      height:110px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(247,251,250,0.9));
+      border-radius:14px;
+      padding:8px;
+      text-align:center;
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(2,6,23,0.08);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      border:1px solid rgba(15,23,42,0.08);
+      transition:transform .15s ease, box-shadow .15s ease;
+    }
+    .icon:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(2,6,23,0.12)}
+    .icon div.emoji{font-size:32px;line-height:1}
+    .icon div.title{font-weight:700;font-size:15px;line-height:1.05}
+    .icon .small-muted{font-size:12px;color:var(--muted);margin:0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .small-muted{color:var(--muted);font-size:13px;margin-top:6px}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    /* chatbot floating (kept as fallback) */
+    #chatbotBox{display:none;position:fixed;bottom:22px;right:22px;width:360px;height:480px;background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.18);overflow:hidden;z-index:9999}
+    #chatHeader{background:var(--accent);color:#fff;padding:12px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+    #chatArea{padding:12px;height:320px;overflow:auto;background:#fbfdff}
+    .msg{margin-bottom:10px;line-height:1.3}
+    .msg.user{text-align:right}
+    .msg .bubble{display:inline-block;padding:8px 12px;border-radius:12px;max-width:80%}
+    .msg.bot .bubble{background:#eef2ff;color:var(--text)}
+    .msg.user .bubble{background:var(--accent);color:white}
+    .chatInputWrap{display:flex;gap:8px;padding:10px}
+    .chatInputWrap input{flex:1;padding:8px;border-radius:10px;border:1px solid #e6eef8}
+    .chatMeta{display:flex;gap:8px;padding:8px;border-top:1px solid #eef6ff;background:#fcfeff}
+    .chatMeta input{width:50%}
+    /* new styles for added features */
+    .small-pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--accent);font-weight:600;font-size:13px}
+    .journey-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .gallery img{width:calc(33% - 8px);border-radius:8px;height:120px;object-fit:cover}
+    .itinerary-day{border:1px dashed #e6eef8;padding:8px;border-radius:8px;margin-top:8px;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.18);padding:8px 10px;border-radius:10px;cursor:pointer}
+    .mini{padding:6px 8px;font-size:13px;border-radius:8px}
+    .muted-block{background:#fbfdff;padding:10px;border-radius:10px;border:1px solid #eef6ff;margin-top:8px;color:var(--muted)}
+    .admin-table{width:100%;border-collapse:collapse;margin-top:8px}
+    .admin-table th,.admin-table td{border:1px solid rgba(15,23,42,0.12);padding:8px;text-align:left;font-size:13px}
+    .admin-badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:600}
+    .admin-paid{background:#dcfce7;color:#166534}
+    .admin-pending{background:#fef3c7;color:#92400e}
+    .admin-table tr[data-uid]{cursor:pointer}
+    .admin-table tr[data-uid]:hover{background:#f8fafc}
+    .admin-row-active{background:#eef6ff !important}
+    /* large square slideshow (new) */
+    .square-slide-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .square-slide{width:520px;height:520px;border-radius:16px;overflow:hidden;box-shadow:0 14px 40px rgba(2,6,23,0.12);position:relative;background:#ddd}
+    .square-slide img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .45s ease}
+    .square-slide .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,0.45);color:white;padding:8px 12px;border-radius:10px;font-weight:600}
+    @media (max-width:960px){
+      .square-slide{width:92%;height:420px}
+    }
+    @media (max-width:640px){
+      .icons{flex-wrap:wrap;gap:12px}
+      .icon{width:90px;height:90px}
+      #chatbotBox{width:300px;height:420px}
+      .gallery img{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  
+}
+
+      .square-slide{width:100%;height:320px}
+    }
+    /* dark mode */
+    .dark{
+      --bg:#0b1f1e;
+      --bg-2:#142e2a;
+      --card:#0f2a27;
+      --text:#e5e7eb;
+      --muted:#cbd5e1;
+      --accent:#34d399;
+      --accent-2:#fbbf24;
+      --shadow:0 16px 40px rgba(0,0,0,0.35);
+      --ring:rgba(52,211,153,0.25);
+      color-scheme:dark;
+    }
+    .dark body,
+    body.dark{
+      color:var(--text);
+      background:linear-gradient(160deg,var(--bg) 0%,var(--bg-2) 60%,#081a18 100%);
+    }
+    .dark .card,
+    .dark .modal,
+    .dark .hotel-card,
+    .dark .book-panel,
+    .dark .muted-block,
+    .dark .itinerary-day,
+    .dark #chatbotBox{
+      background:#102824 !important;
+      color:var(--text) !important;
+      border-color:rgba(148,163,184,0.26) !important;
+    }
+    .dark input,
+    .dark select,
+    .dark textarea{
+      background:#0f172a !important;
+      color:#f8fafc !important;
+      border-color:#334155 !important;
+    }
+    .dark input::placeholder,
+    .dark textarea::placeholder{
+      color:#94a3b8 !important;
+    }
+    .dark button:not(.primary){
+      background:#182b44 !important;
+      color:#e2e8f0 !important;
+      border-color:#3b4d68 !important;
+    }
+    .dark .small-muted,
+    .dark footer{
+      color:#cbd5e1 !important;
+    }
+    .dark .small-pill,
+    .dark .atg-badge{
+      background:#1d334f !important;
+      color:#dbeafe !important;
+      border-color:#3b82f6 !important;
+    }
+    .dark .admin-table th,
+    .dark .admin-table td{
+      border-color:#334155 !important;
+      color:#e5e7eb !important;
+      background:transparent !important;
+    }
+    .dark .admin-table tr[data-uid]:hover{
+      background:#13263f !important;
+    }
+    .dark .admin-row-active{
+      background:#1e3a5f !important;
+    }
+    .dark .admin-paid{
+      background:#14532d !important;
+      color:#dcfce7 !important;
+    }
+    .dark .admin-pending{
+      background:#713f12 !important;
+      color:#fef3c7 !important;
+    }
+    .dark #chatArea,
+    .dark #chatAreaPage{
+      background:#0b1726 !important;
+      color:#e5e7eb !important;
+    }
+    .dark .msg.bot .bubble{
+      background:#1e293b !important;
+      color:#e5e7eb !important;
+    }
+    .dark .chatMeta{
+      background:#0f172a !important;
+      border-top-color:#334155 !important;
+    }
+    .dark .room-type button{
+      border-color:#3b4d68 !important;
+      color:#e2e8f0 !important;
+      background:#111f34 !important;
+    }
+    .dark .room-type button.selected{
+      background:#113a33 !important;
+      border-color:#34d399 !important;
+      color:#d1fae5 !important;
+    }
+    .dark .modal-overlay{
+      background:rgba(2,6,23,0.7) !important;
+    }
+    .dark [style*="background:white"],
+    .dark [style*="background:#fff"],
+    .dark [style*="background:#fbfdff"],
+    .dark [style*="background:#fcfeff"]{
+      background:#102824 !important;
+      color:var(--text) !important;
+      border-color:#334155 !important;
+    }
+    @keyframes pageReveal{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    /* Hotel-specific styles injected later in script too */
