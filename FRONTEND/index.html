@@ -4070,7 +4070,15 @@ function surpriseWeekendPlan(){
   const resultDiv = document.getElementById("aiResult");
   const budget = 10000;
   const days = 3;
-  const month = syncAiMonthToCurrentMonth();
+  const monthSelect = document.getElementById("aiMonth");
+  const currentMonth = new Date().toLocaleString('en-US', { month: 'long' });
+  if(monthSelect){
+    const hasCurrentOption = Array.from(monthSelect.options).some(opt => opt.value === currentMonth);
+    if(hasCurrentOption){
+      monthSelect.value = currentMonth;
+    }
+  }
+  const month = (monthSelect && monthSelect.value) ? monthSelect.value : currentMonth;
   const monthly = Array.isArray(MONTH_DESTINATIONS[month]) ? MONTH_DESTINATIONS[month].map(p => p.name) : [];
   const fallbackHistorical = [
     "Taj Mahal",
