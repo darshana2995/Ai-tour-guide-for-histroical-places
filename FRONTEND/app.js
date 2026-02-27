@@ -1,4 +1,4 @@
-function addPlacesToPlaceSelect(){
+﻿function addPlacesToPlaceSelect(){
   const PLACES = [
     ["Taj Mahal","Agra, Uttar Pradesh"],
     ["Agra Fort","Agra, Uttar Pradesh"],
@@ -68,7 +68,7 @@ function addPlacesToPlaceSelect(){
     if(!window.PLACE_META[name]){
       window.PLACE_META[name] = {
         image: nextFallback(),
-        info: `${name} — located in ${city}. A notable historical site; check local timings before visiting.`
+        info: `${name} â€” located in ${city}. A notable historical site; check local timings before visiting.`
       };
     }
 
@@ -325,23 +325,23 @@ function generateAIPlan(){
 
   // ---------- OUTPUT ----------
   resultDiv.innerHTML = `
-    <h3>?? AI Trip Cost Analysis</h3>
+    <h3>AI Trip Cost Analysis</h3>
 
-    <p><b>?? Best Places:</b> ${places.join(", ")}</p>
-    <p><b>?? Suggested Travel Mode:</b> ${travelMode}</p>
-
-    <hr>
-
-    <h4>?? Cost Breakdown</h4>
-    <p>?? Travel Cost: ?${travelCost}</p>
-    <p>?? Hotel Cost (${days} nights): ?${hotelTotal}</p>
-    <p>??? Food Cost (${days} days): ?${foodTotal}</p>
+    <p><b>Best Places:</b> ${places.join(", ")}</p>
+    <p><b>Suggested Travel Mode:</b> ${travelMode}</p>
 
     <hr>
 
-    <h4>?? Total Trip Expense: ?${totalExpense}</h4>
+    <h4>Cost Breakdown</h4>
+    <p>Travel Cost: \u20B9${travelCost}</p>
+    <p>Hotel Cost (${days} nights): \u20B9${hotelTotal}</p>
+    <p>Food Cost (${days} days): \u20B9${foodTotal}</p>
+
+    <hr>
+
+    <h4>Total Trip Expense: \u20B9${totalExpense}</h4>
     <h4 style="color:${remaining>=0?'green':'red'}">
-      ?? Remaining Budget: ?${remaining}
+      Remaining Budget: \u20B9${remaining}
     </h4>
 
     <p class="small-muted">
@@ -433,15 +433,15 @@ function surpriseWeekendPlan(){
       </ul>
     </div>
 
-    <h4 style="margin-top:10px">?? Budget (Max ?10,000)</h4>
-    <p>Travel: ?${travelCost}</p>
-    <p>Hotel (2 nights): ?${hotelCost}</p>
-    <p>Food (3 days): ?${foodCost}</p>
-    <p>Entry tickets: ?${ticketsCost}</p>
-    <p>Local transport: ?${localCost}</p>
-    <p>Per-place sightseeing allocation (5 places): ?${perPlaceSightseeing} each</p>
-    <h4>Total: ?${total}</h4>
-    <h4 style="color:${remaining>=0?'green':'red'}">Remaining: ?${remaining}</h4>
+    <h4 style="margin-top:10px">Budget (Max \u20B910,000)</h4>
+    <p>Travel: \u20B9${travelCost}</p>
+    <p>Hotel (2 nights): \u20B9${hotelCost}</p>
+    <p>Food (3 days): \u20B9${foodCost}</p>
+    <p>Entry tickets: \u20B9${ticketsCost}</p>
+    <p>Local transport: \u20B9${localCost}</p>
+    <p>Per-place sightseeing allocation (5 places): \u20B9${perPlaceSightseeing} each</p>
+    <h4>Total: \u20B9${total}</h4>
+    <h4 style="color:${remaining>=0?'green':'red'}">Remaining: \u20B9${remaining}</h4>
   `;
 }
 /* ===== FORCE TOURIST IMAGES (FIX BLANK IMAGES) ===== */
@@ -505,7 +505,7 @@ function downloadReceiptPDF(data){
         <p><b>Place:</b> ${data.place || "-"}</p>
         <p><b>Room Type:</b> ${data.type || "-"}</p>
         <p><b>Days:</b> ${data.days || "-"}</p>
-        <p><b>Total Paid:</b> ?${data.total || "0"}</p>
+        <p><b>Total Paid:</b> \u20B9${data.total || "0"}</p>
         <p><b>Date:</b> ${new Date().toLocaleString()}</p>
       </div>
       <div style="margin-top:16px">

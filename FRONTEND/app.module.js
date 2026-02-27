@@ -1,4 +1,4 @@
-/* ====================== Firebase SDK Imports ====================== */
+﻿/* ====================== Firebase SDK Imports ====================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
@@ -526,23 +526,23 @@ function renderTripPhotos(){
   let list = [];
 
   /* EASY */
-  if(trips >= 1) list.push({icon:"??", text:"First Trip Planned", cls:"ach-easy"});
-  if(photos >= 5) list.push({icon:"??", text:"5 Photos Uploaded", cls:"ach-easy"});
-  if(visited >= 3) list.push({icon:"??", text:"3 Places Visited", cls:"ach-easy"});
+  if(trips >= 1) list.push({icon:"ðŸ§­", text:"First Trip Planned", cls:"ach-easy"});
+  if(photos >= 5) list.push({icon:"ðŸ“¸", text:"5 Photos Uploaded", cls:"ach-easy"});
+  if(visited >= 3) list.push({icon:"ðŸ—ºï¸", text:"3 Places Visited", cls:"ach-easy"});
 
   /* MEDIUM */
-  if(trips >= 3) list.push({icon:"??", text:"3 Trips Planned", cls:"ach-medium"});
-  if(photos >= 10) list.push({icon:"??", text:"10 Photos Uploaded", cls:"ach-medium"});
-  if(visited >= 5) list.push({icon:"??", text:"5 Places Visited", cls:"ach-medium"});
+  if(trips >= 3) list.push({icon:"ðŸ§³", text:"3 Trips Planned", cls:"ach-medium"});
+  if(photos >= 10) list.push({icon:"ðŸ–¼ï¸", text:"10 Photos Uploaded", cls:"ach-medium"});
+  if(visited >= 5) list.push({icon:"ðŸ›ï¸", text:"5 Places Visited", cls:"ach-medium"});
 
   /* HARD */
-  if(trips >= 7) list.push({icon:"??", text:"7 Trips Planned", cls:"ach-hard"});
-  if(photos >= 20) list.push({icon:"??", text:"20 Photos Uploaded", cls:"ach-hard"});
-  if(visited >= 10) list.push({icon:"??", text:"10 Places Visited", cls:"ach-hard"});
+  if(trips >= 7) list.push({icon:"ðŸš€", text:"7 Trips Planned", cls:"ach-hard"});
+  if(photos >= 20) list.push({icon:"ðŸ“·", text:"20 Photos Uploaded", cls:"ach-hard"});
+  if(visited >= 10) list.push({icon:"ðŸ°", text:"10 Places Visited", cls:"ach-hard"});
 
   /* SPECIAL */
   if(trips >= 3 && photos >= 10 && visited >= 5){
-    list.push({icon:"??", text:"Travel Enthusiast", cls:"ach-special"});
+    list.push({icon:"ðŸŒŸ", text:"Travel Enthusiast", cls:"ach-special"});
   }
 
   if(list.length === 0){
@@ -746,7 +746,7 @@ const canned = [
    a:"Near Mumbai you can visit **Lonavala, Alibaug, Matheran, Mahabaleshwar, Igatpuri**."},
 
   {q:/budget for .* days/i,
-   a:"For a 2-3 day trip, budget ?5000–?15000 per person** depending on travel and hotel type."},
+   a:"For a 2-3 day trip, budget \u20B95000â€“\u20B915000 per person** depending on travel and hotel type."},
 
   {q:/camping|where camping/i,
    a:"Good camping places: **Rishikesh riverside, Manali camps, Pawna Lake (near Pune)**."},
@@ -852,7 +852,7 @@ function sendChat(source){
             return bd - ad;
           })[0] || bookings[0];
           const status = (last.paymentStatus || 'pending').toUpperCase();
-          setTimeout(()=> appendChat(source,'bot', `Your latest booking: **${last.hotelName || 'Hotel'}** (${last.place || ''}). Total: ?${last.total || 0}. Status: **${status}**.`), 450);
+          setTimeout(()=> appendChat(source,'bot', `Your latest booking: **${last.hotelName || 'Hotel'}** (${last.place || ''}). Total: \u20B9${last.total || 0}. Status: **${status}**.`), 450);
           return;
         }
         if(/my trips|previous trip|last trip|journey history|past journey/i.test(text)){
@@ -991,7 +991,7 @@ function renderJourney(){
   list.forEach(it=>{
     const d = document.createElement('div');
     d.className = 'card';
-    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'—'}</span><span class="small-pill">${translateTravelType(it.travelType||'Solo')}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | ?${it.price}</div></div>`;
+    const metaHtml = `<div class="journey-meta"><span class="small-pill">${it.travelMode||'â€”'}</span><span class="small-pill">${translateTravelType(it.travelType||'Solo')}</span><div style="flex:1"></div><div class="small-muted">Arrive: ${it.arrive || '-'} | Nights: ${it.nights} | \u20B9${it.price}</div></div>`;
     const notesHtml = it.notes ? `<div style="margin-top:8px"><strong>Notes:</strong> <span class="small-muted">${escapeHtml(it.notes)}</span></div>` : '';
     const pm = PLACE_META[it.place];
     const imgHtml = pm ? `<div style="display:flex;gap:10px;margin-top:8px"><img src="${pm.image}" alt="${it.place}" style="width:120px;height:80px;border-radius:8px;object-fit:cover"><div style="flex:1"><strong>${it.place}</strong><div class="small-muted">${pm.info}</div></div></div>` : `<strong>${it.place}</strong>`;
@@ -1188,7 +1188,7 @@ function openReceipt(data){
     <p><b>Place:</b> ${data.place}</p>
     <p><b>Room Type:</b> ${data.type}</p>
     <p><b>Days:</b> ${data.days}</p>
-    <p><b>Total Paid:</b> ?${data.total}</p>
+    <p><b>Total Paid:</b> \u20B9${data.total}</p>
     <p><b>Date:</b> ${new Date().toLocaleString()}</p>
   `;
 
@@ -1234,26 +1234,26 @@ function renderBudget(){
     adviceEl.innerHTML = `<div>Please set your total trip budget to receive tailored advice.</div>`;
     return;
   }
-  statusEl.textContent = `Remaining after hotel expenses: ?${remaining} (spent on hotels: ?${expenses}) — Trip days: ${tripDays}`;
+  statusEl.textContent = `Remaining after hotel expenses: \u20B9${remaining} (spent on hotels: \u20B9${expenses}) â€” Trip days: ${tripDays}`;
   const alloc = {
     food: Math.round((perDayAvailable || 0) * 0.30),
     transport: Math.round((perDayAvailable || 0) * 0.25),
     attractions: Math.round((perDayAvailable || 0) * 0.20),
     misc: Math.round((perDayAvailable || 0) * 0.25)
   };
-  let advice = `<div><strong>Estimated other expenses (baseline):</strong> ?${estimateOther} (?${estimateOtherPerDay}/day × ${tripDays} days)</div>`;
-  advice += `<div style="margin-top:6px"><strong>Approx. daily available for "other" (food/transport/attractions):</strong> ?${perDayAvailable} / day</div>`;
-  advice += `<div style="margin-top:8px"><strong>Suggested allocation per day:</strong><div class="small-muted">Food: ?${alloc.food} • Transport: ?${alloc.transport} • Attractions: ?${alloc.attractions} • Misc: ?${alloc.misc}</div></div>`;
+  let advice = `<div><strong>Estimated other expenses (baseline):</strong> \u20B9${estimateOther} (\u20B9${estimateOtherPerDay}/day Ã— ${tripDays} days)</div>`;
+  advice += `<div style="margin-top:6px"><strong>Approx. daily available for "other" (food/transport/attractions):</strong> \u20B9${perDayAvailable} / day</div>`;
+  advice += `<div style="margin-top:8px"><strong>Suggested allocation per day:</strong><div class="small-muted">Food: \u20B9${alloc.food} â€¢ Transport: \u20B9${alloc.transport} â€¢ Attractions: \u20B9${alloc.attractions} â€¢ Misc: \u20B9${alloc.misc}</div></div>`;
   if(remainingAfterOther < 0){
-    advice += `<div style="margin-top:8px;color:#991b1b"><strong>Warning:</strong> your budget is insufficient by ?${Math.abs(remainingAfterOther)} to cover the baseline daily expenses. Suggestions:</div>`;
+    advice += `<div style="margin-top:8px;color:#991b1b"><strong>Warning:</strong> your budget is insufficient by \u20B9${Math.abs(remainingAfterOther)} to cover the baseline daily expenses. Suggestions:</div>`;
     advice += `<ul style="margin-top:6px">
-      <li>Reduce hotel costs — choose cheaper hotels or fewer nights (save ~?2000–?5000 depending on hotel).</li>
-      <li>Cut daily spends: reduce dining or skip paid attractions to save ?${Math.abs(remainingAfterOther)}.</li>
+      <li>Reduce hotel costs â€” choose cheaper hotels or fewer nights (save ~\u20B92000â€“\u20B95000 depending on hotel).</li>
+      <li>Cut daily spends: reduce dining or skip paid attractions to save \u20B9${Math.abs(remainingAfterOther)}.</li>
       <li>Increase total budget if possible.</li>
       <li>Book shared transport or economy options.</li>
     </ul>`;
   } else {
-    advice += `<div style="margin-top:8px;color:#065f46"><strong>Good:</strong> you have an estimated surplus of ?${remainingAfterOther} after baseline daily costs. Consider allocating extra to souvenirs or a nicer hotel one night.</div>`;
+    advice += `<div style="margin-top:8px;color:#065f46"><strong>Good:</strong> you have an estimated surplus of \u20B9${remainingAfterOther} after baseline daily costs. Consider allocating extra to souvenirs or a nicer hotel one night.</div>`;
   }
   const hotelSharePct = total ? Math.round((expenses/total)*100) : 0;
   advice += `<div style="margin-top:8px" class="small-muted">Hotel costs are ~${hotelSharePct}% of your total budget.</div>`;
@@ -1291,7 +1291,7 @@ function renderVisits(){
   visits.sort((a,b)=> new Date(a.start)-new Date(b.start));
   el.innerHTML = visits.map(v => {
     const sd = new Date(v.start);
-    return `<div style="margin-bottom:8px"><strong>${v.place}</strong> — ${sd.toLocaleString()} for ${v.duration} mins</div>`;
+    return `<div style="margin-bottom:8px"><strong>${v.place}</strong> â€” ${sd.toLocaleString()} for ${v.duration} mins</div>`;
   }).join('');
 }
 
@@ -1390,13 +1390,13 @@ function renderHotelBookings(){
   list.innerHTML = bookings.map(b => `
     <div style="background:#fff;padding:15px;margin-bottom:10px;border-radius:10px">
       <h3>${b.hotelName}</h3>
-      <div>?? ${b.hotelAddress || "Demo Address, India"}</div>
-      <div>?? Days: ${b.days}</div>
-      <div>?? Total: ?${b.total}</div>
+      <div>ðŸ“ ${b.hotelAddress || "Demo Address, India"}</div>
+      <div>ðŸ—“ï¸ Days: ${b.days}</div>
+      <div>Total: \u20B9${b.total}</div>
       <div style="color:${(b.paymentStatus||'pending')==='paid'?'green':'#b45309'};font-weight:bold">
-        ${(b.paymentStatus||'pending')==='paid'?'? Payment Done':'? Payment Pending'}
+        ${(b.paymentStatus||'pending')==='paid'?'âœ… Payment Done':'â³ Payment Pending'}
       </div>
-      ${b.paidAt ? `<div>?? Paid At: ${formatDate(b.paidAt)}</div>` : ''}
+      ${b.paidAt ? `<div>ðŸ•’ Paid At: ${formatDate(b.paidAt)}</div>` : ''}
     </div>
   `).join("");
 }
@@ -1430,7 +1430,7 @@ async function renderAdminPage(){
     const journeys = data.journeys || [];
     const users = data.users || [];
     window.adminData = { users, bookings, journeys };
-    if(meta) meta.textContent = `Updated ${new Date().toLocaleString()} • ${users.length} users • ${bookings.length} bookings • ${journeys.length} journeys`;
+    if(meta) meta.textContent = `Updated ${new Date().toLocaleString()} â€¢ ${users.length} users â€¢ ${bookings.length} bookings â€¢ ${journeys.length} journeys`;
 
     if(!users.length){
       usersEl.innerHTML = '<div class="small-muted">No users found.</div>';
@@ -1461,7 +1461,7 @@ async function renderAdminPage(){
                   <span class="admin-badge ${u.lastBookingStatus==='paid'?'admin-paid':(u.lastBookingStatus==='pending'?'admin-pending':'')}">
                     ${u.lastBookingStatus || 'none'}
                   </span>
-                  ${u.lastBookingTotal ? ` • ?${u.lastBookingTotal}` : ''}
+                  ${u.lastBookingTotal ? ` â€¢ \u20B9${u.lastBookingTotal}` : ''}
                 </td>
                 <td>${formatDate(u.lastPaidAt)}</td>
                 <td>${formatDate(u.createdAt)}</td>
@@ -1496,7 +1496,7 @@ async function renderAdminPage(){
                 <td>${escapeHtml(b.hotelName||'')}</td>
                 <td>${escapeHtml(b.place||'')}</td>
                 <td>${escapeHtml(b.userEmail||b.userId||'')}</td>
-                <td>?${b.total||0}</td>
+                <td>\u20B9${b.total||0}</td>
                 <td>
                   <span class="admin-badge ${(b.paymentStatus||'pending')==='paid'?'admin-paid':'admin-pending'}">
                     ${(b.paymentStatus||'pending')==='paid'?'Paid':'Pending'}
@@ -1588,7 +1588,7 @@ function renderAdminUserDetails(uid){
           <tr>
             <td>${escapeHtml(b.hotelName||'')}</td>
             <td>${escapeHtml(b.place||'')}</td>
-            <td>?${b.total||0}</td>
+            <td>\u20B9${b.total||0}</td>
             <td>
               <span class="admin-badge ${(b.paymentStatus||'pending')==='paid'?'admin-paid':'admin-pending'}">
                 ${(b.paymentStatus||'pending')==='paid'?'Paid':'Pending'}
@@ -1628,7 +1628,7 @@ function renderAdminUserDetails(uid){
   ` : `<div class="small-muted">No journeys for this user.</div>`;
 
   detailsEl.innerHTML = `
-    <div><strong>${escapeHtml(user.name || '-')}</strong> • ${escapeHtml(user.email || '-')} • ${escapeHtml(user.phone || '-')}</div>
+    <div><strong>${escapeHtml(user.name || '-')}</strong> â€¢ ${escapeHtml(user.email || '-')} â€¢ ${escapeHtml(user.phone || '-')}</div>
     <div style="margin-top:8px">
       <div><strong>Booking History</strong></div>
       ${bookingsHtml}
@@ -1672,7 +1672,7 @@ function generatePDF(){
         <div class="small">Generated: ${new Date().toLocaleString()}</div>
       </div>
     </div>
-    <div class="section"><strong>Traveler:</strong> ${escapeHtml((window.user && window.user.name) || 'Guest')} — <span class="small">${escapeHtml((window.user && window.user.email) || '')}</span></div>
+    <div class="section"><strong>Traveler:</strong> ${escapeHtml((window.user && window.user.name) || 'Guest')} â€” <span class="small">${escapeHtml((window.user && window.user.email) || '')}</span></div>
   `;
 
   // Bookings summary
@@ -1681,7 +1681,7 @@ function generatePDF(){
   else {
     html += `<table><thead><tr><th>Hotel</th><th>Place</th><th>Type</th><th>Days</th><th>Rooms</th><th>Per day</th><th>Total</th></tr></thead><tbody>`;
     bookings.forEach(b => {
-      html += `<tr><td>${escapeHtml(b.hotelName)}</td><td>${escapeHtml(b.place)}</td><td>${escapeHtml(b.typeLabel)}</td><td>${b.days}</td><td>${b.rooms}</td><td>?${b.perDay}</td><td>?${b.total}</td></tr>`;
+      html += `<tr><td>${escapeHtml(b.hotelName)}</td><td>${escapeHtml(b.place)}</td><td>${escapeHtml(b.typeLabel)}</td><td>${b.days}</td><td>${b.rooms}</td><td>\u20B9${b.perDay}</td><td>\u20B9${b.total}</td></tr>`;
     });
     html += `</tbody></table>`;
   }
@@ -1692,7 +1692,7 @@ function generatePDF(){
   journey.forEach(it=>{
     const pm = PLACE_META[it.place] || {};
     html += `<div class="place"><img src="${pm.image || ''}" loading="lazy">
-alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'—')} | Type: ${escapeHtml(translateTravelType(it.travelType||'Solo'))} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | ?${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
+alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div class="meta">Arrive: ${it.arrive || '-'} | Travel: ${escapeHtml(it.travelMode||'â€”')} | Type: ${escapeHtml(translateTravelType(it.travelType||'Solo'))} | Hotel: ${escapeHtml(it.hotel)} | Nights: ${it.nights} | \u20B9${it.price}</div><div style="margin-top:6px">${escapeHtml(pm.info || '')}</div>
       ${it.notes ? `<div style="margin-top:8px" class="notes"><strong>Notes:</strong> ${escapeHtml(it.notes)}</div>` : ''}
     </div></div>`;
   });
@@ -1705,7 +1705,7 @@ alt="${escapeHtml(it.place)}"><div><strong>${escapeHtml(it.place)}</strong><div 
     visits.sort((a,b)=>new Date(a.start)-new Date(b.start));
     visits.forEach(v=>{
       const sd = new Date(v.start);
-      html += `<div style="margin-bottom:8px"><strong>${escapeHtml(v.place)}</strong> — ${sd.toLocaleString()} for ${v.duration} mins</div>`;
+      html += `<div style="margin-bottom:8px"><strong>${escapeHtml(v.place)}</strong> â€” ${sd.toLocaleString()} for ${v.duration} mins</div>`;
     });
   }
   html += `</div>`;
@@ -2083,35 +2083,35 @@ const I18N = {
     ph_notes: '?? ??????? ???? ??? (????, ??? ?????, ????????? ????)'
   },
   fr: {
-    title: 'Guide Tour IA - Démo',
+    title: 'Guide Tour IA - DÃ©mo',
     nav_home: 'Accueil',
-    nav_create_journey: 'Créer un voyage',
+    nav_create_journey: 'CrÃ©er un voyage',
     nav_ai_planner: 'Planificateur IA',
-    nav_hotels: 'Hôtels',
-    nav_hotel_bookings: 'Réservations hôtel',
+    nav_hotels: 'HÃ´tels',
+    nav_hotel_bookings: 'RÃ©servations hÃ´tel',
     nav_profile: 'Profil',
-    nav_achievements: 'Réalisations',
+    nav_achievements: 'RÃ©alisations',
     nav_admin: 'Admin',
-    nav_logout: 'Déconnexion',
+    nav_logout: 'DÃ©connexion',
     nav_multilang: 'Multi-langue',
     login_title: 'Bon retour',
-    login_subtitle: 'Connectez-vous à votre compte AI Tour Guide',
+    login_subtitle: 'Connectez-vous Ã  votre compte AI Tour Guide',
     login_btn: 'Connexion',
     register_btn: "S'inscrire",
-    register_title: 'Créer un compte',
+    register_title: 'CrÃ©er un compte',
     back_btn: 'Retour',
-    journey_title: 'Créez votre voyage',
+    journey_title: 'CrÃ©ez votre voyage',
     choose_place: 'Choisir un lieu',
-    arrival_date: "Date d'arrivée",
+    arrival_date: "Date d'arrivÃ©e",
     travel_mode: 'Mode de voyage',
     travel_type: 'Type de voyage',
-    hotel_name: "Nom de l'hôtel",
+    hotel_name: "Nom de l'hÃ´tel",
     nights: 'Nombre de nuits',
-    est_price: 'Prix estimé de l’hôtel (total)',
+    est_price: 'Prix estimÃ© de lâ€™hÃ´tel (total)',
     notes_optional: 'Notes (optionnel)',
     add_journey: 'Ajouter au voyage',
     export_json: 'Exporter JSON',
-    generate_pdf: 'Générer PDF',
+    generate_pdf: 'GÃ©nÃ©rer PDF',
     journey_plan: 'Votre plan de voyage',
     load_sample: 'Charger un exemple',
     clear: 'Effacer',
@@ -2119,28 +2119,28 @@ const I18N = {
     select_month: 'Choisir le mois',
     budget: 'Budget',
     days: 'Jours',
-    generate_ai_plan: 'Générer le plan IA',
+    generate_ai_plan: 'GÃ©nÃ©rer le plan IA',
     travel_solo: 'Solo',
     travel_family: 'Famille',
     travel_friends: 'Amis',
     month_january: 'Janvier',
-    month_february: 'Février',
+    month_february: 'FÃ©vrier',
     month_march: 'Mars',
     month_april: 'Avril',
     month_may: 'Mai',
     month_june: 'Juin',
     month_july: 'Juillet',
-    month_august: 'Août',
+    month_august: 'AoÃ»t',
     month_september: 'Septembre',
     month_october: 'Octobre',
     month_november: 'Novembre',
-    month_december: 'Décembre',
-    ph_hotel_name: 'Hôtel / Maison d’hôtes',
+    month_december: 'DÃ©cembre',
+    ph_hotel_name: 'HÃ´tel / Maison dâ€™hÃ´tes',
     ph_hotel_price: 'ex., 4500',
-    ph_notes: 'Notes pour cet élément du voyage (ex. préférences de chambre, contact)'
+    ph_notes: 'Notes pour cet Ã©lÃ©ment du voyage (ex. prÃ©fÃ©rences de chambre, contact)'
   },
   es: {
-    title: 'Guía Turística IA - Demo',
+    title: 'GuÃ­a TurÃ­stica IA - Demo',
     nav_home: 'Inicio',
     nav_create_journey: 'Crear viaje',
     nav_ai_planner: 'Planificador IA',
@@ -2149,21 +2149,21 @@ const I18N = {
     nav_profile: 'Perfil',
     nav_achievements: 'Logros',
     nav_admin: 'Admin',
-    nav_logout: 'Cerrar sesión',
+    nav_logout: 'Cerrar sesiÃ³n',
     nav_multilang: 'Multi-idioma',
     login_title: 'Bienvenido de nuevo',
-    login_subtitle: 'Inicia sesión en tu cuenta de AI Tour Guide',
-    login_btn: 'Iniciar sesión',
+    login_subtitle: 'Inicia sesiÃ³n en tu cuenta de AI Tour Guide',
+    login_btn: 'Iniciar sesiÃ³n',
     register_btn: 'Registrarse',
     register_title: 'Crear cuenta',
-    back_btn: 'Atrás',
+    back_btn: 'AtrÃ¡s',
     journey_title: 'Crea tu viaje',
     choose_place: 'Elige lugar',
     arrival_date: 'Fecha de llegada',
     travel_mode: 'Modo de viaje',
     travel_type: 'Tipo de viaje',
     hotel_name: 'Nombre del hotel',
-    nights: 'Número de noches',
+    nights: 'NÃºmero de noches',
     est_price: 'Precio estimado del hotel (total)',
     notes_optional: 'Notas (opcional)',
     add_journey: 'Agregar al viaje',
@@ -2175,7 +2175,7 @@ const I18N = {
     ai_title: 'Planificador de viaje IA',
     select_month: 'Selecciona mes',
     budget: 'Presupuesto',
-    days: 'Días',
+    days: 'DÃ­as',
     generate_ai_plan: 'Generar plan IA',
     travel_solo: 'Solo',
     travel_family: 'Familia',
@@ -2192,9 +2192,9 @@ const I18N = {
     month_october: 'Octubre',
     month_november: 'Noviembre',
     month_december: 'Diciembre',
-    ph_hotel_name: 'Hotel / Casa de huéspedes',
+    ph_hotel_name: 'Hotel / Casa de huÃ©spedes',
     ph_hotel_price: 'p. ej., 4500',
-    ph_notes: 'Notas para este viaje (p. ej., preferencias de habitación, contacto)'
+    ph_notes: 'Notas para este viaje (p. ej., preferencias de habitaciÃ³n, contacto)'
   }
 };
 
@@ -2423,7 +2423,7 @@ function escapeHtml(str){
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
-            <h2 style="margin:0">Hotel Suggestions — Historical Places (India)</h2>
+            <h2 style="margin:0">Hotel Suggestions â€” Historical Places (India)</h2>
             <div class="small-muted" style="margin-top:6px">Select a place and click Search to view hotels (default: show 10 popular suggestions).</div>
           </div>
           <div>
@@ -2585,7 +2585,7 @@ function createHotelCard(h){
     <img class="hotel-thumb" src="${h.image}" alt="${escapeHtml(h.name)}">
     <div class="hotel-info">
       <div class="hotel-title">${escapeHtml(h.name)}</div>
-      <div class="hotel-meta">${escapeHtml(h.place)} • ${escapeHtml(h.city)} • from ?${h.baseRate} / baseline</div>
+      <div class="hotel-meta">${escapeHtml(h.place)} â€¢ ${escapeHtml(h.city)} â€¢ from \u20B9${h.baseRate} / baseline</div>
       <div class="hotel-actions">
         <button class="primary" data-hid="${h.id}">Select</button>
         <button class="btn-ghost" data-hid-details="${h.id}">Details</button>
@@ -2636,16 +2636,16 @@ function showHotelDetails(id){
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
             <h3 style="margin:0">${escapeHtml(hotel.name)}</h3>
-            <div class="small-muted">${escapeHtml(hotel.place)} • ${escapeHtml(hotel.city)}</div>
+            <div class="small-muted">${escapeHtml(hotel.place)} â€¢ ${escapeHtml(hotel.city)}</div>
           </div>
           <div><button onclick="closeModal('hotelDetailsModal')" class="btn-ghost">Close</button></div>
         </div>
         <div style="display:flex;gap:12px;margin-top:12px">
           <img src="${hotel.image}" style="width:180px;height:120px;object-fit:cover;border-radius:8px">
           <div style="flex:1">
-            <div class="small-muted">Description: Hotel near ${escapeHtml(hotel.place)}. Base rate: ?${hotel.baseRate} (used to calculate room rates).</div>
+            <div class="small-muted">Description: Hotel near ${escapeHtml(hotel.place)}. Base rate: \u20B9${hotel.baseRate} (used to calculate room rates).</div>
             <div style="margin-top:10px">
-              ${ROOM_TYPES.map(rt => `<div style="margin-bottom:6px"><strong>${rt.label}</strong> — ${rt.desc} — from ?${Math.round(hotel.baseRate * rt.mult)}</div>`).join('')}
+              ${ROOM_TYPES.map(rt => `<div style="margin-bottom:6px"><strong>${rt.label}</strong> â€” ${rt.desc} â€” from \u20B9${Math.round(hotel.baseRate * rt.mult)}</div>`).join('')}
             </div>
           </div>
         </div>
@@ -2668,7 +2668,7 @@ function openHotelModal(id){
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
             <h3 style="margin:0">${escapeHtml(hotel.name)}</h3>
-            <div class="small-muted">${escapeHtml(hotel.place)} • ${escapeHtml(hotel.city)}</div>
+            <div class="small-muted">${escapeHtml(hotel.place)} â€¢ ${escapeHtml(hotel.city)}</div>
           </div>
           <div><button onclick="closeModal('${modalId}')" class="btn-ghost">Close</button></div>
         </div>
@@ -2679,7 +2679,7 @@ function openHotelModal(id){
             <div class="small-muted">Choose room type & number of days</div>
 
             <div class="room-type" id="roomTypesWrap">
-              ${ROOM_TYPES.map(rt => `<button data-type="${rt.key}" data-label="${escapeHtml(rt.label)}" data-mult="${rt.mult}" class="${rt.key==='normal' ? 'selected' : ''}">${escapeHtml(rt.label)} — ?${Math.round(hotel.baseRate * rt.mult)} / baseline</button>`).join('')}
+              ${ROOM_TYPES.map(rt => `<button data-type="${rt.key}" data-label="${escapeHtml(rt.label)}" data-mult="${rt.mult}" class="${rt.key==='normal' ? 'selected' : ''}">${escapeHtml(rt.label)} â€” \u20B9${Math.round(hotel.baseRate * rt.mult)} / baseline</button>`).join('')}
             </div>
 
             <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
@@ -2690,8 +2690,8 @@ function openHotelModal(id){
             </div>
 
             <div style="margin-top:10px" class="book-panel">
-              <div>Price per day: <strong id="pricePerDay">?${Math.round(hotel.baseRate)}</strong></div>
-              <div style="margin-top:6px">Total estimate: <strong id="priceTotal">?${Math.round(hotel.baseRate)}</strong></div>
+              <div>Price per day: <strong id="pricePerDay">\u20B9${Math.round(hotel.baseRate)}</strong></div>
+              <div style="margin-top:6px">Total estimate: <strong id="priceTotal">\u20B9${Math.round(hotel.baseRate)}</strong></div>
               <div class="small-muted" style="margin-top:6px">Note: This is an estimate. Taxes and fees not included.</div>
             </div>
 
@@ -2734,8 +2734,8 @@ function openHotelModal(id){
     const days = Math.max(1, Number(daysInput.value||1));
     const rooms = Math.max(1, Number(roomsInput.value||1));
     const total = perDay * days * rooms;
-    document.getElementById('pricePerDay').textContent = `?${perDay}`;
-    document.getElementById('priceTotal').textContent = `?${total}`;
+    document.getElementById('pricePerDay').textContent = `\u20B9${perDay}`;
+    document.getElementById('priceTotal').textContent = `\u20B9${total}`;
   }
   recalc();
 
